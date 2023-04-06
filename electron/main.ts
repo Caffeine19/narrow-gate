@@ -2,14 +2,23 @@ import { app, BrowserWindow, ipcRenderer, dialog, ipcMain } from 'electron'
 
 import * as path from 'path'
 
+import { readFileSync } from 'fs'
+
+import ePub from 'epubjs'
 function createWindow() {
   const win = new BrowserWindow({
     width: 1440,
     height: 1024,
     webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
       preload: path.join(__dirname, '../dist/preload.js')
     },
     titleBarStyle: 'hidden'
+  })
+
+  ipcMain.on('set-title', (event, title) => {
+    console.log(title)
   })
 
   const isDev = process.env.NODE_ENV?.trim() === 'development'
@@ -21,7 +30,25 @@ function createWindow() {
   }
 }
 
+const openDialog = async () => {
+  const result = await dialog.showOpenDialog({ properties: ['openFile'] })
+  console.log(result)
+  if (result.filePaths.length > 0) {
+    const path = result.filePaths[0]
+    console.log({ path })
+    const data = readFileSync(path)
+    console.log(data)
+
+    const buffer = readFileSync(path)
+    const arrayBuffer = buffer.buffer.slice(
+      buffer.byteOffset,
+      buffer.byteOffset + buffer.byteLength
+    )
+    return { path, arrayBuffer }
+  }
+}
 app.whenReady().then(() => {
+  ipcMain.handle('open-dialog', openDialog)
   createWindow()
 
   app.on('activate', () => {

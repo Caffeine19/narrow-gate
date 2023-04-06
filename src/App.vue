@@ -6,11 +6,25 @@ import HelloWorld from './components/HelloWorld.vue'
 
 import ePub from 'epubjs'
 
-import { ipcRenderer } from 'electron'
-
 onMounted(() => {
   // Load the opf
-  var book = ePub('https://s3.amazonaws.com/moby-dick/moby-dick.epub')
+  // var book = ePub('https://s3.amazonaws.com/moby-dick/moby-dick.epub')
+  // var rendition = book.renderTo('viewer', {
+  //   width: '100%',
+  //   height: 600,
+  //   spread: 'always'
+  // })
+  // rendition.display()
+})
+
+const openDialog = async () => {
+  const res = await window.electronAPI.openDialog('123')
+  console.log({ res })
+
+  let book = ePub()
+
+  book.open(res.arrayBuffer)
+  console.log('🚀 ~ file: App.vue:25 ~ openDialog ~ book:', book)
   var rendition = book.renderTo('viewer', {
     width: '100%',
     height: 600,
@@ -18,24 +32,12 @@ onMounted(() => {
   })
 
   rendition.display()
-})
-
-const openDialog = () => {
-  ipcRenderer.send('openFile', () => {
-    console.log('Event sent.')
-  })
 }
-ipcRenderer.on('selectedItem', (event, files) => {
-  console.log(files)
-})
-
-ipcRenderer.on('fileData', (event, data) => {
-  console.log({ data })
-})
 </script>
 
 <template>
-  <!-- <button @click="openDialog">choose book</button> -->
+  <input type="file" placeholder="选择文件" id="input" />
+  <button @click="openDialog">choose book</button>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
@@ -118,6 +120,6 @@ nav a:first-of-type {
 </style>
 <style>
 body {
-  -webkit-app-region: drag;
+  /* -webkit-app-region: drag; */
 }
 </style>
