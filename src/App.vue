@@ -1,9 +1,41 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+
+import ePub from 'epubjs'
+
+import { ipcRenderer } from 'electron'
+
+onMounted(() => {
+  // Load the opf
+  var book = ePub('https://s3.amazonaws.com/moby-dick/moby-dick.epub')
+  var rendition = book.renderTo('viewer', {
+    width: '100%',
+    height: 600,
+    spread: 'always'
+  })
+
+  rendition.display()
+})
+
+const openDialog = () => {
+  ipcRenderer.send('openFile', () => {
+    console.log('Event sent.')
+  })
+}
+ipcRenderer.on('selectedItem', (event, files) => {
+  console.log(files)
+})
+
+ipcRenderer.on('fileData', (event, data) => {
+  console.log({ data })
+})
 </script>
 
 <template>
+  <!-- <button @click="openDialog">choose book</button> -->
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
@@ -17,6 +49,7 @@ import HelloWorld from './components/HelloWorld.vue'
     </div>
   </header>
 
+  <div style="width: 800px; height: 800px" id="viewer"></div>
   <RouterView />
 </template>
 
