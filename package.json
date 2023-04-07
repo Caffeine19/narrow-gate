@@ -12,7 +12,7 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-    "electron:start": "set NODE_ENV=development && electron dist/main.js",
+    "electron:start": "set NODE_ENV=development & export NODE_ENV=development && electron dist/main.js",
     "electron:compile": "npx tsc -b -w electron"
   },
   "dependencies": {
