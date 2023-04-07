@@ -1,8 +1,12 @@
 <script setup lang="ts"></script>
 <template>
   <div
-    class="h-full flex flex-col justify-between items-center p-4 pt-8 bg-zinc-900 border-r border-zinc-700"
+    class="bg-zinc-900 border-zinc-700 flex flex-col items-center justify-between h-full p-4 pt-8 border-r"
   >
-    <img src="@/assets/img/Logo.svg" class="w-12 h-12" alt="" />
+    <div class="w-12 h-12"><img src="@/assets/img/Logo.svg" alt="" /></div>
+
+    <button class="text-zinc-50">
+      <i class="ri-settings-4-line" style="font-size: 28px"></i>
+    </button>
   </div>
 </template>
