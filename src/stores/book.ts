@@ -1,7 +1,7 @@
 import { reactive } from 'vue'
 import { defineStore } from 'pinia'
 
-import ePub from 'epubjs'
+import ePub, { Book } from 'epubjs'
 
 type BookCover = {
   img: string
@@ -10,10 +10,11 @@ type BookCover = {
 }
 
 export const useBookStore = defineStore('book', () => {
-  const book = ePub()
+  let book: Book
   const bookCoverList = reactive<BookCover[]>([])
 
   const addBook = async () => {
+    book = ePub()
     const res = await window.electronAPI.readBookFile()
     await book.open(res)
 

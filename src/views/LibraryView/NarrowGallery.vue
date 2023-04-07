@@ -19,7 +19,7 @@ const goReading = () => {
     <div
       class="bg-zinc-950/80 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
     >
-      <NarrowButton iconStyle="ri-table-line" :action="bookStore.addBook" />
+      <NarrowButton iconStyle="ri-add-box-line" :action="bookStore.addBook" />
       <div class="flex items-center space-x-3">
         <NarrowButton iconStyle="ri-filter-3-line" />
         <NarrowButton iconStyle="ri-checkbox-multiple-blank-line" />
@@ -27,7 +27,9 @@ const goReading = () => {
         <NarrowButton iconStyle="ri-table-line" />
       </div>
     </div>
-    <div class="gap-y-8 gap-x-8 justify-items-stretch grid grid-cols-4 p-8">
+    <div
+      class="gap-y-8 gap-x-8 justify-items-stretch 2xl:grid-cols-4 xl:grid-cols-3 grid grid-cols-2 p-8"
+    >
       <div
         v-for="(cover, index) in bookCoverList"
         :key="index"
