@@ -36,6 +36,7 @@ const openDialog = async () => {
 </script>
 
 <template>
+  <h1 class="text-3xl font-bold underline">Hello world!</h1>
   <input type="file" placeholder="选择文件" id="input" />
   <button @click="openDialog">choose book</button>
   <header>
