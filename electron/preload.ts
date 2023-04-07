@@ -17,6 +17,5 @@ import { contextBridge, ipcRenderer } from 'electron'
 // })
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  setTitle: (title) => ipcRenderer.send('set-title', title),
-  openDialog: (msg) => ipcRenderer.invoke('open-dialog', msg)
+  readBookFile: () => ipcRenderer.invoke('readBookFile')
 })

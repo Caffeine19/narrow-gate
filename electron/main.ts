@@ -1,10 +1,11 @@
-import { app, BrowserWindow, ipcRenderer, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 
 import * as path from 'path'
 
 import { readFileSync } from 'fs'
 
-import ePub from 'epubjs'
+import { ReadBookFile } from '../src/types/electronAPI'
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1440,
@@ -30,25 +31,21 @@ function createWindow() {
   }
 }
 
-const openDialog = async () => {
-  const result = await dialog.showOpenDialog({ properties: ['openFile'] })
-  console.log(result)
-  if (result.filePaths.length > 0) {
-    const path = result.filePaths[0]
-    console.log({ path })
-    const data = readFileSync(path)
-    console.log(data)
+const readBookFile: ReadBookFile = async () => {
+  const res = await dialog.showOpenDialog({ properties: ['openFile'] })
+  console.log('🚀 ~ file: main.ts:34 ~ readBookFile ~ res:', res)
 
-    const buffer = readFileSync(path)
-    const arrayBuffer = buffer.buffer.slice(
-      buffer.byteOffset,
-      buffer.byteOffset + buffer.byteLength
-    )
-    return { path, arrayBuffer }
+  if (res.filePaths.length > 0) {
+    const file = res.filePaths[0]
+    console.log('🚀 ~ file: main.ts:38 ~ readBookFile ~ file:', file)
+    const data = readFileSync(file)
+    const arrayBuffer = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength)
+    return arrayBuffer
   }
 }
 app.whenReady().then(() => {
-  ipcMain.handle('open-dialog', openDialog)
+  ipcMain.handle('readBookFile', readBookFile)
+
   createWindow()
 
   app.on('activate', () => {
@@ -57,33 +54,6 @@ app.whenReady().then(() => {
     }
   })
 })
-
-// ipcMain.on('openFile', (event, path) => {
-//   const { dialog } = require('electron')
-//   const fs = require('fs')
-//   dialog
-//     .showOpenDialog({})
-//     .then((fileNames) => {
-//       if (fileNames === undefined) {
-//         console.log('No file selected')
-//       } else {
-//         readFile(fileNames[0])
-//       }
-//     })
-//     .catch(() => {})
-
-//   function readFile(filepath) {
-//     fs.readFile(filepath, 'utf-8', (err, data) => {
-//       if (err) {
-//         alert('An error ocurred reading the file :' + err.message)
-//         return
-//       }
-
-//       // handle the file content
-//       event.sender.send('fileData', data)
-//     })
-//   }
-// })
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
