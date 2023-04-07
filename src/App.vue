@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import NarrowSider from './views/HomeView/NarrowSider.vue'
+
 import ePub from 'epubjs'
 
 const openDialog = async () => {
@@ -20,13 +22,9 @@ const openDialog = async () => {
 </script>
 
 <template>
-  <button @click="openDialog">choose book</button>
-
-  <div style="width: 800px; height: 800px" id="viewer"></div>
+  <div class="w-screen h-screen flex">
+    <NarrowSider />
+    <button @click="openDialog" style="-webkit-app-region: no-drag">choose book</button>
+    <div style="width: 800px; height: 800px" id="viewer"></div>
+  </div>
 </template>
-
-<style>
-body {
-  /* -webkit-app-region: drag; */
-}
-</style>
