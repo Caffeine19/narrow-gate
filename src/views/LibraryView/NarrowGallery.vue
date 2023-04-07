@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useBookStore } from '@/stores/book'
+import { useRouter } from 'vue-router'
 
 const bookStore = useBookStore()
 const { bookCoverList } = storeToRefs(bookStore)
+
+const router = useRouter()
+const goReading = () => {
+  router.push({ name: 'reading' })
+}
 </script>
 <template>
   <div class="relative overflow-y-auto">
@@ -43,7 +49,8 @@ const { bookCoverList } = storeToRefs(bookStore)
       <div
         v-for="(cover, index) in bookCoverList"
         :key="index"
-        class="hover:border-zinc-600 hover:bg-zinc-50/5 flex flex-col items-center justify-between p-2 space-y-3 transition-colors border border-transparent rounded cursor-pointer"
+        @click="goReading"
+        class="hover:border-zinc-700 hover:bg-zinc-50/5 flex flex-col items-center justify-between p-2 space-y-3 transition-colors border border-transparent rounded cursor-pointer"
       >
         <img :src="cover.img" alt="" class="w-[164px] h-[240px] rounded" />
         <div>

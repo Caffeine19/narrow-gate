@@ -15,6 +15,7 @@ function createWindow() {
       contextIsolation: true,
       preload: path.join(__dirname, '../dist/preload.js')
     },
+    trafficLightPosition: { x: 10, y: 20 },
     titleBarStyle: 'hidden'
   })
 
