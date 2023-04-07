@@ -1,5 +1,7 @@
 <script setup lang="ts">
-defineProps<{ action: Function; iconStyle: string }>()
+withDefaults(defineProps<{ action?: Function; iconStyle: string }>(), {
+  action: () => console.log('narrow-button-clicked')
+})
 </script>
 <template>
   <button

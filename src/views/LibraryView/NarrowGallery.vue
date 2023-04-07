@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { useBookStore } from '@/stores/book'
 import { useRouter } from 'vue-router'
 
+import { storeToRefs } from 'pinia'
+
+import { useBookStore } from '@/stores/book'
+
+import NarrowButton from '@/components/NarrowButton.vue'
 const bookStore = useBookStore()
 const { bookCoverList } = storeToRefs(bookStore)
 
@@ -14,35 +17,14 @@ const goReading = () => {
 <template>
   <div class="relative overflow-y-auto">
     <div
-      class="bg-zinc-900/80 border-zinc-700 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
+      class="bg-zinc-950/80 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
     >
-      <button
-        @click="bookStore.addBook"
-        class="text-zinc-400 hover:bg-zinc-50/10 hover:text-zinc-50 w-9 h-9 flex items-center justify-center transition-colors rounded"
-      >
-        <i class="ri-add-box-line" style="font-size: 28px"></i>
-      </button>
+      <NarrowButton iconStyle="ri-table-line" :action="bookStore.addBook" />
       <div class="flex items-center space-x-3">
-        <button
-          class="text-zinc-400 hover:bg-zinc-50/10 hover:text-zinc-50 w-9 h-9 flex items-center justify-center transition-colors rounded"
-        >
-          <i class="ri-filter-3-line" style="font-size: 28px"></i>
-        </button>
-        <button
-          class="text-zinc-400 hover:bg-zinc-50/10 hover:text-zinc-50 w-9 h-9 flex items-center justify-center transition-colors rounded"
-        >
-          <i class="ri-checkbox-multiple-blank-line" style="font-size: 28px"></i>
-        </button>
-        <button
-          class="text-zinc-400 hover:bg-zinc-50/10 hover:text-zinc-50 w-9 h-9 flex items-center justify-center transition-colors rounded"
-        >
-          <i class="ri-arrow-up-down-line" style="font-size: 28px"></i>
-        </button>
-        <button
-          class="text-zinc-400 hover:bg-zinc-50/10 hover:text-zinc-50 w-9 h-9 flex items-center justify-center transition-colors rounded"
-        >
-          <i class="ri-table-line" style="font-size: 28px"></i>
-        </button>
+        <NarrowButton iconStyle="ri-filter-3-line" />
+        <NarrowButton iconStyle="ri-checkbox-multiple-blank-line" />
+        <NarrowButton iconStyle="ri-arrow-up-down-line" />
+        <NarrowButton iconStyle="ri-table-line" />
       </div>
     </div>
     <div class="gap-y-8 gap-x-8 justify-items-stretch grid grid-cols-4 p-8">

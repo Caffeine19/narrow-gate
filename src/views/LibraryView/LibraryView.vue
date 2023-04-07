@@ -6,7 +6,7 @@ import NarrowDetail from './NarrowDetail.vue'
 <template>
   <NarrowSider />
   <div class="grow flex" style="-webkit-app-region: no-drag">
-    <NarrowGallery class="basis-3/4 overflow-hidden" />
-    <NarrowDetail class="basis-1/4 overflow-hidden" />
+    <NarrowGallery class="basis-8/12 overflow-hidden" />
+    <NarrowDetail class="basis-4/12 overflow-hidden" />
   </div>
 </template>
