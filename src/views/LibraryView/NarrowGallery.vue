@@ -6,17 +6,21 @@ import { storeToRefs } from 'pinia'
 import { useBookStore } from '@/stores/book'
 
 import NarrowButton from '@/components/NarrowButton.vue'
+
+import type { BookCover } from '@/types/book'
 const bookStore = useBookStore()
 const { bookCoverList } = storeToRefs(bookStore)
 
 const router = useRouter()
-const goReading = () => {
+const goReading = (cover: BookCover) => {
+  bookStore.setOpenedBook(cover)
   router.push({ name: 'reading' })
 }
 </script>
 <template>
   <div class="relative overflow-y-auto">
     <div
+      style="-webkit-app-region: drag"
       class="bg-zinc-950/80 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
     >
       <NarrowButton iconStyle="ri-add-box-line" :action="bookStore.addBook" />
@@ -33,7 +37,7 @@ const goReading = () => {
       <div
         v-for="(cover, index) in bookCoverList"
         :key="index"
-        @click="goReading"
+        @click="() => goReading(cover)"
         class="hover:border-zinc-700 hover:bg-zinc-50/5 flex flex-col items-center justify-between p-2 space-y-3 transition-colors border border-transparent rounded cursor-pointer"
       >
         <img :src="cover.img" alt="" class="w-[164px] h-[240px] rounded" />

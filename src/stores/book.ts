@@ -1,18 +1,14 @@
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import ePub, { Book } from 'epubjs'
+import ePub, { Book, Rendition } from 'epubjs'
 
-type BookCover = {
-  img: string
-  creator: string
-  title: string
-}
+import type { BookCover, OpenedBook } from '@/types/book'
 
 export const useBookStore = defineStore('book', () => {
   let book: Book
-  const bookCoverList = reactive<BookCover[]>([])
 
+  const bookCoverList = reactive<BookCover[]>([])
   const addBook = async () => {
     book = ePub()
     const res = await window.electronAPI.readBookFile()
@@ -40,14 +36,37 @@ export const useBookStore = defineStore('book', () => {
         })
     }
   }
+
+  const openedBook = ref<OpenedBook>()
+  const setOpenedBook = (cover: BookCover) => {
+    openedBook.value = { title: cover.title, creator: cover.creator }
+  }
+
+  let rendition: Rendition
   const openBook = () => {
-    const rendition = book.renderTo('viewer', {
+    rendition = book.renderTo('viewer', {
       width: '100%',
-      height: '100%',
-      spread: 'always'
+      height: '100%'
+      // spread: 'always'
     })
+    rendition.themes.default({
+      p: { color: '#fafafa', 'font-family': 'misans !important' },
+      a: { color: '#818cf8' },
+      h1: { color: '#fafafa' },
+      hr: { 'border-color': '#52525b' }
+    })
+
+    // rendition.themes.register(`${getStreamHost()}/static/epub.css`)
+    // rendition.themes.select('book-theme')
 
     rendition.display()
   }
-  return { bookCoverList, addBook, openBook }
+
+  const nextPage = () => {
+    rendition.next()
+  }
+  const prevPage = () => {
+    rendition.prev()
+  }
+  return { bookCoverList, addBook, openedBook, openBook, setOpenedBook, nextPage, prevPage }
 })

@@ -12,3 +12,8 @@
         -webkit-app-region: no-drag;
     }
 }
+
+@font-face {
+    font-family: 'misans';
+    src: url(/src/assets/img/MiSans-Normal.ttf);
+}
