@@ -41,14 +41,14 @@ onMounted(() => {
     <div class="grow text-slate-50 flex justify-between" style="-webkit-app-region: no-drag">
       <button
         @click="bookStore.prevPage"
-        class="text-zinc-400 hover:text-zinc-50 hover:bg-zinc-50/5 p-2 transition-colors"
+        class="text-zinc-400 hover:text-zinc-50 hover:bg-zinc-50/5 shrink-0 p-2 transition-colors"
       >
         <i class="ri-skip-left-line" style="font-size: 32px"></i>
       </button>
-      <div id="viewer" class="!text-zinc-50 h-full grow container"></div>
+      <div id="viewer" class="!text-zinc-50 h-full grow container overflow-hidden"></div>
       <button
         @click="bookStore.nextPage"
-        class="text-zinc-400 hover:text-zinc-50 hover:bg-zinc-50/5 p-2 transition-colors"
+        class="text-zinc-400 hover:text-zinc-50 hover:bg-zinc-50/5 shrink-0 p-2 transition-colors"
       >
         <i class="ri-skip-right-line" style="font-size: 32px"></i>
       </button>

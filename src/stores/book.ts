@@ -44,20 +44,46 @@ export const useBookStore = defineStore('book', () => {
 
   let rendition: Rendition
   const openBook = () => {
+    console.log('🚀 ~ file: book.ts:107 ~ useBookStore ~ book:', book)
     rendition = book.renderTo('viewer', {
       width: '100%',
-      height: '100%'
-      // spread: 'always'
-    })
-    rendition.themes.default({
-      p: { color: '#fafafa', 'font-family': 'misans !important' },
-      a: { color: '#818cf8' },
-      h1: { color: '#fafafa' },
-      hr: { 'border-color': '#52525b' }
+      height: '100%',
+      spread: 'always'
     })
 
-    // rendition.themes.register(`${getStreamHost()}/static/epub.css`)
-    // rendition.themes.select('book-theme')
+    rendition.themes.override('background', 'none', true)
+    rendition.themes.override('color', '#fafafa', true)
+    // rendition.themes.register('dark', 'themes.css')
+    // rendition.themes.register('light', 'themes.css')
+    // rendition.themes.register('tan', 'themes.css')
+
+    // rendition.themes.select('tan')
+    // rendition.themes.fontSize('140%')
+
+    rendition.themes.default({
+      body: { 'background-color': 'transparent !important', color: '#fafafa !important' },
+      html: { 'background-color': 'transparent !important' },
+      p: {
+        color: '#fafafa !important',
+        'font-family': 'misans !important',
+        'border-color': 'red !important'
+      },
+      a: { color: '#818cf8 !important' },
+      h1: { color: '#fafafa !important' },
+      h2: { color: '#fafafa !important' },
+      h3: { color: '#fafafa !important' },
+      hr: { 'border-color': '#52525b !important' },
+      span: { color: '#e4e4e7 !important' },
+      code: { color: '#818cf8 !important' },
+      pre: {
+        'background-color': '#1A1B25 !important',
+        'border-color': '#111122 !important'
+      },
+      li: {
+        color: '#fafafa !important',
+        'font-family': 'misans !important'
+      }
+    })
 
     rendition.display()
   }
