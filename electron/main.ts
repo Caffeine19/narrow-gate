@@ -4,6 +4,8 @@ import * as path from 'path'
 
 import { readFileSync } from 'fs'
 
+import * as sqlite3 from 'sqlite3'
+
 import { ReadBookFile } from '../src/types/electronAPI'
 
 function createWindow() {
@@ -48,6 +50,10 @@ app.whenReady().then(() => {
   ipcMain.handle('readBookFile', readBookFile)
 
   createWindow()
+
+  const sqlite = sqlite3.verbose()
+  const db = new sqlite.Database(path.join(__dirname, '../db/narrow_gate.db'))
+  db.run('CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)')
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
