@@ -25,3 +25,11 @@ model Post {
   author    User    @relation(fields: [authorId], references: [id])
   authorId  Int
 }
+
+model Book {
+  id            Int    @id @default(autoincrement())
+  name          String
+  author        String
+  bookCoverPath String
+  bookFilePath  String
+}

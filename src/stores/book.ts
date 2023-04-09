@@ -11,8 +11,8 @@ export const useBookStore = defineStore('book', () => {
   const bookCoverList = reactive<BookCover[]>([])
   const addBook = async () => {
     book = ePub()
-    const res = await window.electronAPI.readBookFile()
-    await book.open(res)
+    const bookRes = await window.electronAPI.readBookFile()
+    await book.open(bookRes)
 
     //获取元信息
     const metadata = await book.loaded.metadata
@@ -25,15 +25,18 @@ export const useBookStore = defineStore('book', () => {
     if (coverUrl) {
       bookCoverList.push({ img: coverUrl, title: metadata.title, creator: metadata.creator })
 
-      fetch(coverUrl)
-        .then((response) => {
-          console.log('🚀 ~ file: NarrowGallery.vue:20 ~ .then ~ response:', response)
-          return response.arrayBuffer()
-        })
-        .then((blob) => {
-          // 将Blob对象保存为文件
-          console.dir({ blob })
-        })
+      const coverFile = await (await fetch(coverUrl)).arrayBuffer()
+
+      console.dir('🚀 ~ file: book.ts:30 ~ addBook ~ coverFile:', coverFile)
+
+      window.electronAPI.createBook(metadata.title, metadata.creator, bookRes, coverFile)
+      // .then((response) => {
+      //   console.log('🚀 ~ file: NarrowGallery.vue:20 ~ .then ~ response:', response)
+      //   return response.arrayBuffer()
+      // })
+      // .then((arrayBuffer) => {
+      //   console.log('🚀 ~ file: book.ts:34 ~ .then ~ arrayBuffer:', arrayBuffer)
+      // })
     }
   }
 

@@ -2,11 +2,11 @@ import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 
 import * as path from 'path'
 
-import { readFileSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync } from 'fs'
 
-import * as sqlite3 from 'sqlite3'
+import { CreateBook, ReadBookFile } from '../src/types/electronAPI'
 
-import { ReadBookFile } from '../src/types/electronAPI'
+import { createBook } from '../data/script'
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -15,7 +15,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
-      preload: path.join(__dirname, '../dist/preload.js')
+      preload: path.join(__dirname, '../electron/preload.js')
     },
     trafficLightPosition: { x: 10, y: 20 },
     titleBarStyle: 'hidden'
@@ -46,14 +46,37 @@ const readBookFile: ReadBookFile = async () => {
     return arrayBuffer
   }
 }
+
+const onCreateBook: CreateBook = async (name, author, bookFile, bookCoverFile) => {
+  console.clear()
+  console.log('🚀 ~ file: main.ts:51 ~ constonCreateBook:CreateBook= ~ onCreateBook:', onCreateBook)
+  console.log('123')
+  try {
+    const bookFilePath = `./static/book/${name}.book`
+    const bookCoverPath = `./static/bookCover/${name}.bookCover`
+    if (!existsSync(bookFilePath)) {
+      writeFileSync(bookFilePath, '')
+    }
+
+    if (!existsSync(bookCoverPath)) {
+      writeFileSync(bookCoverPath, '')
+    }
+
+    writeFileSync(bookFilePath, Buffer.from(bookFile))
+    writeFileSync(bookCoverPath, Buffer.from(bookCoverFile))
+
+    await createBook(name, author, bookCoverPath, bookFilePath)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 app.whenReady().then(() => {
   ipcMain.handle('readBookFile', readBookFile)
-
+  ipcMain.on('createBook', (event, data) => {
+    onCreateBook(data.name, data.author, data.bookFile, data.bookCoverFile)
+  })
   createWindow()
-
-  const sqlite = sqlite3.verbose()
-  const db = new sqlite.Database(path.join(__dirname, '../db/narrow_gate.db'))
-  db.run('CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)')
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

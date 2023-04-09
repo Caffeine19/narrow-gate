@@ -34,3 +34,5 @@ playwright-report/
 *.db
 migrations
 narrow_gate.db-journal
+static/
+

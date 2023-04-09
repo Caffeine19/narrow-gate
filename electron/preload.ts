@@ -1,3 +1,4 @@
+import { Book } from '@prisma/client'
 import { contextBridge, ipcRenderer } from 'electron'
 
 // window.addEventListener('DOMContentLoaded', () => {
@@ -17,5 +18,11 @@ import { contextBridge, ipcRenderer } from 'electron'
 // })
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  readBookFile: () => ipcRenderer.invoke('readBookFile')
+  readBookFile: () => ipcRenderer.invoke('readBookFile'),
+  createBook: (
+    name: Book['name'],
+    author: Book['author'],
+    bookFile: ArrayBuffer,
+    bookCoverFile: ArrayBuffer
+  ) => ipcRenderer.send('createBook', { name, author, bookFile, bookCoverFile })
 })
