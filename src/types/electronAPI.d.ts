@@ -17,10 +17,15 @@ export interface GetBookCoverList {
   (): Promise<BookCover[]>
 }
 
+export interface GetBookContent {
+  (id: Book['id']): Promise<ArrayBuffer>
+}
+
 export interface IElectronAPI {
   readBookFile: ReadBookFile
   createBook: CreateBook
   getBookCoverList: GetBookCoverList
+  getBookContent: GetBookContent
 }
 
 declare global {

@@ -4,9 +4,14 @@ import * as path from 'path'
 
 import { readFileSync, writeFileSync, existsSync } from 'fs'
 
-import { CreateBook, GetBookCoverList, ReadBookFile } from '../src/types/electronAPI'
+import {
+  CreateBook,
+  GetBookContent,
+  GetBookCoverList,
+  ReadBookFile
+} from '../src/types/electronAPI'
 
-import { createBook, getBookList } from '../data/main'
+import { createBook, getBookContent, getBookList } from '../data/main'
 import { readFile } from 'fs/promises'
 
 function createWindow() {
@@ -84,14 +89,24 @@ const onGetBookCoverList: GetBookCoverList = async () => {
       })
     }
 
-    console.log(
-      '🚀 ~ file: main.ts:79 ~ constonGetBookCoverList:GetBookCoverList= ~ bookCoverList:',
-      bookCoverList
-    )
-
     return bookCoverList
   } catch (error) {
     console.log('🚀 ~ file: main.ts:78 ~ onGetBookList ~ error:', error)
+  }
+}
+const onGetBookContent: GetBookContent = async (id) => {
+  try {
+    const res = await getBookContent(id)
+    const data = await readFile(res.bookFilePath)
+    const arrayBuffer = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength)
+    console.log(
+      '🚀 ~ file: main.ts:102 ~ constonGetBookContent:GetBookContent= ~ arrayBuffer:',
+      arrayBuffer
+    )
+
+    return arrayBuffer
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:101 ~ onGetBookContent ~ error:', error)
   }
 }
 
@@ -108,6 +123,11 @@ app.whenReady().then(() => {
     return createdBook
   })
   ipcMain.handle('getBookCoverList', onGetBookCoverList)
+  ipcMain.handle('getBookContent', async (event, data) => {
+    console.log('🚀 ~ file: main.ts:126 ~ ipcMain.handle ~ data:', data)
+    const bookContent = await onGetBookContent(data)
+    return bookContent
+  })
 
   createWindow()
 

@@ -64,8 +64,14 @@ export const useBookStore = defineStore('book', () => {
   }
 
   const openedBook = ref<OpenedBook>()
-  const setOpenedBook = (cover: BookCover) => {
-    openedBook.value = { title: cover.title, creator: cover.creator }
+  const setOpenedBook = async (cover: BookCover) => {
+    openedBook.value = { id: cover.id, title: cover.title, creator: cover.creator }
+
+    const bookContent = await window.electronAPI.getBookContent(cover.id)
+    console.log('🚀 ~ file: book.ts:71 ~ setOpenedBook ~ bookContent:', bookContent)
+
+    book = ePub()
+    await book.open(bookContent)
   }
 
   let rendition: Rendition
@@ -115,9 +121,12 @@ export const useBookStore = defineStore('book', () => {
   }
 
   const nextPage = () => {
+    console.log('🚀 ~ file: book.ts:124 ~ nextPage ~ nextPage:', nextPage)
+
     rendition.next()
   }
   const prevPage = () => {
+    console.log('🚀 ~ file: book.ts:129 ~ prevPage ~ prevPage:', prevPage)
     rendition.prev()
   }
   return {

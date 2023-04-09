@@ -33,6 +33,14 @@ export const getBookList = async () => {
   console.log('🚀 ~ file: main.ts:30 ~ getBookList ~ bookList:', bookList)
   return bookList
 }
+
+export const getBookContent = async (id: Book['id']) => {
+  const bookContent = await prisma.book.findUnique({
+    where: { id },
+    select: { bookFilePath: true }
+  })
+  return bookContent
+}
 // main()
 //   .then(async () => {
 //     await prisma.$disconnect()

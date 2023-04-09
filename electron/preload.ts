@@ -1,7 +1,6 @@
 import { Book } from '@prisma/client'
 import { contextBridge, ipcRenderer } from 'electron'
 
-import { GetBookCoverList } from '../src/types/electronAPI'
 // window.addEventListener('DOMContentLoaded', () => {
 //   const replaceText = (selector, text) => {
 //     const element = document.getElementById(selector)
@@ -26,5 +25,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     bookFile: ArrayBuffer,
     bookCoverFile: ArrayBuffer
   ) => ipcRenderer.invoke('createBook', { title, creator, bookFile, bookCoverFile }),
-  getBookCoverList: () => ipcRenderer.invoke('getBookCoverList')
+  getBookCoverList: () => ipcRenderer.invoke('getBookCoverList'),
+  getBookContent: (id: Book['id']) => ipcRenderer.invoke('getBookContent', id)
 })
