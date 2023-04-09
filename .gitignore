@@ -30,4 +30,7 @@ coverage
 test-results/
 playwright-report/
 
-db
+.env
+*.db
+migrations
+narrow_gate.db-journal
