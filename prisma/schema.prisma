@@ -28,8 +28,8 @@ model Post {
 
 model Book {
   id            Int    @id @default(autoincrement())
-  name          String
-  author        String
+  title         String
+  creator       String
   bookCoverPath String
   bookFilePath  String
 }

@@ -8,6 +8,7 @@ import { useBookStore } from '@/stores/book'
 import NarrowButton from '@/components/NarrowButton.vue'
 
 import type { BookCover } from '@/types/book'
+import { onMounted } from 'vue'
 const bookStore = useBookStore()
 const { bookCoverList } = storeToRefs(bookStore)
 
@@ -16,6 +17,10 @@ const goReading = (cover: BookCover) => {
   bookStore.setOpenedBook(cover)
   router.push({ name: 'reading' })
 }
+
+onMounted(() => {
+  bookStore.getBookCoverList()
+})
 </script>
 <template>
   <div class="relative overflow-y-auto">
@@ -35,17 +40,19 @@ const goReading = (cover: BookCover) => {
       class="gap-y-8 gap-x-8 justify-items-stretch 2xl:grid-cols-4 xl:grid-cols-3 grid grid-cols-2 p-8"
     >
       <div
-        v-for="(cover, index) in bookCoverList"
+        v-for="(bookCover, index) in bookCoverList"
         :key="index"
-        @click="() => goReading(cover)"
+        @click="() => goReading(bookCover)"
         class="hover:border-zinc-700 hover:bg-zinc-50/5 flex flex-col items-center justify-between p-2 space-y-3 transition-colors border border-transparent rounded cursor-pointer"
       >
-        <img :src="cover.img" alt="" class="w-[164px] h-[240px] rounded" />
+        <img :src="bookCover.bookCover" alt="" class="w-[164px] h-[240px] rounded" />
         <div>
           <p class="text-zinc-50 text-lg text-center">
-            {{ cover.title.length > 12 ? cover.title.slice(0, 12) + '...' : cover.title }}
+            {{
+              bookCover.title.length > 12 ? bookCover.title.slice(0, 12) + '...' : bookCover.title
+            }}
           </p>
-          <p class="text-zinc-400 text-center">{{ cover.creator }}</p>
+          <p class="text-zinc-400 text-center">{{ bookCover.creator }}</p>
         </div>
       </div>
     </div>

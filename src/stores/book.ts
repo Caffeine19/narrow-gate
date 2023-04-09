@@ -12,6 +12,7 @@ export const useBookStore = defineStore('book', () => {
   const addBook = async () => {
     book = ePub()
     const bookRes = await window.electronAPI.readBookFile()
+    console.log('🚀 ~ file: book.ts:15 ~ addBook ~ bookRes:', bookRes)
     await book.open(bookRes)
 
     //获取元信息
@@ -23,13 +24,22 @@ export const useBookStore = defineStore('book', () => {
     console.log('🚀 ~ file: NarrowGallery.vue:14 ~ openDialog ~ coverUrl:', coverUrl)
 
     if (coverUrl) {
-      bookCoverList.push({ img: coverUrl, title: metadata.title, creator: metadata.creator })
-
       const coverFile = await (await fetch(coverUrl)).arrayBuffer()
 
-      console.dir('🚀 ~ file: book.ts:30 ~ addBook ~ coverFile:', coverFile)
+      const createdBook = await window.electronAPI.createBook(
+        metadata.title,
+        metadata.creator,
+        bookRes,
+        coverFile
+      )
+      console.log('🚀 ~ file: book.ts:35 ~ addBook ~ createdBook:', createdBook)
 
-      window.electronAPI.createBook(metadata.title, metadata.creator, bookRes, coverFile)
+      bookCoverList.push({
+        id: createdBook.id,
+        title: metadata.title,
+        creator: metadata.creator,
+        bookCover: coverUrl
+      })
       // .then((response) => {
       //   console.log('🚀 ~ file: NarrowGallery.vue:20 ~ .then ~ response:', response)
       //   return response.arrayBuffer()
@@ -37,6 +47,19 @@ export const useBookStore = defineStore('book', () => {
       // .then((arrayBuffer) => {
       //   console.log('🚀 ~ file: book.ts:34 ~ .then ~ arrayBuffer:', arrayBuffer)
       // })
+    }
+  }
+
+  const getBookCoverList = async () => {
+    try {
+      const res = await window.electronAPI.getBookCoverList()
+      console.log('🚀 ~ file: book.ts:56 ~ getBookCoverList ~ res:', res)
+      bookCoverList.length = 0
+      res.forEach((bookCover) => {
+        bookCoverList.push(bookCover)
+      })
+    } catch (error) {
+      console.log('🚀 ~ file: book.ts:47 ~ getBookList ~ error:', error)
     }
   }
 
@@ -97,5 +120,14 @@ export const useBookStore = defineStore('book', () => {
   const prevPage = () => {
     rendition.prev()
   }
-  return { bookCoverList, addBook, openedBook, openBook, setOpenedBook, nextPage, prevPage }
+  return {
+    bookCoverList,
+    addBook,
+    openedBook,
+    openBook,
+    setOpenedBook,
+    nextPage,
+    prevPage,
+    getBookCoverList
+  }
 })
