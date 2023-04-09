@@ -17,3 +17,23 @@
     font-family: 'misans';
     src: url(/src/assets/font/MiSans-Normal.ttf);
 }
+
+@layer utilities {
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+     
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        @apply bg-zinc-300 dark:bg-zinc-700 transition-colors;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        @apply bg-zinc-400 dark:bg-zinc-600;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        @apply bg-zinc-200 dark:bg-zinc-800;
+    }
+}
