@@ -48,7 +48,9 @@ export const useBookStore = defineStore('book', () => {
         size: bookRes.byteLength,
         identifier: metadata.identifier,
         pubdate: metadata.identifier,
-        publisher: metadata.publisher
+        publisher: metadata.publisher,
+
+        picked: false
       })
       // .then((response) => {
       //   console.log('🚀 ~ file: NarrowGallery.vue:20 ~ .then ~ response:', response)
@@ -71,6 +73,13 @@ export const useBookStore = defineStore('book', () => {
     } catch (error) {
       console.log('🚀 ~ file: book.ts:47 ~ getBookList ~ error:', error)
     }
+  }
+
+  const pickBook = (id: BookCover['id']) => {
+    const index = bookCoverList.findIndex((bookCover) => {
+      return bookCover.id == id
+    })
+    bookCoverList[index].picked = !bookCoverList[index].picked
   }
 
   const openedBook = ref<OpenedBook>()
@@ -132,7 +141,6 @@ export const useBookStore = defineStore('book', () => {
 
   const nextPage = () => {
     console.log('🚀 ~ file: book.ts:124 ~ nextPage ~ nextPage:', nextPage)
-
     rendition.next()
   }
   const prevPage = () => {
@@ -142,6 +150,7 @@ export const useBookStore = defineStore('book', () => {
   return {
     bookCoverList,
     addBook,
+    pickBook,
     openedBook,
     openBook,
     setOpenedBook,

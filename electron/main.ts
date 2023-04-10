@@ -14,6 +14,7 @@ import {
 import { createBook, getBookContent, getBookList } from '../data/main'
 import { readFile } from 'fs/promises'
 import { platform } from 'os'
+import { BookCover } from '../src/types/book'
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -102,13 +103,14 @@ const onCreateBook: CreateBook = async (
 const onGetBookCoverList: GetBookCoverList = async () => {
   try {
     const bookList = await getBookList()
-    const bookCoverList = []
+    const bookCoverList: BookCover[] = []
 
     for (const book of bookList) {
       const bookCover = await readFile(book.bookCoverPath)
       bookCoverList.push({
         ...book,
-        bookCover: `data:image/png;base64,${Buffer.from(bookCover).toString('base64')}`
+        bookCover: `data:image/png;base64,${Buffer.from(bookCover).toString('base64')}`,
+        picked: false
       })
     }
 
