@@ -32,4 +32,8 @@ model Book {
   creator       String
   bookCoverPath String
   bookFilePath  String
+  size          Int
+  identifier    String
+  pubdate       String
+  publisher     String
 }

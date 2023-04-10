@@ -9,7 +9,11 @@ export interface CreateBook {
     title: Book['title'],
     creator: Book['creator'],
     bookFile: ArrayBuffer,
-    bookCoverFile: ArrayBuffer
+    bookCoverFile: ArrayBuffer,
+    size: Book['size'],
+    identifier: Book['identifier'],
+    pubdate: Book['pubdate'],
+    publisher: Book['publisher']
   ): Promise<Pick<Book, 'id'>>
 }
 

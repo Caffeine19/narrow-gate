@@ -16,10 +16,23 @@ export const createBook = async (
   title: Book['title'],
   creator: Book['creator'],
   bookCoverPath: Book['bookCoverPath'],
-  bookFilePath: Book['bookFilePath']
+  bookFilePath: Book['bookFilePath'],
+  size: Book['size'],
+  identifier: Book['identifier'],
+  pubdate: Book['pubdate'],
+  publisher: Book['publisher']
 ) => {
   const createdBook = await prisma.book.create({
-    data: { title, creator, bookCoverPath, bookFilePath },
+    data: {
+      title,
+      creator,
+      bookCoverPath,
+      bookFilePath,
+      size,
+      identifier,
+      pubdate,
+      publisher
+    },
     select: { id: true }
   })
   console.log('🚀 ~ file: script.ts:22 ~ book:', createdBook)
@@ -28,7 +41,16 @@ export const createBook = async (
 
 export const getBookList = async () => {
   const bookList = await prisma.book.findMany({
-    select: { id: true, title: true, creator: true, bookCoverPath: true }
+    select: {
+      id: true,
+      title: true,
+      creator: true,
+      bookCoverPath: true,
+      size: true,
+      identifier: true,
+      pubdate: true,
+      publisher: true
+    }
   })
   console.log('🚀 ~ file: main.ts:30 ~ getBookList ~ bookList:', bookList)
   return bookList

@@ -32,7 +32,11 @@ export const useBookStore = defineStore('book', () => {
         metadata.title,
         metadata.creator,
         bookRes,
-        coverFile
+        coverFile,
+        bookRes.byteLength,
+        metadata.identifier,
+        metadata.pubdate,
+        metadata.publisher
       )
       console.log('🚀 ~ file: book.ts:35 ~ addBook ~ createdBook:', createdBook)
 
@@ -40,7 +44,11 @@ export const useBookStore = defineStore('book', () => {
         id: createdBook.id,
         title: metadata.title,
         creator: metadata.creator,
-        bookCover: coverUrl
+        bookCover: coverUrl,
+        size: bookRes.byteLength,
+        identifier: metadata.identifier,
+        pubdate: metadata.identifier,
+        publisher: metadata.publisher
       })
       // .then((response) => {
       //   console.log('🚀 ~ file: NarrowGallery.vue:20 ~ .then ~ response:', response)

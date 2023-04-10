@@ -36,8 +36,6 @@ function createWindow() {
     win.loadFile('dist/index.html')
   }
 
-  const pl = platform()
-
   win.webContents.on('did-finish-load', () => {
     win.webContents.send('platform', platform()) // 将操作系统信息传递到渲染进程
   })
@@ -60,7 +58,16 @@ const onReadBookFile: ReadBookFile = async () => {
   }
 }
 
-const onCreateBook: CreateBook = async (title, creator, bookFile, bookCoverFile) => {
+const onCreateBook: CreateBook = async (
+  title,
+  creator,
+  bookFile,
+  bookCoverFile,
+  size,
+  identifier,
+  pubdate,
+  publisher
+) => {
   console.log('🚀 ~ file: main.ts:52 ~ constonCreateBook:CreateBook= ~ onCreateBook:', onCreateBook)
   try {
     const bookFilePath = `./static/book/${title}.book`
@@ -76,7 +83,16 @@ const onCreateBook: CreateBook = async (title, creator, bookFile, bookCoverFile)
     writeFileSync(bookFilePath, Buffer.from(bookFile))
     writeFileSync(bookCoverPath, Buffer.from(bookCoverFile))
 
-    const createdBook = await createBook(title, creator, bookCoverPath, bookFilePath)
+    const createdBook = await createBook(
+      title,
+      creator,
+      bookCoverPath,
+      bookFilePath,
+      size,
+      identifier,
+      pubdate,
+      publisher
+    )
     return createdBook
   } catch (error) {
     console.log('🚀 ~ file: main.ts:74 ~ constonCreateBook:CreateBook= ~ error:', error)
@@ -125,7 +141,11 @@ app.whenReady().then(() => {
       data.title,
       data.creator,
       data.bookFile,
-      data.bookCoverFile
+      data.bookCoverFile,
+      data.size,
+      data.identifier,
+      data.pubdate,
+      data.publisher
     )
     return createdBook
   })
