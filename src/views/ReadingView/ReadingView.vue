@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import NarrowButton from '@/components/NarrowButton.vue'
 import { useBookStore } from '@/stores/book'
+import { useOSStore } from '@/stores/os'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+
+const { platform } = storeToRefs(useOSStore())
 
 const router = useRouter()
 const goLibrary = () => {
@@ -19,8 +22,9 @@ onMounted(() => {
 <template>
   <div class="bg-zinc-900 flex flex-col items-stretch justify-between w-full h-full">
     <div
-      class="bg-zinc-950 border-zinc-800 grid items-center px-8 py-3 pl-24 border-b"
+      class="bg-zinc-950 border-zinc-800 grid items-center px-8 py-3 border-b"
       style="grid-template-columns: 1fr min-content 1fr"
+      :class="platform == 'darwin' ? 'pt-24' : ''"
     >
       <NarrowButton
         iconStyle="ri-logout-circle-line"

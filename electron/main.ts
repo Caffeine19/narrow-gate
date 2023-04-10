@@ -13,6 +13,7 @@ import {
 
 import { createBook, getBookContent, getBookList } from '../data/main'
 import { readFile } from 'fs/promises'
+import { platform } from 'os'
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -30,10 +31,16 @@ function createWindow() {
   const isDev = process.env.NODE_ENV?.trim() === 'development'
   console.log('🚀 ~ file: main.ts:15 ~ createWindow ~ isDev:', isDev)
   if (isDev) {
-    win.loadURL('http://localhost:5173/#/')
+    win.loadURL('http://localhost:5177/#/')
   } else {
     win.loadFile('dist/index.html')
   }
+
+  const pl = platform()
+
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.send('platform', platform()) // 将操作系统信息传递到渲染进程
+  })
 }
 
 const onReadBookFile: ReadBookFile = async () => {

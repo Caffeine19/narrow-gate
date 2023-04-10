@@ -26,5 +26,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     bookCoverFile: ArrayBuffer
   ) => ipcRenderer.invoke('createBook', { title, creator, bookFile, bookCoverFile }),
   getBookCoverList: () => ipcRenderer.invoke('getBookCoverList'),
-  getBookContent: (id: Book['id']) => ipcRenderer.invoke('getBookContent', id)
+  getBookContent: (id: Book['id']) => ipcRenderer.invoke('getBookContent', id),
+  platform: (callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) =>
+    ipcRenderer.on('platform', callback)
 })

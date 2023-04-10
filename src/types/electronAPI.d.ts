@@ -21,11 +21,19 @@ export interface GetBookContent {
   (id: Book['id']): Promise<ArrayBuffer>
 }
 
+interface IPlatformCallback {
+  (event, value): void
+}
+export interface IPlatform {
+  (callback: IPlatformCallback): void
+}
+
 export interface IElectronAPI {
   readBookFile: ReadBookFile
   createBook: CreateBook
   getBookCoverList: GetBookCoverList
   getBookContent: GetBookContent
+  platform: IPlatform
 }
 
 declare global {
