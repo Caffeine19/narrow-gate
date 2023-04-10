@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { onBeforeMount, onMounted } from 'vue'
+
 import NarrowButton from '@/components/NarrowButton.vue'
+
+import { storeToRefs } from 'pinia'
 import { useBookStore } from '@/stores/book'
 import { useOSStore } from '@/stores/os'
-import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
+
 import { useRoute, useRouter } from 'vue-router'
 
 const { platform } = storeToRefs(useOSStore())
@@ -18,6 +21,30 @@ const { openedBook } = storeToRefs(bookStore)
 onMounted(() => {
   const route = useRoute()
   if (route.query.id) bookStore.openBook(Number(route.query.id))
+})
+
+const onKeyDown = (event: KeyboardEvent) => {
+  // console.log('🚀 ~ file: ReadingView.vue:24 ~ onKeyDown ~ event:', event)
+  switch (event.key) {
+    case 'ArrowUp':
+      bookStore.prevPage()
+      break
+    case 'ArrowDown':
+      bookStore.nextPage()
+      break
+    case 'ArrowLeft':
+      bookStore.prevPage()
+      break
+    case 'ArrowRight':
+      bookStore.nextPage()
+      break
+  }
+}
+onMounted(() => {
+  document.addEventListener('keydown', onKeyDown)
+})
+onBeforeMount(() => {
+  document.removeEventListener('keydown', onKeyDown)
 })
 </script>
 <template>

@@ -92,7 +92,7 @@ export const useBookStore = defineStore('book', () => {
     // rendition.themes.register('tan', 'themes.css')
 
     // rendition.themes.select('tan')
-    // rendition.themes.fontSize('140%')
+    rendition.themes.fontSize('120%')
 
     rendition.themes.default({
       body: { 'background-color': 'transparent !important', color: '#fafafa !important' },
@@ -100,7 +100,7 @@ export const useBookStore = defineStore('book', () => {
       p: {
         color: '#fafafa !important',
         'font-family': 'misans !important',
-        'border-color': 'red !important'
+        'border-color': '#818cf8 !important'
       },
       a: { color: '#818cf8 !important' },
       h1: { color: '#fafafa !important' },
