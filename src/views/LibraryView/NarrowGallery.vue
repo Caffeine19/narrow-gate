@@ -19,8 +19,8 @@ const enum Layout {
   Grid
 }
 const currentLayout = ref(Layout.Grid)
-const toggleLayout = () => {
-  currentLayout.value = currentLayout.value == Layout.Grid ? Layout.TABLE : Layout.Grid
+const toggleLayout = (newVal: Layout) => {
+  currentLayout.value = newVal
 }
 </script>
 <template>
@@ -30,26 +30,40 @@ const toggleLayout = () => {
       class="bg-zinc-950/60 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
     >
       <div class="flex items-center space-x-3">
+        <div class="border-zinc-700 flex p-1 space-x-1 border rounded">
+          <NarrowButton
+            :action="() => toggleLayout(Layout.TABLE)"
+            iconStyle="ri-table-line"
+            :active="currentLayout == Layout.TABLE"
+            buttonStyle=" border-0"
+            activeStyle="!bg-zinc-600 text-zinc-50"
+          />
+          <NarrowButton
+            :action="() => toggleLayout(Layout.Grid)"
+            iconStyle="ri-stack-line"
+            :active="currentLayout == Layout.Grid"
+            buttonStyle=" border-0"
+            activeStyle="!bg-zinc-600 text-zinc-50"
+          />
+        </div>
         <NarrowButton iconStyle="ri-filter-3-line" />
         <NarrowButton iconStyle="ri-checkbox-multiple-blank-line" />
-        <NarrowButton iconStyle="ri-arrow-up-down-line" />
-        <NarrowButton
-          :iconStyle="currentLayout == Layout.Grid ? 'ri-table-line' : 'ri-stack-line'"
-          :action="toggleLayout"
-        />
+        <NarrowButton iconStyle="ri-arrow-up-down-line" :action="bookStore.sortBook" />
       </div>
       <NarrowButton
         iconStyle="ri-add-line"
         :action="bookStore.addBook"
         label="Add"
-        buttonStyle="bg-apathetic-500 hover:!bg-apathetic-500/90 text-zinc-50 pr-1.5"
+        buttonStyle="bg-apathetic-500 hover:!bg-apathetic-500/90 text-zinc-50 pr-1.5 hover:border-apathetic-500 border-apathetic-500"
       />
     </div>
-    <!-- <div class="box"></div> -->
-    <component
-      :is="currentLayout == Layout.Grid ? GridLayout : TableLayout"
-      :bookCoverList="bookCoverList"
-    ></component>
+
+    <keep-alive>
+      <component
+        :is="currentLayout == Layout.Grid ? GridLayout : TableLayout"
+        :bookCoverList="bookCoverList"
+      ></component>
+    </keep-alive>
   </div>
 </template>
 <style>
