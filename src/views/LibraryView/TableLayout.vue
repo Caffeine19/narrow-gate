@@ -10,7 +10,7 @@ const bookStore = useBookStore()
 </script>
 <template>
   <div class="custom-scrollbar p-8 overflow-x-auto">
-    <table class="">
+    <table class="w-full">
       <thead class="border-zinc-700 bg-zinc-950 text-zinc-200 border">
         <th class="px-2 py-1.5 border-r border-zinc-700">
           <button class="w-7 h-7 flex items-center justify-center">
@@ -73,7 +73,7 @@ const bookStore = useBookStore()
           class="border-zinc-700 group transition-colors border border-t-0"
           :class="
             bookCover.picked
-              ? 'bg-indigo-400/10 text-indigo-300'
+              ? 'bg-apathetic-400/10 text-apathetic-300'
               : ' hover:text-zinc-50 group hover:bg-zinc-800 text-zinc-100'
           "
         >

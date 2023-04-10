@@ -29,7 +29,6 @@ const toggleLayout = () => {
       style="-webkit-app-region: drag"
       class="bg-zinc-950/60 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
     >
-      <NarrowButton iconStyle="ri-add-box-line" :action="bookStore.addBook" />
       <div class="flex items-center space-x-3">
         <NarrowButton iconStyle="ri-filter-3-line" />
         <NarrowButton iconStyle="ri-checkbox-multiple-blank-line" />
@@ -39,6 +38,12 @@ const toggleLayout = () => {
           :action="toggleLayout"
         />
       </div>
+      <NarrowButton
+        iconStyle="ri-add-line"
+        :action="bookStore.addBook"
+        label="Add"
+        buttonStyle="bg-apathetic-500 hover:!bg-apathetic-500/90 text-zinc-50 pr-1.5"
+      />
     </div>
     <!-- <div class="box"></div> -->
     <component
