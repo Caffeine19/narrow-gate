@@ -73,7 +73,7 @@ const bookStore = useBookStore()
           class="border-zinc-700 group transition-colors border border-t-0"
           :class="
             bookCover.picked
-              ? 'bg-apathetic-400/10 text-apathetic-300'
+              ? 'bg-apathetic-300/10 text-apathetic-400'
               : ' hover:text-zinc-50 group hover:bg-zinc-800 text-zinc-100'
           "
         >

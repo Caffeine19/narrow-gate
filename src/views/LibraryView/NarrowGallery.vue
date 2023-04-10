@@ -54,7 +54,7 @@ const toggleLayout = (newVal: Layout) => {
         iconStyle="ri-add-line"
         :action="bookStore.addBook"
         label="Add"
-        buttonStyle="bg-apathetic-500 hover:!bg-apathetic-500/90 text-zinc-50 pr-1.5 hover:border-apathetic-500 border-apathetic-500"
+        buttonStyle="bg-apathetic-600 hover:!bg-apathetic-600/90 text-apathetic-50 pr-1.5 hover:!border-apathetic-600 border-apathetic-600"
       />
     </div>
 
