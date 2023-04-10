@@ -32,12 +32,17 @@ export interface IPlatform {
   (callback: IPlatformCallback): void
 }
 
+export interface DeleteBook {
+  (idList: Book['id'][]): void
+}
+
 export interface IElectronAPI {
   readBookFile: ReadBookFile
   createBook: CreateBook
   getBookCoverList: GetBookCoverList
   getBookContent: GetBookContent
   platform: IPlatform
+  deleteBook: DeleteBook
 }
 
 declare global {

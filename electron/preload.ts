@@ -42,5 +42,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getBookCoverList: () => ipcRenderer.invoke('getBookCoverList'),
   getBookContent: (id: Book['id']) => ipcRenderer.invoke('getBookContent', id),
   platform: (callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) =>
-    ipcRenderer.on('platform', callback)
+    ipcRenderer.on('platform', callback),
+  deleteBook: (idList: Book['id'][]) => ipcRenderer.send('deleteBook', idList)
 })

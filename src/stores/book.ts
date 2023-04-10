@@ -82,6 +82,10 @@ export const useBookStore = defineStore('book', () => {
     bookCoverList[index].picked = !bookCoverList[index].picked
   }
 
+  const deleteBook = (idList: BookCover['id'][]) => {
+    window.electronAPI.deleteBook(idList)
+  }
+
   const openedBook = ref<OpenedBook>()
   const setOpenedBook = async (cover: BookCover) => {
     openedBook.value = { id: cover.id, title: cover.title, creator: cover.creator }

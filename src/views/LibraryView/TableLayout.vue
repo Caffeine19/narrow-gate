@@ -73,7 +73,7 @@ const bookStore = useBookStore()
           class="border-zinc-700 group transition-colors border border-t-0"
           :class="
             bookCover.picked
-              ? 'bg-indigo-400/10 text-indigo-300'
+              ? 'bg-apathetic-800/10 text-apathetic-300'
               : ' hover:text-zinc-50 group hover:bg-zinc-800 text-zinc-100'
           "
         >
@@ -81,7 +81,7 @@ const bookStore = useBookStore()
             <button
               class="w-7 h-7 text-zinc-400/60 flex items-center justify-center transition-colors"
               @click="() => bookStore.pickBook(bookCover.id)"
-              :class="bookCover.picked ? 'text-indigo-300' : 'group-hover:text-zinc-50'"
+              :class="bookCover.picked ? 'text-apathetic-300' : 'group-hover:text-zinc-50'"
             >
               <i
                 style="font-size: 24px"
