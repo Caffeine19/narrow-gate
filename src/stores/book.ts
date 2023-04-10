@@ -5,6 +5,8 @@ import ePub, { Book, Rendition } from 'epubjs'
 
 import type { BookCover, OpenedBook } from '@/types/book'
 
+import type { Book as IBook } from '@prisma/client'
+
 export const useBookStore = defineStore('book', () => {
   let book: Book
 
@@ -66,16 +68,16 @@ export const useBookStore = defineStore('book', () => {
   const openedBook = ref<OpenedBook>()
   const setOpenedBook = async (cover: BookCover) => {
     openedBook.value = { id: cover.id, title: cover.title, creator: cover.creator }
+  }
 
-    const bookContent = await window.electronAPI.getBookContent(cover.id)
+  let rendition: Rendition
+  const openBook = async (id: IBook['id']) => {
+    const bookContent = await window.electronAPI.getBookContent(id)
     console.log('🚀 ~ file: book.ts:71 ~ setOpenedBook ~ bookContent:', bookContent)
 
     book = ePub()
     await book.open(bookContent)
-  }
 
-  let rendition: Rendition
-  const openBook = () => {
     console.log('🚀 ~ file: book.ts:107 ~ useBookStore ~ book:', book)
     rendition = book.renderTo('viewer', {
       width: '100%',

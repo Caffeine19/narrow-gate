@@ -4,7 +4,7 @@ import { useBookStore } from '@/stores/book'
 import { useOSStore } from '@/stores/os'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const { platform } = storeToRefs(useOSStore())
 
@@ -16,7 +16,8 @@ const goLibrary = () => {
 const bookStore = useBookStore()
 const { openedBook } = storeToRefs(bookStore)
 onMounted(() => {
-  bookStore.openBook()
+  const route = useRoute()
+  if (route.query.id) bookStore.openBook(Number(route.query.id))
 })
 </script>
 <template>
