@@ -18,7 +18,7 @@ const goReading = (cover: BookCover) => {
 </script>
 <template>
   <div class="p-8 overflow-hidden">
-    <div class="custom-scrollbar border-zinc-700 container overflow-x-auto overflow-y-auto border">
+    <div class="custom-scrollbar overflow-x-auto overflow-y-auto">
       <table>
         <thead>
           <th class="px-2 py-1.5">
@@ -131,12 +131,17 @@ const goReading = (cover: BookCover) => {
                 <NarrowButton
                   icon-style="ri-play-line"
                   :action="() => goReading(bookCover)"
-                  button-style="!bg-careless-400/10 !text-careless-400 hover:!text-careless-400 hover:!bg-careless-400/20 hover:!border-careless-400/60"
+                  button-style="!bg-careless-400/20 !text-careless-400 hover:!text-careless-400 hover:!bg-careless-400/20 hover:!border-careless-400/60"
+                />
+                <NarrowButton
+                  icon-style="ri-ball-pen-line"
+                  :action="() => bookStore.deleteBook([bookCover.id])"
+                  button-style="!bg-tea-400/20 !text-tea-400 hover:!text-tea-400  hover:!bg-tea-400/20 hover:!border-tea-400/60"
                 />
                 <NarrowButton
                   icon-style="ri-delete-bin-line"
                   :action="() => bookStore.deleteBook([bookCover.id])"
-                  button-style="!bg-apathetic-400/10 !text-apathetic-400 hover:!text-apathetic-400  hover:!bg-apathetic-400/20 hover:!border-apathetic-400/60"
+                  button-style="!bg-passion-400/20 !text-passion-400 hover:!text-passion-400  hover:!bg-passion-400/20 hover:!border-passion-400/60"
                 />
               </div>
             </td>
