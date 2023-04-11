@@ -65,9 +65,10 @@ export const getBookContent = async (id: Book['id']) => {
 }
 
 export const deleteBook = async (idList: Book['id'][]) => {
+  console.log('🚀 ~ file: main.ts:68 ~ deleteBook ~ idList:', idList)
   const task: any[] = []
   idList.forEach((id) => {
-    task.push(() => prisma.book.delete({ where: { id } }))
+    task.push(prisma.book.delete({ where: { id } }))
   })
 
   const res = await Promise.all(task)

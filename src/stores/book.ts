@@ -11,7 +11,7 @@ import type { Book as IBook } from '@prisma/client'
 export const useBookStore = defineStore('book', () => {
   let book: Book
 
-  const bookCoverList = reactive<BookCover[]>([])
+  const bookCoverList = ref<BookCover[]>([])
   const addBook = async () => {
     book = ePub()
     const bookRes = await window.electronAPI.readBookFile()
@@ -41,7 +41,7 @@ export const useBookStore = defineStore('book', () => {
       )
       console.log('🚀 ~ file: book.ts:35 ~ addBook ~ createdBook:', createdBook)
 
-      bookCoverList.push({
+      bookCoverList.value.push({
         id: createdBook.id,
         title: metadata.title,
         creator: metadata.creator,
@@ -67,9 +67,9 @@ export const useBookStore = defineStore('book', () => {
     try {
       const res = await window.electronAPI.getBookCoverList()
       console.log('🚀 ~ file: book.ts:56 ~ getBookCoverList ~ res:', res)
-      bookCoverList.length = 0
+      bookCoverList.value.length = 0
       res.forEach((bookCover) => {
-        bookCoverList.push(bookCover)
+        bookCoverList.value.push(bookCover)
       })
     } catch (error) {
       console.log('🚀 ~ file: book.ts:47 ~ getBookList ~ error:', error)
@@ -77,36 +77,41 @@ export const useBookStore = defineStore('book', () => {
   }
 
   const pickBook = (id: BookCover['id']) => {
-    const index = bookCoverList.findIndex((bookCover) => {
+    const index = bookCoverList.value.findIndex((bookCover) => {
       return bookCover.id == id
     })
-    bookCoverList[index].picked = !bookCoverList[index].picked
+    bookCoverList.value[index].picked = !bookCoverList.value[index].picked
   }
 
   const deleteBook = (idList: BookCover['id'][]) => {
+    console.log('🚀 ~ file: book.ts:87 ~ deleteBook ~ idList:', idList)
     window.electronAPI.deleteBook(idList)
+
+    bookCoverList.value = bookCoverList.value.filter((book) => {
+      return !idList.includes(book.id)
+    })
   }
   const sortBook = (params: BookSortParams) => {
     console.log('🚀 ~ file: book.ts:90 ~ sortBook ~ params:', params)
     // const array = ['刘一', '陈二', '张三', '李四', '王五', '赵六', '孙七', '周八', '吴九', '郑十']
     switch (params) {
       case 'title':
-        bookCoverList.sort(function (a, b) {
+        bookCoverList.value.sort(function (a, b) {
           return a.title.localeCompare(b.title, 'zh-Hans-CN', { sensitivity: 'accent' })
         })
         break
       case 'creator':
-        bookCoverList.sort(function (a, b) {
+        bookCoverList.value.sort(function (a, b) {
           return a.creator.localeCompare(b.creator, 'zh-Hans-CN', { sensitivity: 'accent' })
         })
         break
       case 'size':
-        bookCoverList.sort(function (a, b) {
+        bookCoverList.value.sort(function (a, b) {
           return a.size - b.size
         })
         break
       case 'pubdate':
-        bookCoverList.sort(function (a, b) {
+        bookCoverList.value.sort(function (a, b) {
           return a.size - b.size
         })
         break

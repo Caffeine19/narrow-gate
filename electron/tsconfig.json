@@ -5,5 +5,8 @@
     "outDir": "../dist",
     "moduleResolution": "node"
   },
-  "include": ["./*.ts"]
+  "include": [
+    "../electron/*.ts",
+    "../data/*.ts",
+  ]
 }
