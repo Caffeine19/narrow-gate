@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, onMounted } from 'vue'
+import { onActivated, onBeforeMount, onMounted } from 'vue'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 
@@ -18,10 +18,14 @@ const goLibrary = () => {
 
 const bookStore = useBookStore()
 const { openedBook } = storeToRefs(bookStore)
-onMounted(() => {
+
+onActivated(() => {
   const route = useRoute()
   if (route.query.id) bookStore.openBook(Number(route.query.id))
 })
+// onMounted(() => {
+
+// })
 
 const onKeyDown = (event: KeyboardEvent) => {
   // console.log('🚀 ~ file: ReadingView.vue:24 ~ onKeyDown ~ event:', event)

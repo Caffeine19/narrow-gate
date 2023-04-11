@@ -14,6 +14,10 @@ onMounted(() => {
 
 <template>
   <div class="flex w-screen h-screen overflow-hidden">
-    <RouterView></RouterView>
+    <router-view v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
   </div>
 </template>

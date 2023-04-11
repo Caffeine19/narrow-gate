@@ -125,6 +125,7 @@ export const useBookStore = defineStore('book', () => {
 
   let rendition: Rendition
   const openBook = async (id: IBook['id']) => {
+    rendition?.destroy()
     const bookContent = await window.electronAPI.getBookContent(id)
     console.log('🚀 ~ file: book.ts:71 ~ setOpenedBook ~ bookContent:', bookContent)
 

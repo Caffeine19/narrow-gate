@@ -4,10 +4,17 @@ import type { PropType } from 'vue'
 import type { BookCover } from '@/types/book'
 import { useBookStore } from '@/stores/book'
 import NarrowButton from '@/components/NarrowButton.vue'
+import { useRouter } from 'vue-router'
 
 defineProps({ bookCoverList: Array as PropType<BookCover[]> })
 
 const bookStore = useBookStore()
+
+const router = useRouter()
+const goReading = (cover: BookCover) => {
+  bookStore.setOpenedBook(cover)
+  router.push({ name: 'reading', query: { id: cover.id } })
+}
 </script>
 <template>
   <div class="p-8 overflow-hidden">
@@ -123,6 +130,7 @@ const bookStore = useBookStore()
               <div class="flex items-center space-x-3">
                 <NarrowButton
                   icon-style="ri-play-line"
+                  :action="() => goReading(bookCover)"
                   button-style="bg-careless-400/10 text-careless-400 hover:text-careless-400  hover:bg-careless-400/20 hover:border-careless-400/60"
                 />
                 <NarrowButton
