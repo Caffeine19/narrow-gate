@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, type PropType, reactive, watch } from 'vue'
+import { ref, type PropType, reactive } from 'vue'
 import NarrowButton from './NarrowButton.vue'
 import type { MenuItem } from '@/types/menuItem'
-const props = defineProps({
+defineProps({
   menuItemList: Array as PropType<MenuItem[]>,
   visible: { type: Boolean, defaults: false }
 })
@@ -60,7 +60,7 @@ const calMenuPosition = (event: MouseEvent) => {
 <style>
 .zoom-enter-active,
 .zoom-leave-active {
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 .zoom-enter-from,
 .zoom-leave-to {

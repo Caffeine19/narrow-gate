@@ -89,7 +89,10 @@ const onSortMenuSelect = (index: number) => {
         <NarrowButton iconStyle="ri-checkbox-multiple-blank-line" />
 
         <DropMenu :menuItemList="sortMenu" :visible="sortMenuVisible" @select="onSortMenuSelect">
-          <NarrowButton iconStyle="ri-arrow-up-down-line" :action="() => toggleSortMenu(true)" />
+          <NarrowButton
+            iconStyle="ri-arrow-up-down-line"
+            :action="() => toggleSortMenu(!sortMenuVisible)"
+          />
         </DropMenu>
       </div>
       <NarrowButton
