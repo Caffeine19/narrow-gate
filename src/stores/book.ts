@@ -85,6 +85,13 @@ export const useBookStore = defineStore('book', () => {
   const deleteBook = (idList: BookCover['id'][]) => {
     window.electronAPI.deleteBook(idList)
   }
+  const sortBook = () => {
+    // const array = ['刘一', '陈二', '张三', '李四', '王五', '赵六', '孙七', '周八', '吴九', '郑十']
+
+    bookCoverList.sort(function (a, b) {
+      return a.title.localeCompare(b.title, 'zh-Hans-CN', { sensitivity: 'accent' })
+    })
+  }
 
   const openedBook = ref<OpenedBook>()
   const setOpenedBook = async (cover: BookCover) => {
@@ -160,6 +167,8 @@ export const useBookStore = defineStore('book', () => {
     setOpenedBook,
     nextPage,
     prevPage,
-    getBookCoverList
+    getBookCoverList,
+    sortBook,
+    deleteBook
   }
 })

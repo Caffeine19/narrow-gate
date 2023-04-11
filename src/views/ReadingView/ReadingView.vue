@@ -52,7 +52,7 @@ onBeforeMount(() => {
     <div
       class="bg-zinc-950 border-zinc-800 grid items-center px-8 py-3 border-b"
       style="grid-template-columns: 1fr min-content 1fr"
-      :class="platform == 'darwin' ? 'pt-24' : ''"
+      :class="platform == 'darwin' ? 'pl-24' : ''"
     >
       <NarrowButton
         iconStyle="ri-logout-circle-line"
