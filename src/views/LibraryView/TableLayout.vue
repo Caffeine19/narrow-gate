@@ -11,7 +11,7 @@ const bookStore = useBookStore()
 <template>
   <div class="custom-scrollbar p-8 overflow-x-auto">
     <table class="w-full">
-      <thead class="border-zinc-700 bg-zinc-950 text-zinc-200 border">
+      <thead class="border-zinc-700 bg-zinc-950 text-zinc-400 border">
         <th class="px-2 py-1.5 border-r border-zinc-700">
           <button class="w-7 h-7 flex items-center justify-center">
             <i class="ri-checkbox-indeterminate-line" style="font-size: 24px"></i>
@@ -79,9 +79,13 @@ const bookStore = useBookStore()
         >
           <th class="px-2 py-1.5 border-r border-zinc-700">
             <button
-              class="w-7 h-7 text-zinc-400/60 flex items-center justify-center transition-colors"
+              class="w-7 h-7 flex items-center justify-center transition-colors"
               @click="() => bookStore.pickBook(bookCover.id)"
-              :class="bookCover.picked ? 'text-apathetic-300' : 'group-hover:text-zinc-50'"
+              :class="
+                bookCover.picked
+                  ? 'text-apathetic-400'
+                  : 'group-hover:text-zinc-50 text-zinc-400/60'
+              "
             >
               <i
                 style="font-size: 24px"

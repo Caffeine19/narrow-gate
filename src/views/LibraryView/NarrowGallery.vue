@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useBookStore } from '@/stores/book'
@@ -7,6 +7,9 @@ import { useBookStore } from '@/stores/book'
 import NarrowButton from '@/components/NarrowButton.vue'
 import GridLayout from './GridLayout.vue'
 import TableLayout from './TableLayout.vue'
+import DropMenu from '@/components/DropMenu.vue'
+
+import type { MenuItem } from '@/types/menuItem'
 
 const bookStore = useBookStore()
 const { bookCoverList } = storeToRefs(bookStore)
@@ -21,6 +24,42 @@ const enum Layout {
 const currentLayout = ref(Layout.Grid)
 const toggleLayout = (newVal: Layout) => {
   currentLayout.value = newVal
+}
+
+const sortMenu = reactive<MenuItem[]>([
+  {
+    iconStyle: 'ri-attachment-line',
+    label: 'title',
+    value: 'title',
+    action: () => console.log('')
+  },
+  {
+    iconStyle: 'ri-user-smile-line',
+    label: 'creator',
+    value: 'creator',
+    action: () => console.log('')
+  },
+  {
+    iconStyle: 'ri-file-zip-line',
+    label: 'size',
+    value: 'size',
+    action: () => console.log('')
+  },
+  {
+    iconStyle: 'ri-calendar-check-line',
+    label: 'pubdate',
+    value: 'pubdate',
+    action: () => console.log('')
+  }
+])
+const sortMenuVisible = ref(false)
+const toggleSortMenu = (flag: boolean) => {
+  sortMenuVisible.value = flag
+}
+const onSortMenuSelect = (index: number) => {
+  console.log('🚀 ~ file: NarrowGallery.vue:59 ~ onSortMenuSelect ~ index:', index)
+  bookStore.sortBook(sortMenu[index].value)
+  toggleSortMenu(false)
 }
 </script>
 <template>
@@ -48,13 +87,16 @@ const toggleLayout = (newVal: Layout) => {
         </div>
         <NarrowButton iconStyle="ri-filter-3-line" />
         <NarrowButton iconStyle="ri-checkbox-multiple-blank-line" />
-        <NarrowButton iconStyle="ri-arrow-up-down-line" :action="bookStore.sortBook" />
+
+        <DropMenu :menuItemList="sortMenu" :visible="sortMenuVisible" @select="onSortMenuSelect">
+          <NarrowButton iconStyle="ri-arrow-up-down-line" :action="() => toggleSortMenu(true)" />
+        </DropMenu>
       </div>
       <NarrowButton
         iconStyle="ri-add-line"
         :action="bookStore.addBook"
         label="Add"
-        buttonStyle="bg-apathetic-600 hover:!bg-apathetic-600/90 text-apathetic-50 pr-1.5 hover:!border-apathetic-600 border-apathetic-600"
+        buttonStyle="bg-apathetic-600 hover:!bg-apathetic-600/90 !text-apathetic-50 pr-1.5 hover:!border-apathetic-600 border-apathetic-600 hover:!text-apathetic-50"
       />
     </div>
 
