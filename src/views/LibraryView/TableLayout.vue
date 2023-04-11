@@ -131,12 +131,12 @@ const goReading = (cover: BookCover) => {
                 <NarrowButton
                   icon-style="ri-play-line"
                   :action="() => goReading(bookCover)"
-                  button-style="bg-careless-400/10 text-careless-400 hover:text-careless-400  hover:bg-careless-400/20 hover:border-careless-400/60"
+                  button-style="!bg-careless-400/10 !text-careless-400 hover:!text-careless-400 hover:!bg-careless-400/20 hover:!border-careless-400/60"
                 />
                 <NarrowButton
                   icon-style="ri-delete-bin-line"
                   :action="() => bookStore.deleteBook([bookCover.id])"
-                  button-style="bg-apathetic-400/10 !text-apathetic-400 hover:text-apathetic-400  hover:bg-apathetic-400/20 hover:border-apathetic-400/60"
+                  button-style="!bg-apathetic-400/10 !text-apathetic-400 hover:!text-apathetic-400  hover:!bg-apathetic-400/20 hover:!border-apathetic-400/60"
                 />
               </div>
             </td>
