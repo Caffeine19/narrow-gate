@@ -1,13 +1,14 @@
 import { computed, reactive, ref, toRaw } from 'vue'
 import { defineStore } from 'pinia'
 
-import ePub, { Book, Rendition } from 'epubjs'
+import ePub, { Book, Rendition, type NavItem } from 'epubjs'
 
 import type { BookCover, OpenedBook } from '@/types/book'
 import type { BookSortParams } from '@/types/bookSortParams'
 
 import type { Book as IBook } from '@prisma/client'
 import dayjs from 'dayjs'
+import type Section from 'epubjs/types/section'
 
 export const useBookStore = defineStore('book', () => {
   let book: Book
@@ -175,6 +176,20 @@ export const useBookStore = defineStore('book', () => {
     openedBook.value = { id: cover.id, title: cover.title, creator: cover.creator }
   }
 
+  const chapterList = ref<NavItem[]>([])
+  const expandedChapterList = ref<NavItem['id'][]>([])
+  const expandChapter = (id: NavItem['id']) => {
+    expandedChapterList.value?.push(id)
+  }
+  const collapseChapter = (id: NavItem['id']) => {
+    expandedChapterList.value = expandedChapterList.value.filter((expandedId) => expandedId !== id)
+  }
+
+  const currentChapterHref = ref<NavItem['href']>()
+
+  const goChapter = (href: NavItem['href']) => {
+    rendition.display(href)
+  }
   let rendition: Rendition
   const openBook = async (id: IBook['id']) => {
     rendition?.destroy()
@@ -184,8 +199,8 @@ export const useBookStore = defineStore('book', () => {
     book = ePub()
     await book.open(bookContent)
 
-    book.loaded.navigation.then((toc) => {
-      console.log('🚀 ~ file: book.ts:188 ~ book.loaded.navigation.then ~ toc:', toc)
+    book.loaded.navigation.then((navigation) => {
+      chapterList.value = navigation.toc
     })
 
     console.log('🚀 ~ file: book.ts:107 ~ useBookStore ~ book:', book)
@@ -229,7 +244,10 @@ export const useBookStore = defineStore('book', () => {
       }
     })
 
-    rendition.display()
+    await rendition.display()
+    rendition.on('rendered', (section: Section) => {
+      currentChapterHref.value = section.href
+    })
   }
 
   const nextPage = () => {
@@ -240,6 +258,7 @@ export const useBookStore = defineStore('book', () => {
     console.log('🚀 ~ file: book.ts:129 ~ prevPage ~ prevPage:', prevPage)
     rendition.prev()
   }
+
   return {
     bookCoverList,
     addBook,
@@ -260,6 +279,12 @@ export const useBookStore = defineStore('book', () => {
     checkedBookList,
     uncheckAllBook,
     checkAllBook,
-    allBookChecked
+    allBookChecked,
+    chapterList,
+    expandedChapterList,
+    expandChapter,
+    collapseChapter,
+    currentChapterHref,
+    goChapter
   }
 })

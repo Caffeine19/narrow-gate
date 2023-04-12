@@ -54,12 +54,12 @@ const onDeleteButtonClick = () => {
         />
       </div>
     </div>
-    <div class="xl:flex-col xl:space-y-8 xl:space-x-0 flex flex-row p-8 space-x-8">
-      <div class="basis-1/3 xl:basis-auto overflow-hidden">
+    <div class="md:flex-col md:space-y-8 md:space-x-0 flex flex-row p-8 space-x-8">
+      <div class="basis-1/3 md:basis-auto overflow-hidden">
         <img :src="selectedBook?.bookCover" alt="" class="rounded" />
       </div>
 
-      <div class="basis-2/3 xl:basis-auto space-y-6">
+      <div class="basis-2/3 md:basis-auto space-y-6">
         <div class="space-y-2.5">
           <p class="text-zinc-50 text-2xl font-semibold">{{ selectedBook?.title }}</p>
           <p class="text-zinc-200 text-xl font-medium">{{ selectedBook?.creator }}</p>

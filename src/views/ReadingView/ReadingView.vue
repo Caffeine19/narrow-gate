@@ -2,6 +2,7 @@
 import { onActivated, onBeforeMount, onMounted } from 'vue'
 
 import NarrowButton from '@/components/NarrowButton.vue'
+import ChapterNavigator from './ChapterNavigator.vue'
 
 import { storeToRefs } from 'pinia'
 import { useBookStore } from '@/stores/book'
@@ -23,9 +24,6 @@ onActivated(() => {
   const route = useRoute()
   if (route.query.id) bookStore.openBook(Number(route.query.id))
 })
-// onMounted(() => {
-
-// })
 
 const onKeyDown = (event: KeyboardEvent) => {
   // console.log('🚀 ~ file: ReadingView.vue:24 ~ onKeyDown ~ event:', event)
@@ -74,7 +72,11 @@ onBeforeMount(() => {
 
       <NarrowButton iconStyle="ri-equalizer-line" class="justify-self-end" />
     </div>
-    <div class="grow text-slate-50 flex justify-between" style="-webkit-app-region: no-drag">
+    <div
+      class="grow text-slate-50 relative flex justify-between"
+      style="-webkit-app-region: no-drag"
+    >
+      <ChapterNavigator />
       <button
         @click="bookStore.prevPage"
         class="text-zinc-400 hover:text-zinc-50 hover:bg-zinc-50/5 shrink-0 p-2 transition-colors"
