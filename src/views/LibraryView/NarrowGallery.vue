@@ -88,7 +88,7 @@ const { isBookSorted } = storeToRefs(bookStore)
 <template>
   <div class="custom-scrollbar relative overflow-y-auto">
     <div
-      class="bg-zinc-950/60 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
+      class="bg-zinc-950/80 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
       style="-webkit-app-region: drag"
     >
       <div class="flex items-center space-x-3">

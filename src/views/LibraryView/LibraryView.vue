@@ -9,8 +9,11 @@ const { openingDetail } = storeToRefs(useBookStore())
 </script>
 <template>
   <NarrowSider />
-  <div class="grow flex overflow-hidden" style="-webkit-app-region: no-drag">
+  <div class="grow relative flex overflow-hidden" style="-webkit-app-region: no-drag">
     <NarrowGallery class="basis-7/12 grow overflow-hidden" />
-    <NarrowDetail class="basis-4/12 max-w-md overflow-hidden" v-if="openingDetail" />
+    <NarrowDetail
+      class="xl:basis-4/12 xl:max-w-md xl:relative absolute bottom-0 xl:z-0 z-10 overflow-hidden max-h-[50%] xl:max-h-full w-full"
+      v-if="openingDetail"
+    />
   </div>
 </template>
