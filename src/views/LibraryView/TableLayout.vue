@@ -181,12 +181,12 @@ table {
 }
 
 thead {
-  @apply border-zinc-700 bg-zinc-950 text-zinc-400 border;
+  @apply border-zinc-700 bg-zinc-950 text-zinc-400;
 }
 
 th,
 td {
-  @apply border-zinc-700 border;
+  @apply border-zinc-700 border-t border-l;
 }
 
 td:first-child,
@@ -199,5 +199,23 @@ td:last-child,
 th:last-child {
   z-index: 5;
   @apply bg-zinc-950/60 backdrop-blur-xl sticky right-0;
+}
+
+tbody tr:last-child td {
+  @apply border-b;
+}
+tr td:last-child,
+td:first-child {
+  @apply border-r;
+}
+tr th:last-child,
+th:first-child {
+  @apply border-r;
+}
+tbody tr td:nth-child(2) {
+  @apply border-l-0;
+}
+th:nth-child(2) {
+  @apply border-l-0;
 }
 </style>
