@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 
+import { useRouter } from 'vue-router'
+
+import dayjs from 'dayjs'
+
 import { useBookStore } from '@/stores/book'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 import type { BookCover } from '@/types/book'
-import { useRouter } from 'vue-router'
 
 const bookStore = useBookStore()
 const { selectedBook } = storeToRefs(bookStore)
@@ -80,7 +83,7 @@ const onDeleteButtonClick = () => {
             <span class="flex items-center space-x-3">
               <i class="ri-calendar-check-line" style="font-size: 20px"></i><span>pubdate:</span>
             </span>
-            <span>{{ selectedBook?.pubdate }}</span>
+            <span>{{ dayjs(selectedBook?.pubdate).format('YYYY-MM-DD') }}</span>
           </li>
           <li class="flex items-start justify-between space-x-3">
             <span class="flex items-center space-x-3">
@@ -95,20 +98,24 @@ const onDeleteButtonClick = () => {
             <span class="flex items-center space-x-3">
               <i class="ri-file-zip-line" style="font-size: 20px"></i><span>size:</span>
             </span>
-            <span>{{ selectedBook?.size }}</span>
+            <span>{{ (selectedBook?.size || 1 / 1024).toFixed(2) }}KB</span>
           </li>
           <li class="flex items-start justify-between space-x-3">
             <span class="flex items-center space-x-3">
               <i class="ri-inbox-archive-line" style="font-size: 20px"></i><span>addedDate:</span>
             </span>
-            <span>{{ selectedBook?.addedDate }}</span>
+            <span>{{ dayjs(selectedBook?.addedDate).format('YYYY-MM-DD') }}</span>
           </li>
           <li class="flex items-start justify-between space-x-3">
             <span class="flex items-center space-x-3">
               <i class="ri-folder-open-line" style="font-size: 20px"></i
               ><span>lastOpenedDate:</span>
             </span>
-            <span>{{ selectedBook?.lastOpenedDate || 'not opened yet' }}</span>
+            <span>{{
+              selectedBook?.lastOpenedDate
+                ? dayjs(selectedBook.lastOpenedDate).format('YYYY-MM-DD')
+                : 'not opened yet'
+            }}</span>
           </li>
         </ul>
       </div>

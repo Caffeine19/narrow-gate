@@ -1,4 +1,4 @@
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import ePub, { Book, Rendition } from 'epubjs'
@@ -7,6 +7,7 @@ import type { BookCover, OpenedBook } from '@/types/book'
 import type { BookSortParams } from '@/types/bookSortParams'
 
 import type { Book as IBook } from '@prisma/client'
+import dayjs from 'dayjs'
 
 export const useBookStore = defineStore('book', () => {
   let book: Book
@@ -94,27 +95,28 @@ export const useBookStore = defineStore('book', () => {
       return !idList.includes(book.id)
     })
   }
+
   const sortBook = (params: BookSortParams) => {
     console.log('🚀 ~ file: book.ts:90 ~ sortBook ~ params:', params)
     switch (params) {
       case 'title':
-        bookCoverList.value.sort(function (a, b) {
+        bookCoverList.value.sort((a, b) => {
           return a.title.localeCompare(b.title, 'zh-Hans-CN', { sensitivity: 'accent' })
         })
         break
       case 'creator':
-        bookCoverList.value.sort(function (a, b) {
+        bookCoverList.value.sort((a, b) => {
           return a.creator.localeCompare(b.creator, 'zh-Hans-CN', { sensitivity: 'accent' })
         })
         break
       case 'size':
-        bookCoverList.value.sort(function (a, b) {
+        bookCoverList.value.sort((a, b) => {
           return a.size - b.size
         })
         break
       case 'pubdate':
-        bookCoverList.value.sort(function (a, b) {
-          return a.size - b.size
+        bookCoverList.value.sort((a, b) => {
+          return dayjs(a.pubdate).valueOf() - dayjs(b.pubdate).valueOf()
         })
         break
     }

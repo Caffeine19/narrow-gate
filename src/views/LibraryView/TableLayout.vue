@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
-import type { BookCover } from '@/types/book'
-import { useBookStore } from '@/stores/book'
-import NarrowButton from '@/components/NarrowButton.vue'
 import { useRouter } from 'vue-router'
+
+import dayjs from 'dayjs'
+
+import type { BookCover } from '@/types/book'
+
+import { useBookStore } from '@/stores/book'
+
+import NarrowButton from '@/components/NarrowButton.vue'
 
 defineProps({ bookCoverList: Array as PropType<BookCover[]> })
 
@@ -134,9 +139,15 @@ const goReading = (cover: BookCover) => {
             <td class="px-3 py-1.5 break-keep">
               {{ bookCover.publisher }}
             </td>
-            <td class="px-3 py-1.5">{{ bookCover.pubdate }}</td>
-            <td class="px-3 py-1.5">{{ bookCover.addedDate }}</td>
-            <td class="px-3 py-1.5">{{ bookCover.lastOpenedDate || 'not open yet' }}</td>
+            <td class="px-3 py-1.5">{{ dayjs(bookCover.pubdate).format('YYYY-MM-DD') }}</td>
+            <td class="px-3 py-1.5">{{ dayjs(bookCover.addedDate).format('YYYY-MM-DD') }}</td>
+            <td class="px-3 py-1.5">
+              {{
+                bookCover.lastOpenedDate
+                  ? dayjs(bookCover.lastOpenedDate).format('YYYY-MM-DD')
+                  : 'not open yet'
+              }}
+            </td>
             <td class="px-3 py-1.5">
               <div class="flex items-center space-x-3">
                 <NarrowButton
