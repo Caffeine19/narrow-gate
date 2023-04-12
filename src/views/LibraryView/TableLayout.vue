@@ -176,6 +176,6 @@ th:first-child {
 td:last-child,
 th:last-child {
   z-index: 5;
-  @apply bg-zinc-950 sticky right-0;
+  @apply bg-zinc-950/60 backdrop-blur-xl sticky right-0;
 }
 </style>

@@ -118,6 +118,11 @@ export const useBookStore = defineStore('book', () => {
     }
   }
 
+  const selectedBook = ref<BookCover>()
+  const setSelectedBook = (book: BookCover) => {
+    selectedBook.value = book
+  }
+
   const openedBook = ref<OpenedBook>()
   const setOpenedBook = async (cover: BookCover) => {
     openedBook.value = { id: cover.id, title: cover.title, creator: cover.creator }
@@ -195,6 +200,8 @@ export const useBookStore = defineStore('book', () => {
     prevPage,
     getBookCoverList,
     sortBook,
-    deleteBook
+    deleteBook,
+    selectedBook,
+    setSelectedBook
   }
 })

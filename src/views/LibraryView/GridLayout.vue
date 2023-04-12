@@ -10,8 +10,9 @@ const bookStore = useBookStore()
 
 const router = useRouter()
 const goReading = (cover: BookCover) => {
-  bookStore.setOpenedBook(cover)
-  router.push({ name: 'reading', query: { id: cover.id } })
+  // bookStore.setOpenedBook(cover)
+  // router.push({ name: 'reading', query: { id: cover.id } })
+  bookStore.setSelectedBook(cover)
 }
 
 defineProps({ bookCoverList: Array as PropType<BookCover[]> })
