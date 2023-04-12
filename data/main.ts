@@ -20,7 +20,8 @@ export const createBook = async (
   size: Book['size'],
   identifier: Book['identifier'],
   pubdate: Book['pubdate'],
-  publisher: Book['publisher']
+  publisher: Book['publisher'],
+  language: Book['language']
 ) => {
   const createdBook = await prisma.book.create({
     data: {
@@ -31,9 +32,10 @@ export const createBook = async (
       size,
       identifier,
       pubdate,
-      publisher
+      publisher,
+      language
     },
-    select: { id: true }
+    select: { id: true, lastOpenedDate: true, addedDate: true }
   })
   console.log('🚀 ~ file: script.ts:22 ~ book:', createdBook)
   return createdBook
@@ -49,7 +51,10 @@ export const getBookList = async () => {
       size: true,
       identifier: true,
       pubdate: true,
-      publisher: true
+      publisher: true,
+      language: true,
+      addedDate: true,
+      lastOpenedDate: true
     }
   })
   console.log('🚀 ~ file: main.ts:30 ~ getBookList ~ bookList:', bookList)

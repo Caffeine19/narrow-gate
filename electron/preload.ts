@@ -27,7 +27,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     size: Book['size'],
     identifier: Book['identifier'],
     pubdate: Book['pubdate'],
-    publisher: Book['publisher']
+    publisher: Book['publisher'],
+    language: Book['language']
   ) =>
     ipcRenderer.invoke('createBook', {
       title,
@@ -37,7 +38,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
       size,
       identifier,
       pubdate,
-      publisher
+      publisher,
+      language
     }),
   getBookCoverList: () => ipcRenderer.invoke('getBookCoverList'),
   getBookContent: (id: Book['id']) => ipcRenderer.invoke('getBookContent', id),

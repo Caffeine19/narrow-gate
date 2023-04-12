@@ -46,6 +46,12 @@ const goReading = (cover: BookCover) => {
           </th>
           <th>
             <div class="flex items-center px-2 py-1.5 space-x-1.5">
+              <i class="ri-global-line" style="font-size: 24px"></i>
+              <p class="text-lg font-medium">language</p>
+            </div>
+          </th>
+          <th>
+            <div class="flex items-center px-2 py-1.5 space-x-1.5">
               <i class="ri-file-zip-line" style="font-size: 24px"></i>
               <p class="text-lg font-medium">size</p>
             </div>
@@ -119,13 +125,18 @@ const goReading = (cover: BookCover) => {
             >
               {{ bookCover.creator }}
             </td>
+            <td
+              class="px-3 py-1.5 overflow-x-auto custom-scrollbar whitespace-nowrap max-w-[240px]"
+            >
+              {{ bookCover.language }}
+            </td>
             <td class="px-3 py-1.5">{{ (bookCover.size / 1024).toFixed(2) }}KB</td>
             <td class="px-3 py-1.5 break-keep">
               {{ bookCover.publisher }}
             </td>
             <td class="px-3 py-1.5">{{ bookCover.pubdate }}</td>
-            <td class="px-3 py-1.5">{{ bookCover.pubdate }}</td>
-            <td class="px-3 py-1.5">{{ bookCover.pubdate }}</td>
+            <td class="px-3 py-1.5">{{ bookCover.addedDate }}</td>
+            <td class="px-3 py-1.5">{{ bookCover.lastOpenedDate || 'not open yet' }}</td>
             <td class="px-3 py-1.5">
               <div class="flex items-center space-x-3">
                 <NarrowButton

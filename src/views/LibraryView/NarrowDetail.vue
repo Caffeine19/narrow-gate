@@ -99,16 +99,16 @@ const onDeleteButtonClick = () => {
           </li>
           <li class="flex items-start justify-between space-x-3">
             <span class="flex items-center space-x-3">
-              <i class="ri-inbox-archive-line" style="font-size: 20px"></i><span>added date:</span>
+              <i class="ri-inbox-archive-line" style="font-size: 20px"></i><span>addedDate:</span>
             </span>
-            <span>{{ selectedBook?.creator }}</span>
+            <span>{{ selectedBook?.addedDate }}</span>
           </li>
           <li class="flex items-start justify-between space-x-3">
             <span class="flex items-center space-x-3">
               <i class="ri-folder-open-line" style="font-size: 20px"></i
-              ><span>last opened date:</span>
+              ><span>lastOpenedDate:</span>
             </span>
-            <span>{{ selectedBook?.creator }}</span>
+            <span>{{ selectedBook?.lastOpenedDate || 'not opened yet' }}</span>
           </li>
         </ul>
       </div>

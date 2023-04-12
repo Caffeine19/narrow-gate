@@ -13,8 +13,9 @@ export interface CreateBook {
     size: Book['size'],
     identifier: Book['identifier'],
     pubdate: Book['pubdate'],
-    publisher: Book['publisher']
-  ): Promise<Pick<Book, 'id'>>
+    publisher: Book['publisher'],
+    language: Book['language']
+  ): Promise<Pick<Book, 'id' | 'addedDate' | 'lastOpenedDate'>>
 }
 
 export interface GetBookCoverList {

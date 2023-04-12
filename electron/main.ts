@@ -67,7 +67,8 @@ const onCreateBook: CreateBook = async (
   size,
   identifier,
   pubdate,
-  publisher
+  publisher,
+  language
 ) => {
   console.log('🚀 ~ file: main.ts:52 ~ constonCreateBook:CreateBook= ~ onCreateBook:', onCreateBook)
   try {
@@ -92,7 +93,8 @@ const onCreateBook: CreateBook = async (
       size,
       identifier,
       pubdate,
-      publisher
+      publisher,
+      language
     )
     return createdBook
   } catch (error) {
@@ -153,7 +155,8 @@ app.whenReady().then(() => {
       data.size,
       data.identifier,
       data.pubdate,
-      data.publisher
+      data.publisher,
+      data.language
     )
     return createdBook
   })

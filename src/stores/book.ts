@@ -37,7 +37,8 @@ export const useBookStore = defineStore('book', () => {
         bookRes.byteLength,
         metadata.identifier,
         metadata.pubdate,
-        metadata.publisher
+        metadata.publisher,
+        metadata.language
       )
       console.log('🚀 ~ file: book.ts:35 ~ addBook ~ createdBook:', createdBook)
 
@@ -50,7 +51,9 @@ export const useBookStore = defineStore('book', () => {
         identifier: metadata.identifier,
         pubdate: metadata.identifier,
         publisher: metadata.publisher,
-
+        language: metadata.language,
+        addedDate: createdBook.addedDate,
+        lastOpenedDate: createdBook.lastOpenedDate,
         picked: false
       })
       // .then((response) => {
@@ -93,7 +96,6 @@ export const useBookStore = defineStore('book', () => {
   }
   const sortBook = (params: BookSortParams) => {
     console.log('🚀 ~ file: book.ts:90 ~ sortBook ~ params:', params)
-    // const array = ['刘一', '陈二', '张三', '李四', '王五', '赵六', '孙七', '周八', '吴九', '郑十']
     switch (params) {
       case 'title':
         bookCoverList.value.sort(function (a, b) {

@@ -27,13 +27,16 @@ model Post {
 }
 
 model Book {
-  id            Int    @id @default(autoincrement())
-  title         String
-  creator       String
-  bookCoverPath String
-  bookFilePath  String
-  size          Int
-  identifier    String
-  pubdate       String
-  publisher     String
+  id             Int       @id @default(autoincrement())
+  title          String
+  creator        String
+  bookCoverPath  String
+  bookFilePath   String
+  size           Int
+  identifier     String
+  pubdate        String
+  publisher      String
+  language       String
+  addedDate      DateTime  @default(now())
+  lastOpenedDate DateTime?
 }
