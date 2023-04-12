@@ -89,20 +89,21 @@ const { isBookSorted } = storeToRefs(bookStore)
   <div class="custom-scrollbar relative overflow-y-auto">
     <div
       class="bg-zinc-950/60 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
+      style="-webkit-app-region: drag"
     >
       <div class="flex items-center space-x-3">
         <div class="border-zinc-700 flex p-1 space-x-1 border rounded">
           <NarrowButton
-            :action="() => toggleLayout(Layout.TABLE)"
-            iconStyle="ri-table-line"
-            :active="currentLayout == Layout.TABLE"
+            :action="() => toggleLayout(Layout.Grid)"
+            iconStyle="ri-stack-line"
+            :active="currentLayout == Layout.Grid"
             buttonStyle=" border-0"
             activeStyle="!bg-zinc-600 text-zinc-50"
           />
           <NarrowButton
-            :action="() => toggleLayout(Layout.Grid)"
-            iconStyle="ri-stack-line"
-            :active="currentLayout == Layout.Grid"
+            :action="() => toggleLayout(Layout.TABLE)"
+            iconStyle="ri-table-line"
+            :active="currentLayout == Layout.TABLE"
             buttonStyle=" border-0"
             activeStyle="!bg-zinc-600 text-zinc-50"
           />

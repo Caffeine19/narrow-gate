@@ -149,6 +149,10 @@ export const useBookStore = defineStore('book', () => {
     }
   }
 
+  const openingDetail = ref(false)
+  const toggleDetail = (flag: boolean) => {
+    openingDetail.value = flag
+  }
   const selectedBook = ref<BookCover>()
   const setSelectedBook = (book: BookCover | undefined) => {
     selectedBook.value = book
@@ -234,6 +238,8 @@ export const useBookStore = defineStore('book', () => {
     deleteBook,
     selectedBook,
     setSelectedBook,
-    isBookSorted
+    isBookSorted,
+    openingDetail,
+    toggleDetail
   }
 })

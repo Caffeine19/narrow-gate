@@ -35,7 +35,7 @@ const onDeleteButtonClick = () => {
     <div
       class="bg-zinc-950/60 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b h-[67px]"
     >
-      <NarrowButton iconStyle="ri-side-bar-fill" />
+      <NarrowButton iconStyle="ri-side-bar-fill" :action="() => bookStore.toggleDetail(false)" />
       <div class="flex items-center space-x-3">
         <NarrowButton
           icon-style="ri-play-line"
