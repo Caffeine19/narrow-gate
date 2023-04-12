@@ -50,6 +50,26 @@ const sortMenu = reactive<MenuItem[]>([
     label: 'pubdate',
     value: 'pubdate',
     action: () => console.log('')
+  },
+  {
+    iconStyle: 'ri-inbox-archive-line',
+    label: 'addedDate',
+    value: 'addedDate',
+    action: () => console.log('')
+  },
+  {
+    iconStyle: 'ri-folder-open-line',
+    label: 'lastOpenedDate',
+    value: 'lastOpenedDate',
+    action: () => console.log('')
+  },
+  {
+    iconStyle: 'ri-eraser-line',
+    label: 'clear',
+    value: 'clear',
+    action: () => console.log(''),
+    buttonStyle: '!text-passion-500/80 hover:!text-passion-500 mt-0.5 border-zinc-700 border-t',
+    activeStyle: 'bg-transparent'
   }
 ])
 const sortMenuVisible = ref(false)
@@ -58,9 +78,12 @@ const toggleSortMenu = (flag: boolean) => {
 }
 const onSortMenuSelect = (index: number) => {
   console.log('🚀 ~ file: NarrowGallery.vue:59 ~ onSortMenuSelect ~ index:', index)
+
   bookStore.sortBook(sortMenu[index].value)
   toggleSortMenu(false)
 }
+
+const { isBookSorted } = storeToRefs(bookStore)
 </script>
 <template>
   <div class="custom-scrollbar relative overflow-y-auto">
@@ -91,6 +114,11 @@ const onSortMenuSelect = (index: number) => {
           <NarrowButton
             iconStyle="ri-arrow-up-down-line"
             :action="() => toggleSortMenu(!sortMenuVisible)"
+            :class="
+              isBookSorted
+                ? '!bg-apathetic-500/10 !text-apathetic-500 hover:!border-apathetic-500/80'
+                : ''
+            "
           />
         </DropMenu>
       </div>
@@ -145,5 +173,3 @@ const onSortMenuSelect = (index: number) => {
   }
 }
 </style>
-
-50-6.25

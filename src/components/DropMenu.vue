@@ -45,10 +45,14 @@ const calMenuPosition = (event: MouseEvent) => {
             :key="index"
             :iconStyle="item.iconStyle"
             :label="item.label"
-            activeStyle="bg-apathetic-500 text-zinc-50 hover:bg-apathetic-500 hover:text-zinc-50"
+            :activeStyle="
+              item.activeStyle ||
+              'bg-apathetic-500 text-zinc-50 hover:!bg-apathetic-500/80 hover:!text-zinc-50'
+            "
             labelStyle="text-base font-normal"
             class="space-x-1.5 rounded-none px-2 py-1.5 border-0"
             :active="selectedMenuItemIndex === index"
+            :class="item.buttonStyle"
           >
           </NarrowButton>
         </div>

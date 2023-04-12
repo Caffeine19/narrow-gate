@@ -96,28 +96,55 @@ export const useBookStore = defineStore('book', () => {
     })
   }
 
+  const isBookSorted = ref(false)
   const sortBook = (params: BookSortParams) => {
     console.log('🚀 ~ file: book.ts:90 ~ sortBook ~ params:', params)
+
     switch (params) {
       case 'title':
         bookCoverList.value.sort((a, b) => {
           return a.title.localeCompare(b.title, 'zh-Hans-CN', { sensitivity: 'accent' })
         })
+        isBookSorted.value = true
         break
       case 'creator':
         bookCoverList.value.sort((a, b) => {
           return a.creator.localeCompare(b.creator, 'zh-Hans-CN', { sensitivity: 'accent' })
         })
+        isBookSorted.value = true
         break
       case 'size':
         bookCoverList.value.sort((a, b) => {
           return a.size - b.size
         })
+        isBookSorted.value = true
         break
       case 'pubdate':
         bookCoverList.value.sort((a, b) => {
           return dayjs(a.pubdate).valueOf() - dayjs(b.pubdate).valueOf()
         })
+        isBookSorted.value = true
+        break
+
+      case 'addedDate':
+        bookCoverList.value.sort((a, b) => {
+          return dayjs(a.addedDate).valueOf() - dayjs(b.addedDate).valueOf()
+        })
+        isBookSorted.value = true
+        break
+
+      case 'lastOpenedDate':
+        bookCoverList.value.sort((a, b) => {
+          return dayjs(a.lastOpenedDate).valueOf() - dayjs(b.lastOpenedDate).valueOf()
+        })
+        isBookSorted.value = true
+        break
+
+      case 'clear':
+        bookCoverList.value.sort((a, b) => {
+          return a.id - b.id
+        })
+        isBookSorted.value = false
         break
     }
   }
@@ -206,6 +233,7 @@ export const useBookStore = defineStore('book', () => {
     sortBook,
     deleteBook,
     selectedBook,
-    setSelectedBook
+    setSelectedBook,
+    isBookSorted
   }
 })

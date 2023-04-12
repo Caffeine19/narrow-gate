@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router'
 import { useBookStore } from '@/stores/book'
 
 import type { BookCover } from '@/types/book'
+import { storeToRefs } from 'pinia'
 const bookStore = useBookStore()
 
 const router = useRouter()
@@ -16,16 +17,23 @@ const goReading = (cover: BookCover) => {
 }
 
 defineProps({ bookCoverList: Array as PropType<BookCover[]> })
+
+const { selectedBook } = storeToRefs(bookStore)
 </script>
 <template>
   <div
-    class="gap-y-8 gap-x-8 justify-items-stretch 2xl:grid-cols-4 xl:grid-cols-3 grid grid-cols-2 p-8"
+    class="gap-y-8 gap-x-8 justify-items-stretch 2xl:grid-cols-4 xl:grid-cols-3 grid grid-cols-2 gap-8 p-8"
   >
     <div
       v-for="(bookCover, index) in bookCoverList"
       :key="index"
       @click="() => goReading(bookCover)"
-      class="hover:border-zinc-700 hover:bg-zinc-50/5 flex flex-col items-center justify-between p-2 space-y-3 transition-colors border border-transparent rounded cursor-pointer"
+      class="hover:border-zinc-700 hover:bg-zinc-50/5 flex flex-col items-center justify-between p-4 space-y-3 transition-colors border border-transparent rounded cursor-pointer"
+      :class="
+        bookCover.id == selectedBook?.id
+          ? 'border-apathetic-500/80 hover:!border-apathetic-500 hover:!bg-apathetic-500/5'
+          : ''
+      "
     >
       <img :src="bookCover.bookCover" alt="" class="w-[164px] h-[240px] rounded" />
       <div>
@@ -37,3 +45,8 @@ defineProps({ bookCoverList: Array as PropType<BookCover[]> })
     </div>
   </div>
 </template>
+<style>
+.card {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+</style>

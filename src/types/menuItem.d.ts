@@ -3,4 +3,6 @@ export type MenuItem = {
   label: string
   value: any
   action: Function
+  buttonStyle?: string
+  activeStyle?: string
 }
