@@ -119,7 +119,7 @@ export const useBookStore = defineStore('book', () => {
   }
 
   const selectedBook = ref<BookCover>()
-  const setSelectedBook = (book: BookCover) => {
+  const setSelectedBook = (book: BookCover | undefined) => {
     selectedBook.value = book
   }
 

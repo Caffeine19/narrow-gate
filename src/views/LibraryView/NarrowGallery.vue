@@ -65,7 +65,7 @@ const onSortMenuSelect = (index: number) => {
 <template>
   <div class="custom-scrollbar relative overflow-y-auto">
     <div
-      class="bg-zinc-950/40 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
+      class="bg-zinc-950/60 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
     >
       <div class="flex items-center space-x-3">
         <div class="border-zinc-700 flex p-1 space-x-1 border rounded">
