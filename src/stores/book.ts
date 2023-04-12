@@ -184,6 +184,10 @@ export const useBookStore = defineStore('book', () => {
     book = ePub()
     await book.open(bookContent)
 
+    book.loaded.navigation.then((toc) => {
+      console.log('🚀 ~ file: book.ts:188 ~ book.loaded.navigation.then ~ toc:', toc)
+    })
+
     console.log('🚀 ~ file: book.ts:107 ~ useBookStore ~ book:', book)
     rendition = book.renderTo('viewer', {
       width: '100%',
