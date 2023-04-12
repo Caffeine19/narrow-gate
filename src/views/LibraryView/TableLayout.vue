@@ -10,6 +10,7 @@ import type { BookCover } from '@/types/book'
 import { useBookStore } from '@/stores/book'
 
 import NarrowButton from '@/components/NarrowButton.vue'
+import { storeToRefs } from 'pinia'
 
 defineProps({ bookCoverList: Array as PropType<BookCover[]> })
 
@@ -20,6 +21,15 @@ const goReading = (cover: BookCover) => {
   bookStore.setOpenedBook(cover)
   router.push({ name: 'reading', query: { id: cover.id } })
 }
+
+const { checkedBookList, allBookChecked } = storeToRefs(bookStore)
+const onMultiCheckButtonClick = () => {
+  if (allBookChecked.value) {
+    bookStore.uncheckAllBook()
+  } else {
+    bookStore.checkAllBook()
+  }
+}
 </script>
 <template>
   <div class="p-8 overflow-hidden">
@@ -27,8 +37,20 @@ const goReading = (cover: BookCover) => {
       <table>
         <thead>
           <th class="px-2 py-1.5">
-            <button class="w-7 h-7 flex items-center justify-center">
-              <i class="ri-checkbox-indeterminate-line" style="font-size: 24px"></i>
+            <button
+              class="w-7 h-7 flex items-center justify-center"
+              @click="onMultiCheckButtonClick"
+            >
+              <i
+                style="font-size: 24px"
+                :class="
+                  checkedBookList.length == 0
+                    ? 'ri-checkbox-blank-line'
+                    : allBookChecked
+                    ? 'ri-checkbox-fill text-apathetic-500'
+                    : 'ri-checkbox-indeterminate-fill text-apathetic-500'
+                "
+              ></i>
             </button>
           </th>
           <th>
@@ -98,7 +120,7 @@ const goReading = (cover: BookCover) => {
             :key="bookCover.id"
             class="group transition-colors border-t-0"
             :class="
-              bookCover.picked
+              checkedBookList.includes(bookCover.id)
                 ? 'bg-apathetic-300/10 text-apathetic-400'
                 : ' hover:text-zinc-50 group hover:bg-zinc-800 text-zinc-100'
             "
@@ -106,16 +128,20 @@ const goReading = (cover: BookCover) => {
             <td class="px-2 py-1.5">
               <button
                 class="w-7 h-7 flex items-center justify-center transition-colors"
-                @click="() => bookStore.pickBook(bookCover.id)"
+                @click="() => bookStore.toggleCheckBook(bookCover.id)"
                 :class="
-                  bookCover.picked
+                  checkedBookList.includes(bookCover.id)
                     ? 'text-apathetic-400'
                     : 'group-hover:text-zinc-50 text-zinc-400/60'
                 "
               >
                 <i
                   style="font-size: 24px"
-                  :class="bookCover.picked ? 'ri-checkbox-line' : 'ri-checkbox-blank-line'"
+                  :class="
+                    checkedBookList.includes(bookCover.id)
+                      ? 'ri-checkbox-line'
+                      : 'ri-checkbox-blank-line'
+                  "
                 ></i>
               </button>
             </td>

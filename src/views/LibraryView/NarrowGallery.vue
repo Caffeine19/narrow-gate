@@ -82,8 +82,9 @@ const onSortMenuSelect = (index: number) => {
   bookStore.sortBook(sortMenu[index].value)
   toggleSortMenu(false)
 }
-
 const { isBookSorted } = storeToRefs(bookStore)
+
+const { checkedBookList } = storeToRefs(bookStore)
 </script>
 <template>
   <div class="custom-scrollbar relative overflow-y-auto">
@@ -123,12 +124,26 @@ const { isBookSorted } = storeToRefs(bookStore)
           />
         </DropMenu>
       </div>
-      <NarrowButton
-        iconStyle="ri-add-line"
-        :action="bookStore.addBook"
-        label="Add"
-        buttonStyle="bg-apathetic-500 hover:!bg-apathetic-500/90 !text-apathetic-50 pr-1.5 hover:!border-apathetic-500 border-apathetic-600 hover:!text-apathetic-50"
-      />
+      <div class="flex items-center space-x-3">
+        <NarrowButton
+          iconStyle="ri-add-line"
+          :action="bookStore.addBook"
+          label="Add"
+          buttonStyle="bg-apathetic-500 hover:!bg-apathetic-500/90 !text-apathetic-50 pr-1.5 hover:!border-apathetic-500 border-apathetic-600 hover:!text-apathetic-50"
+        />
+        <NarrowButton
+          v-if="checkedBookList.length > 0"
+          iconStyle="ri-fire-line"
+          :action="
+            () => {
+              bookStore.deleteBook(checkedBookList)
+              bookStore.uncheckAllBook()
+            }
+          "
+          label="Delete"
+          buttonStyle="bg-passion-500 hover:!bg-passion-500/90 !text-passion-50 pr-1.5 hover:!border-passion-500 border-passion-600 hover:!text-passion-50"
+        />
+      </div>
     </div>
 
     <keep-alive>

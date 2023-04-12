@@ -111,8 +111,7 @@ const onGetBookCoverList: GetBookCoverList = async () => {
       const bookCover = await readFile(book.bookCoverPath)
       bookCoverList.push({
         ...book,
-        bookCover: `data:image/png;base64,${Buffer.from(bookCover).toString('base64')}`,
-        picked: false
+        bookCover: `data:image/png;base64,${Buffer.from(bookCover).toString('base64')}`
       })
     }
 

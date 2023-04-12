@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, reactive, ref, toRaw } from 'vue'
 import { defineStore } from 'pinia'
 
 import ePub, { Book, Rendition } from 'epubjs'
@@ -54,8 +54,7 @@ export const useBookStore = defineStore('book', () => {
         publisher: metadata.publisher,
         language: metadata.language,
         addedDate: createdBook.addedDate,
-        lastOpenedDate: createdBook.lastOpenedDate,
-        picked: false
+        lastOpenedDate: createdBook.lastOpenedDate
       })
       // .then((response) => {
       //   console.log('🚀 ~ file: NarrowGallery.vue:20 ~ .then ~ response:', response)
@@ -80,16 +79,29 @@ export const useBookStore = defineStore('book', () => {
     }
   }
 
-  const pickBook = (id: BookCover['id']) => {
-    const index = bookCoverList.value.findIndex((bookCover) => {
-      return bookCover.id == id
-    })
-    bookCoverList.value[index].picked = !bookCoverList.value[index].picked
+  const checkedBookList = ref<BookCover['id'][]>([])
+  const toggleCheckBook = (id: BookCover['id']) => {
+    if (checkedBookList.value.includes(id)) {
+      checkedBookList.value = checkedBookList.value.filter((checkedId) => {
+        return checkedId !== id
+      })
+    } else {
+      checkedBookList.value.push(id)
+    }
+  }
+
+  const allBookChecked = computed(() => bookCoverList.value.length === checkedBookList.value.length)
+
+  const uncheckAllBook = () => {
+    checkedBookList.value.length = 0
+  }
+  const checkAllBook = () => {
+    checkedBookList.value = bookCoverList.value.map((book) => book.id)
   }
 
   const deleteBook = (idList: BookCover['id'][]) => {
     console.log('🚀 ~ file: book.ts:87 ~ deleteBook ~ idList:', idList)
-    window.electronAPI.deleteBook(idList)
+    window.electronAPI.deleteBook(toRaw(idList))
 
     bookCoverList.value = bookCoverList.value.filter((book) => {
       return !idList.includes(book.id)
@@ -227,7 +239,6 @@ export const useBookStore = defineStore('book', () => {
   return {
     bookCoverList,
     addBook,
-    pickBook,
     openedBook,
     openBook,
     setOpenedBook,
@@ -240,6 +251,11 @@ export const useBookStore = defineStore('book', () => {
     setSelectedBook,
     isBookSorted,
     openingDetail,
-    toggleDetail
+    toggleDetail,
+    toggleCheckBook,
+    checkedBookList,
+    uncheckAllBook,
+    checkAllBook,
+    allBookChecked
   }
 })
