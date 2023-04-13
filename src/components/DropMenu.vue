@@ -1,8 +1,20 @@
 <script setup lang="ts">
-import { ref, type PropType, reactive } from 'vue'
+import {
+  ref,
+  type PropType,
+  reactive,
+  useSlots,
+  onMounted,
+  h,
+  Fragment,
+  computed,
+  nextTick,
+  type VNodeArrayChildren,
+  watch
+} from 'vue'
 import NarrowButton from './NarrowButton.vue'
 import type { MenuItem } from '@/types/menuItem'
-defineProps({
+const props = defineProps({
   menuItemList: Array as PropType<MenuItem[]>,
   visible: { type: Boolean, defaults: false }
 })
@@ -18,20 +30,33 @@ const onMenuItemClick = (index: number) => {
 
 const menuPosition = reactive({ top: 0, left: 0 })
 
-const calMenuPosition = (event: MouseEvent) => {
-  console.log(event.target)
-  if (event.target) {
-    const rect = (event.target as Element).getBoundingClientRect()
+const slots = useSlots()
 
-    menuPosition.top = rect.bottom + 20
-    menuPosition.left = rect.left
+const TriggerSlotRenderer = computed<any>(() => h(Fragment, slots.trigger ? slots.trigger() : []))
+
+watch(
+  () => props.visible,
+  (newVal) => {
+    if (!newVal) return
+    nextTick(() => {
+      if (TriggerSlotRenderer.value.children) {
+        const triggerSlot = (TriggerSlotRenderer.value.children as VNodeArrayChildren)[0]
+        if (triggerSlot) {
+          const triggerEl = (triggerSlot as any).el
+          const rect = triggerEl.getBoundingClientRect()
+          console.log('🚀 ~ file: DropMenu.vue:54 ~ onMounted ~ rect:', rect)
+          menuPosition.top = rect.bottom + 20
+          menuPosition.left = rect.left
+        }
+      }
+    })
   }
-}
+)
 </script>
 
 <template>
-  <div @click.stop="calMenuPosition">
-    <slot></slot>
+  <div>
+    <TriggerSlotRenderer />
     <Teleport to="body">
       <transition name="zoom">
         <div

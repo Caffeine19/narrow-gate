@@ -13,12 +13,10 @@ withDefaults(
     action: () => console.log('narrow-button-clicked')
   }
 )
-
-
 </script>
 <template>
   <button
-    @click="() => action()"
+    @click.stop="() => action()"
     class="text-zinc-400 hover:bg-zinc-50/10 hover:text-zinc-50 hover:border-zinc-700 flex items-center h-8 px-1 transition-colors border border-transparent rounded"
     :class="[buttonStyle, active ? activeStyle : '']"
   >

@@ -113,15 +113,17 @@ const { checkedBookList } = storeToRefs(bookStore)
         <NarrowButton iconStyle="ri-checkbox-multiple-blank-line" />
 
         <DropMenu :menuItemList="sortMenu" :visible="sortMenuVisible" @select="onSortMenuSelect">
-          <NarrowButton
-            iconStyle="ri-arrow-up-down-line"
-            :action="() => toggleSortMenu(!sortMenuVisible)"
-            :class="
-              isBookSorted
-                ? '!bg-apathetic-500/10 !text-apathetic-500 hover:!border-apathetic-500/80'
-                : ''
-            "
-          />
+          <template #trigger>
+            <NarrowButton
+              iconStyle="ri-arrow-up-down-line"
+              :action="() => toggleSortMenu(!sortMenuVisible)"
+              :class="
+                isBookSorted
+                  ? '!bg-apathetic-500/10 !text-apathetic-500 hover:!border-apathetic-500/80'
+                  : ''
+              "
+            />
+          </template>
         </DropMenu>
       </div>
       <div class="flex items-center space-x-3">

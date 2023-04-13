@@ -1,4 +1,4 @@
-import { computed, reactive, ref, toRaw } from 'vue'
+import { computed, ref, toRaw } from 'vue'
 import { defineStore } from 'pinia'
 
 import ePub, { Book, Rendition, type NavItem } from 'epubjs'
