@@ -2,13 +2,17 @@ import { computed, ref, toRaw } from 'vue'
 import { defineStore } from 'pinia'
 
 import ePub, { Book, Rendition, type NavItem } from 'epubjs'
+import type Section from 'epubjs/types/section'
+
+import type { Book as IBook } from '@prisma/client'
+
+import dayjs from 'dayjs'
+
+import pinyin from 'pinyin'
 
 import type { BookCover, OpenedBook } from '@/types/book'
 import type { BookSortParams } from '@/types/bookSortParams'
-
-import type { Book as IBook } from '@prisma/client'
-import dayjs from 'dayjs'
-import type Section from 'epubjs/types/section'
+import type { BookGroupParams } from '@/types/bookGroupParams'
 
 export const useBookStore = defineStore('book', () => {
   let book: Book
@@ -162,6 +166,38 @@ export const useBookStore = defineStore('book', () => {
     }
   }
 
+  const isBookGrouped = ref(false)
+  type GroupedBook = {
+    [key: string]: BookCover[]
+  }
+  const groupedBookList = ref<GroupedBook>({})
+  const groupBook = (params: BookGroupParams) => {
+    isBookGrouped.value = true
+
+    switch (params) {
+      case 'clear':
+        isBookGrouped.value = false
+        break
+      case 'title':
+        groupedBookList.value = bookCoverList.value.reduce((acc, cur) => {
+          if (!acc[pinyin(cur[params])[0][0][0]]) {
+            acc[pinyin(cur[params])[0][0][0]] = []
+          }
+          acc[pinyin(cur[params])[0][0][0]].push(cur)
+          return acc
+        }, {} as GroupedBook)
+        break
+      default:
+        groupedBookList.value = bookCoverList.value.reduce((acc, cur) => {
+          if (!acc[cur[params]]) {
+            acc[cur[params]] = []
+          }
+          acc[cur[params]].push(cur)
+          return acc
+        }, {} as GroupedBook)
+    }
+  }
+
   const openingDetail = ref(false)
   const toggleDetail = (flag: boolean) => {
     openingDetail.value = flag
@@ -285,6 +321,9 @@ export const useBookStore = defineStore('book', () => {
     expandChapter,
     collapseChapter,
     currentChapterHref,
-    goChapter
+    goChapter,
+    groupedBookList,
+    groupBook,
+    isBookGrouped
   }
 })

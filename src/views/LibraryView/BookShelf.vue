@@ -7,6 +7,7 @@ import { useBookStore } from '@/stores/book'
 import NarrowButton from '@/components/NarrowButton.vue'
 import GridLayout from './GridLayout.vue'
 import TableLayout from './TableLayout.vue'
+import GroupLayout from './GroupLayout.vue'
 import DropMenu from '@/components/DropMenu.vue'
 
 import type { MenuItem } from '@/types/menuItem'
@@ -85,6 +86,44 @@ const onSortMenuSelect = (index: number) => {
 const { isBookSorted } = storeToRefs(bookStore)
 
 const { checkedBookList } = storeToRefs(bookStore)
+
+const { isBookGrouped } = storeToRefs(bookStore)
+const groupMenu = reactive<MenuItem[]>([
+  {
+    iconStyle: 'ri-attachment-line',
+    label: 'title',
+    value: 'title',
+    action: () => console.log('')
+  },
+  {
+    iconStyle: 'ri-user-smile-line',
+    label: 'creator',
+    value: 'creator',
+    action: () => console.log('')
+  },
+  {
+    iconStyle: 'ri-mail-send-line',
+    label: 'publisher',
+    value: 'publisher',
+    action: () => console.log('')
+  },
+  {
+    iconStyle: 'ri-eraser-line',
+    label: 'clear',
+    value: 'clear',
+    action: () => console.log(''),
+    buttonStyle: '!text-passion-500/80 hover:!text-passion-500 mt-0.5 border-zinc-700 border-t',
+    activeStyle: 'bg-transparent'
+  }
+])
+const groupMenuVisible = ref(false)
+const toggleGroupMenu = (flag: boolean) => {
+  groupMenuVisible.value = flag
+}
+const onGroupMenuSelect = (index: number) => {
+  bookStore.groupBook(groupMenu[index].value)
+  toggleGroupMenu(false)
+}
 </script>
 <template>
   <div class="custom-scrollbar relative overflow-y-auto">
@@ -125,6 +164,20 @@ const { checkedBookList } = storeToRefs(bookStore)
             />
           </template>
         </DropMenu>
+        <DropMenu :menuItemList="groupMenu" :visible="groupMenuVisible" @select="onGroupMenuSelect">
+          <template #trigger>
+            <NarrowButton
+              iconStyle="ri-archive-drawer-line"
+              :action="() => toggleGroupMenu(!groupMenuVisible)"
+              :active="isBookGrouped"
+              :class="
+                isBookGrouped
+                  ? '!bg-apathetic-500/20 !text-apathetic-500 hover:!border-apathetic-500/80'
+                  : ''
+              "
+            ></NarrowButton
+          ></template>
+        </DropMenu>
       </div>
       <div class="flex items-center space-x-3">
         <NarrowButton
@@ -150,7 +203,7 @@ const { checkedBookList } = storeToRefs(bookStore)
 
     <keep-alive>
       <component
-        :is="currentLayout == Layout.Grid ? GridLayout : TableLayout"
+        :is="currentLayout == Layout.TABLE ? TableLayout : isBookGrouped ? GroupLayout : GridLayout"
         :bookCoverList="bookCoverList"
       ></component>
     </keep-alive>
