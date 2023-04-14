@@ -66,7 +66,9 @@ const toggleChapterNavigator = (flag: boolean) => {
         :action="goLibrary"
         class="justify-self-start"
       />
-      <p class="text-zinc-400 justify-self-center whitespace-nowrap text-xl italic font-medium">
+      <p
+        class="text-apathetic-500 justify-self-center whitespace-nowrap text-xl italic font-medium"
+      >
         {{
           (openedBook?.title?.length || 0) > 12
             ? openedBook?.title.slice(0, 12) + '...'
