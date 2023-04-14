@@ -4,7 +4,6 @@ import {
   type PropType,
   reactive,
   useSlots,
-  onMounted,
   h,
   Fragment,
   computed,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onActivated, onBeforeMount, onMounted } from 'vue'
+import { onActivated, onBeforeMount, onMounted, ref } from 'vue'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 import ChapterNavigator from './ChapterNavigator.vue'
@@ -48,6 +48,11 @@ onMounted(() => {
 onBeforeMount(() => {
   document.removeEventListener('keydown', onKeyDown)
 })
+
+const openingChapterNavigator = ref(false)
+const toggleChapterNavigator = (flag: boolean) => {
+  openingChapterNavigator.value = flag
+}
 </script>
 <template>
   <div class="bg-zinc-900 flex flex-col items-stretch justify-between w-full h-full">
@@ -76,7 +81,10 @@ onBeforeMount(() => {
       class="grow text-slate-50 relative flex justify-between"
       style="-webkit-app-region: no-drag"
     >
-      <ChapterNavigator />
+      <Transition name="slide">
+        <ChapterNavigator v-show="openingChapterNavigator" />
+      </Transition>
+
       <button
         @click="bookStore.prevPage"
         class="text-zinc-400 hover:text-zinc-50 hover:bg-zinc-50/5 shrink-0 p-2 transition-colors"
@@ -92,8 +100,25 @@ onBeforeMount(() => {
       </button>
     </div>
     <div class="bg-zinc-950 border-zinc-800 flex items-center justify-between px-8 py-3 border-b">
-      <NarrowButton iconStyle="ri-side-bar-line" :action="goLibrary" class="justify-self-start" />
+      <NarrowButton
+        iconStyle="ri-compass-3-line"
+        :active="openingChapterNavigator"
+        activeStyle="!bg-apathetic-500/20 !text-apathetic-500 hover:!border-apathetic-500/80"
+        :action="() => toggleChapterNavigator(!openingChapterNavigator)"
+        class="justify-self-start"
+      />
       <p class="text-zinc-400 justify-self-center text-xl italic font-medium">4 | 366</p>
     </div>
   </div>
 </template>
+<style>
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(-400px);
+}
+</style>

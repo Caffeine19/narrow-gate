@@ -119,7 +119,7 @@ const { checkedBookList } = storeToRefs(bookStore)
               :action="() => toggleSortMenu(!sortMenuVisible)"
               :class="
                 isBookSorted
-                  ? '!bg-apathetic-500/10 !text-apathetic-500 hover:!border-apathetic-500/80'
+                  ? '!bg-apathetic-500/20 !text-apathetic-500 hover:!border-apathetic-500/80'
                   : ''
               "
             />
