@@ -31,7 +31,7 @@ const { selectedBook } = storeToRefs(bookStore)
       class="hover:border-zinc-700 hover:bg-zinc-50/5 flex flex-col items-center justify-between p-4 space-y-3 transition-colors border border-transparent rounded cursor-pointer"
       :class="
         bookCover.id == selectedBook?.id
-          ? 'border-apathetic-500/80 hover:!border-apathetic-500 hover:!bg-apathetic-500/5'
+          ? '!border-apathetic-500/80 hover:!border-apathetic-500 !bg-apathetic-500/5'
           : ''
       "
     >

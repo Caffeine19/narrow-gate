@@ -36,11 +36,10 @@ onDeactivated(() => {
           expandedChapterList.includes(chapter.id)
             ? '!bg-zinc-800 !border-zinc-700'
             : 'border-transparent',
-          currentChapterHref === chapter.href
+          chapter.href.includes(currentChapterHref || '')
             ? '!bg-apathetic-500 !text-apathetic-50 hover:!bg-apathetic-500/90'
             : 'hover:bg-zinc-50/10'
         ]"
-        @click="() => bookStore.goChapter(chapter.href)"
       >
         <div
           class="flex items-center justify-between space-x-3 text-lg border-b"
@@ -51,10 +50,11 @@ onDeactivated(() => {
               ? 'border-apathetic-500 pb-2'
               : 'border-transparent'
           "
+          @click="() => bookStore.goChapter(chapter.href)"
         >
           <p class="flex items-center">
             <i class="ri-checkbox-blank-circle-fill mr-2" style="font-size: 8px"></i>
-            {{ chapter.label }}
+            {{ chapter.label }}{{ chapter.href }}
           </p>
           <NarrowButton
             :iconStyle="
@@ -76,10 +76,18 @@ onDeactivated(() => {
             expandedChapterList.includes(chapter.id)
           "
         >
-          <p v-for="(subChapter, index) in chapter.subitems" :key="index" class="flex items-center">
+          <li
+            v-for="(subChapter, index) in chapter.subitems"
+            :key="index"
+            class="flex items-center"
+            @click="() => bookStore.goChapter(subChapter.href)"
+            :class="
+              subChapter.href.includes(currentChapterHref || 'fuck') ? 'text-apathetic-500' : ''
+            "
+          >
             <i class="ri-checkbox-blank-circle-fill mr-2" style="font-size: 8px"></i>
-            {{ subChapter.label }}
-          </p>
+            {{ subChapter.label }}{{ subChapter.href }}
+          </li>
         </ul>
       </li>
     </ul>
