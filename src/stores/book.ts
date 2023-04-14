@@ -170,31 +170,54 @@ export const useBookStore = defineStore('book', () => {
   type GroupedBook = {
     [key: string]: BookCover[]
   }
-  const groupedBookList = ref<GroupedBook>({})
+  type GroupedSortedBook = {
+    key: string
+    val: BookCover[]
+  }
+  const groupedBookList = ref<GroupedSortedBook[]>([])
   const groupBook = (params: BookGroupParams) => {
     isBookGrouped.value = true
+
+    let res
 
     switch (params) {
       case 'clear':
         isBookGrouped.value = false
         break
       case 'title':
-        groupedBookList.value = bookCoverList.value.reduce((acc, cur) => {
-          if (!acc[pinyin(cur[params])[0][0][0]]) {
-            acc[pinyin(cur[params])[0][0][0]] = []
-          }
-          acc[pinyin(cur[params])[0][0][0]].push(cur)
-          return acc
-        }, {} as GroupedBook)
+        groupedBookList.value = Object.entries(
+          bookCoverList.value.reduce((acc, cur) => {
+            if (!acc[pinyin(cur[params])[0][0][0]]) {
+              acc[pinyin(cur[params])[0][0][0]] = []
+            }
+            acc[pinyin(cur[params])[0][0][0]].push(cur)
+            return acc
+          }, {} as GroupedBook)
+        )
+          .map(([key, value]) => {
+            return { key: key, val: value }
+          })
+          .sort((a, b) => {
+            return a.key.localeCompare(b.key, 'zh-Hans-CN', { sensitivity: 'accent' })
+          })
+        console.log('🚀 ~ file: book.ts:199 ~ groupBook ~ res:', res)
         break
       default:
-        groupedBookList.value = bookCoverList.value.reduce((acc, cur) => {
-          if (!acc[cur[params]]) {
-            acc[cur[params]] = []
-          }
-          acc[cur[params]].push(cur)
-          return acc
-        }, {} as GroupedBook)
+        groupedBookList.value = Object.entries(
+          bookCoverList.value.reduce((acc, cur) => {
+            if (!acc[cur[params]]) {
+              acc[cur[params]] = []
+            }
+            acc[cur[params]].push(cur)
+            return acc
+          }, {} as GroupedBook)
+        )
+          .map(([key, value]) => {
+            return { key: key, val: value }
+          })
+          .sort((a, b) => {
+            return a.key.localeCompare(b.key, 'zh-Hans-CN', { sensitivity: 'accent' })
+          })
     }
   }
 
