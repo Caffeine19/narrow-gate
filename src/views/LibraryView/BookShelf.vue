@@ -126,7 +126,7 @@ const onGroupMenuSelect = (index: number) => {
 }
 </script>
 <template>
-  <div class="custom-scrollbar relative overflow-y-auto">
+  <div class="custom-scrollbar relative overflow-y-auto" id="bookShelf">
     <div
       class="bg-zinc-950/80 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
       style="-webkit-app-region: drag"

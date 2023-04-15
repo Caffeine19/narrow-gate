@@ -178,7 +178,7 @@ export const useBookStore = defineStore('book', () => {
   const groupBook = (params: BookGroupParams) => {
     isBookGrouped.value = true
 
-    let res
+    // collapsedGroupList.value.length = 0
 
     switch (params) {
       case 'clear':
@@ -200,7 +200,6 @@ export const useBookStore = defineStore('book', () => {
           .sort((a, b) => {
             return a.key.localeCompare(b.key, 'zh-Hans-CN', { sensitivity: 'accent' })
           })
-        console.log('🚀 ~ file: book.ts:199 ~ groupBook ~ res:', res)
         break
       default:
         groupedBookList.value = Object.entries(
@@ -219,6 +218,15 @@ export const useBookStore = defineStore('book', () => {
             return a.key.localeCompare(b.key, 'zh-Hans-CN', { sensitivity: 'accent' })
           })
     }
+  }
+  const collapsedGroupList = ref<string[]>([])
+  const expandGroup = (key: string) => {
+    collapsedGroupList.value = collapsedGroupList.value.filter(
+      (collapsedKey) => collapsedKey !== key
+    )
+  }
+  const collapseGroup = (key: string) => {
+    collapsedGroupList.value.push(key)
   }
 
   const openingDetail = ref(false)
@@ -347,6 +355,9 @@ export const useBookStore = defineStore('book', () => {
     goChapter,
     groupedBookList,
     groupBook,
-    isBookGrouped
+    isBookGrouped,
+    collapsedGroupList,
+    expandGroup,
+    collapseGroup
   }
 })

@@ -102,7 +102,7 @@ const onDeleteButtonClick = () => {
               <span class="flex items-center space-x-3">
                 <i class="ri-file-zip-line" style="font-size: 20px"></i><span>size:</span>
               </span>
-              <span>{{ (selectedBook?.size || 1 / 1024).toFixed(2) }}KB</span>
+              <span>{{ ((selectedBook?.size || 1) / 1024).toFixed(2) }}KB</span>
             </li>
             <li class="flex items-start justify-between space-x-3">
               <span class="flex items-center space-x-3">
