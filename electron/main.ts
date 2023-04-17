@@ -11,7 +11,10 @@ import {
   ReadBookFile
 } from '../src/types/electronAPI'
 
-import { createBook, deleteBook, getBookContent, getBookList } from '../data/main'
+import { createBook, deleteBook, getBookContent, getBookList } from '../data/book'
+
+import { createReading } from '../data/reading'
+
 import { readFile } from 'fs/promises'
 import { platform } from 'os'
 import { BookCover } from '../src/types/book'
@@ -135,13 +138,16 @@ const onGetBookContent: GetBookContent = async (id) => {
     console.log('🚀 ~ file: main.ts:101 ~ onGetBookContent ~ error:', error)
   }
 }
-const onDeleteBook = async (idList) => {
+const onDeleteBook = async (idList: number[]) => {
   try {
     await deleteBook(idList)
   } catch (error) {
     console.log('🚀 ~ file: main.ts:141 ~ onDeleteBook ~ error:', error)
   }
 }
+
+const onCreateReading = async () => {}
+
 app.whenReady().then(() => {
   ipcMain.handle('readBookFile', onReadBookFile)
   ipcMain.handle('createBook', async (event, data) => {

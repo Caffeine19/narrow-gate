@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { onActivated, onBeforeMount, onMounted, ref } from 'vue'
+import { onActivated, onBeforeMount, onDeactivated, onMounted, ref } from 'vue'
+
+import { useRoute, useRouter } from 'vue-router'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 import ChapterNavigator from './ChapterNavigator.vue'
@@ -7,8 +9,6 @@ import ChapterNavigator from './ChapterNavigator.vue'
 import { storeToRefs } from 'pinia'
 import { useOSStore } from '@/stores/os'
 import { useReadingStore } from '@/stores/reading'
-
-import { useRoute, useRouter } from 'vue-router'
 
 const { platform } = storeToRefs(useOSStore())
 
@@ -18,12 +18,31 @@ const goLibrary = () => {
 }
 
 const readingStore = useReadingStore()
-const { openedBook } = storeToRefs(readingStore)
+const { openedBook, readingDuration } = storeToRefs(readingStore)
+// eslint-disable-next-line no-undef
+let setReadingEndTimer: string | number | undefined | NodeJS.Timer
 onActivated(() => {
   const route = useRoute()
-  if (route.query.id) readingStore.openBook(Number(route.query.id))
+  if (route.query.id) {
+    readingStore.openBook(Number(route.query.id))
+    readingStore.setReadingBegin(new Date(), Number(route.query.id))
+
+    setReadingEndTimer = setInterval(() => readingStore.setReadingEnd(new Date()), 1000)
+  }
+})
+onDeactivated(() => {
+  clearInterval(setReadingEndTimer)
 })
 
+const onTimerButtonClick = () => {
+  if (setReadingEndTimer) {
+    clearInterval(setReadingEndTimer)
+    setReadingEndTimer = undefined
+  } else {
+    clearInterval(setReadingEndTimer)
+    setReadingEndTimer = setInterval(() => readingStore.setReadingEnd(new Date()), 1000)
+  }
+}
 const onKeyDown = (event: KeyboardEvent) => {
   // console.log('🚀 ~ file: ReadingView.vue:24 ~ onKeyDown ~ event:', event)
   switch (event.key) {
@@ -65,9 +84,7 @@ const toggleChapterNavigator = (flag: boolean) => {
         :action="goLibrary"
         class="justify-self-start"
       />
-      <p
-        class="text-apathetic-500 justify-self-center whitespace-nowrap text-xl italic font-medium"
-      >
+      <p class="text-zinc-200 justify-self-center whitespace-nowrap text-xl italic font-medium">
         {{
           (openedBook?.title?.length || 0) > 12
             ? openedBook?.title.slice(0, 12) + '...'
@@ -75,8 +92,22 @@ const toggleChapterNavigator = (flag: boolean) => {
         }}
         | {{ openedBook?.creator }}
       </p>
+      <div class="justify-self-end flex items-center space-x-3">
+        <NarrowButton
+          iconStyle="ri-stop-circle-line"
+          class="bg-zinc-800 px-3 py-1 space-x-2"
+          :class="
+            setReadingEndTimer
+              ? '!text-passion-400 hover:!text-passion-400'
+              : '!text-tea-400 hover:!text-tea-400'
+          "
+          labelStyle="text-zinc-50"
+          :label="readingDuration"
+          :action="onTimerButtonClick"
+        ></NarrowButton>
 
-      <NarrowButton iconStyle="ri-equalizer-line" class="justify-self-end" />
+        <NarrowButton iconStyle="ri-equalizer-line" />
+      </div>
     </div>
     <div
       class="grow text-slate-50 relative flex justify-between"

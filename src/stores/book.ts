@@ -3,9 +3,6 @@ import { defineStore } from 'pinia'
 
 import ePub, { Book } from 'epubjs'
 
-
-
-
 import dayjs from 'dayjs'
 
 import pinyin from 'pinyin'
@@ -61,13 +58,6 @@ export const useBookStore = defineStore('book', () => {
         addedDate: createdBook.addedDate,
         lastOpenedDate: createdBook.lastOpenedDate
       })
-      // .then((response) => {
-      //   console.log('🚀 ~ file: NarrowGallery.vue:20 ~ .then ~ response:', response)
-      //   return response.arrayBuffer()
-      // })
-      // .then((arrayBuffer) => {
-      //   console.log('🚀 ~ file: book.ts:34 ~ .then ~ arrayBuffer:', arrayBuffer)
-      // })
     }
   }
 
@@ -237,8 +227,6 @@ export const useBookStore = defineStore('book', () => {
   const setSelectedBook = (book: BookCover | undefined) => {
     selectedBook.value = book
   }
-
-
 
   return {
     bookCoverList,

@@ -39,4 +39,13 @@ model Book {
   language       String
   addedDate      DateTime  @default(now())
   lastOpenedDate DateTime?
+  readings       Reading[]
+}
+
+model Reading {
+  id     Int      @id @default(autoincrement())
+  begin  DateTime
+  end    DateTime
+  book   Book     @relation(fields: [bookId], references: [id])
+  bookId Int
 }
