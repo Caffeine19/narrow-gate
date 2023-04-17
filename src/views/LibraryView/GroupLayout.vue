@@ -48,8 +48,24 @@ const onExpandButtonClick = (key: string) => {
 }
 </script>
 <template>
-  <div class="flex p-8 space-x-8">
-    <div class="flex-1 space-y-8">
+  <div class="border-zinc-700 flex ml-8 border-l">
+    <ul class="h-fit top-20 sticky z-10 flex flex-col py-2 max-w-[16rem]">
+      <li
+        v-for="(group, index) in groupedBookList"
+        :key="index"
+        class="flex items-center min-w-[8rem] px-4 transition-colors py-2 cursor-pointer"
+        :class="
+          intoViewGroup == index
+            ? 'text-apathetic-50 bg-apathetic-500 '
+            : 'text-zinc-200 hover:bg-zinc-50/10  hover:text-zinc-50'
+        "
+        @click="onLinkClick(index)"
+      >
+        <i class="ri-checkbox-blank-circle-fill mr-2" style="font-size: 4px"></i>
+        {{ group.key }}
+      </li>
+    </ul>
+    <div class="border-zinc-700 flex-1 p-8 space-y-8 border-l @container">
       <div v-for="(group, index) in groupedBookList" :key="index" class="space-y-4" ref="groupRef">
         <div class="flex items-center justify-between space-x-6">
           <NarrowButton
@@ -72,7 +88,7 @@ const onExpandButtonClick = (key: string) => {
           </p>
         </div>
         <div
-          class="gap-y-8 gap-x-8 justify-items-stretch 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 grid grid-cols-1 gap-8"
+          class="gap-y-8 gap-x-8 justify-items-stretch grid grid-cols-1 gap-8 @lg:grid-cols-2 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5"
           v-show="!collapsedGroupList.includes(group.key)"
         >
           <BookCard
@@ -84,23 +100,5 @@ const onExpandButtonClick = (key: string) => {
         </div>
       </div>
     </div>
-    <ul
-      class="bg-zinc-800 border-zinc-700 h-fit top-20 sticky z-10 flex flex-col py-2 border rounded"
-    >
-      <li
-        v-for="(group, index) in groupedBookList"
-        :key="index"
-        class="flex items-center min-w-[8rem] px-2 transition-colors py-2 cursor-pointer"
-        :class="
-          intoViewGroup == index
-            ? 'text-apathetic-50 bg-apathetic-500 '
-            : 'text-zinc-200 hover:bg-zinc-50/10  hover:text-zinc-50'
-        "
-        @click="onLinkClick(index)"
-      >
-        <i class="ri-checkbox-blank-circle-fill mr-2" style="font-size: 4px"></i>
-        {{ group.key }}
-      </li>
-    </ul>
   </div>
 </template>
