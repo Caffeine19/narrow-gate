@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 
 import { useBookStore } from '@/stores/book'
+import { useReadingStore } from '@/stores/reading'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 import type { BookCover } from '@/types/book'
@@ -13,9 +14,10 @@ import type { BookCover } from '@/types/book'
 const bookStore = useBookStore()
 const { selectedBook } = storeToRefs(bookStore)
 
+const readingStore = useReadingStore()
 const router = useRouter()
 const goReading = (cover: BookCover) => {
-  bookStore.setOpenedBook(cover)
+  readingStore.setOpenedBook(cover)
   router.push({ name: 'reading', query: { id: cover.id } })
 }
 

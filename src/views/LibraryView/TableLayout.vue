@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import type { BookCover } from '@/types/book'
 
 import { useBookStore } from '@/stores/book'
+import { useReadingStore } from '@/stores/reading'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 import { storeToRefs } from 'pinia'
@@ -16,9 +17,10 @@ defineProps({ bookCoverList: Array as PropType<BookCover[]> })
 
 const bookStore = useBookStore()
 
+const readingStore = useReadingStore()
 const router = useRouter()
 const goReading = (cover: BookCover) => {
-  bookStore.setOpenedBook(cover)
+  readingStore.setOpenedBook(cover)
   router.push({ name: 'reading', query: { id: cover.id } })
 }
 

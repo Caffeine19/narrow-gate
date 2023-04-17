@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useBookStore } from '@/stores/book'
+import { useReadingStore } from '@/stores/reading'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 import { onDeactivated } from 'vue'
 
-const bookStore = useBookStore()
-const { chapterList, expandedChapterList, currentChapterHref } = storeToRefs(bookStore)
+const readingStore = useReadingStore()
+const { chapterList, expandedChapterList, currentChapterHref } = storeToRefs(readingStore)
 
 const onExpandButtonClick = (id: string) => {
   if (expandedChapterList.value.includes(id)) {
-    bookStore.collapseChapter(id)
+    readingStore.collapseChapter(id)
   } else {
-    bookStore.expandChapter(id)
+    readingStore.expandChapter(id)
   }
 }
 onDeactivated(() => {
@@ -50,7 +50,7 @@ onDeactivated(() => {
               ? 'border-apathetic-500 pb-2'
               : 'border-transparent'
           "
-          @click="() => bookStore.goChapter(chapter.href)"
+          @click="() => readingStore.goChapter(chapter.href)"
         >
           <p class="flex items-center">
             <i class="ri-checkbox-blank-circle-fill mr-2" style="font-size: 8px"></i>
@@ -80,7 +80,7 @@ onDeactivated(() => {
             v-for="(subChapter, index) in chapter.subitems"
             :key="index"
             class="flex items-center"
-            @click="() => bookStore.goChapter(subChapter.href)"
+            @click="() => readingStore.goChapter(subChapter.href)"
             :class="
               subChapter.href.includes(currentChapterHref || 'fuck') ? 'text-apathetic-500' : ''
             "
