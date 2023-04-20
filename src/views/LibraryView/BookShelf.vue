@@ -124,6 +124,11 @@ const onGroupMenuSelect = (index: number) => {
   bookStore.groupBook(groupMenu[index].value)
   toggleGroupMenu(false)
 }
+
+const bookFileInputRef = ref<null | HTMLElement>(null)
+const dispatchInputClick = () => {
+  if (bookFileInputRef.value) bookFileInputRef.value.click()
+}
 </script>
 <template>
   <div class="custom-scrollbar relative overflow-y-auto" id="bookShelf">
@@ -182,9 +187,16 @@ const onGroupMenuSelect = (index: number) => {
       <div class="flex items-center space-x-3">
         <NarrowButton
           iconStyle="ri-add-line"
-          :action="bookStore.addBook"
+          :action="dispatchInputClick"
           label="Add"
           buttonStyle="bg-apathetic-500 hover:!bg-apathetic-500/90 !text-apathetic-50 pr-1.5 hover:!border-apathetic-500 border-apathetic-600 hover:!text-apathetic-50"
+        />
+        <input
+          type="file"
+          multiple
+          class="hidden"
+          ref="bookFileInputRef"
+          @change="bookStore.addBook"
         />
         <NarrowButton
           v-if="checkedBookList.length > 0"

@@ -1,8 +1,5 @@
 import { type Book } from '@prisma/client'
 import type { BookCover } from './book'
-export interface ReadBookFile {
-  (): Promise<ArrayBuffer>
-}
 
 export interface CreateBook {
   (
@@ -38,7 +35,6 @@ export interface DeleteBook {
 }
 
 export interface IElectronAPI {
-  readBookFile: ReadBookFile
   createBook: CreateBook
   getBookCoverList: GetBookCoverList
   getBookContent: GetBookContent

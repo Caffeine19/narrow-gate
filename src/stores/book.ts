@@ -12,52 +12,78 @@ import type { BookSortParams } from '@/types/bookSortParams'
 import type { BookGroupParams } from '@/types/bookGroupParams'
 
 export const useBookStore = defineStore('book', () => {
-  let book: Book = ePub()
+  const book: Book = ePub()
 
   const bookCoverList = ref<BookCover[]>([])
-  const addBook = async () => {
-    book = ePub()
-    const bookRes = await window.electronAPI.readBookFile()
-    console.log('🚀 ~ file: book.ts:15 ~ addBook ~ bookRes:', bookRes)
-    await book.open(bookRes)
+  const addBook = async (event: Event) => {
+    if (event.target && (event.target as HTMLInputElement).files) {
+      const files = (event.target as HTMLInputElement).files
+      if (!files || files.length === 0) {
+        alert('Please select one or more EPUB files.')
+        return
+      }
 
-    //获取元信息
-    const metadata = await book.loaded.metadata
-    console.log('🚀 ~ file: NarrowGallery.vue:20 ~ openDialog ~ metadata:', metadata)
+      for (const file of files) {
+        if (!file.name.endsWith('.epub')) {
+          alert(`Invalid file type: ${file.name}. Please select an EPUB file.`)
+          return
+        }
 
-    // 获取封面URL
-    const coverUrl = await book.coverUrl()
-    console.log('🚀 ~ file: NarrowGallery.vue:14 ~ openDialog ~ coverUrl:', coverUrl)
+        const reader = new FileReader()
 
-    if (coverUrl) {
-      const coverFile = await (await fetch(coverUrl)).arrayBuffer()
+        reader.onload = async () => {
+          const buffer = reader.result
+          if (buffer && buffer instanceof ArrayBuffer) {
+            const book = ePub()
+            await book.open(buffer)
 
-      const createdBook = await window.electronAPI.createBook(
-        metadata.title,
-        metadata.creator,
-        bookRes,
-        coverFile,
-        bookRes.byteLength,
-        metadata.identifier,
-        metadata.pubdate,
-        metadata.publisher,
-        metadata.language
-      )
-      console.log('🚀 ~ file: book.ts:35 ~ addBook ~ createdBook:', createdBook)
+            //获取元信息
+            const metadata = await book.loaded.metadata
+            console.log('🚀 ~ file: NarrowGallery.vue:20 ~ openDialog ~ metadata:', metadata)
 
-      bookCoverList.value.push({
-        id: createdBook.id,
-        title: metadata.title,
-        creator: metadata.creator,
-        bookCover: coverUrl,
-        size: bookRes.byteLength,
-        identifier: metadata.identifier,
-        pubdate: metadata.identifier,
-        publisher: metadata.publisher,
-        language: metadata.language,
-        addedDate: createdBook.addedDate,
-        lastOpenedDate: createdBook.lastOpenedDate
-      })
+            // 获取封面URL
+            const coverUrl = await book.coverUrl()
+            console.log('🚀 ~ file: NarrowGallery.vue:14 ~ openDialog ~ coverUrl:', coverUrl)
+
+            if (coverUrl) {
+              const coverFile = await (await fetch(coverUrl)).arrayBuffer()
+
+              const createdBook = await window.electronAPI.createBook(
+                metadata.title,
+                metadata.creator,
+                buffer,
+                coverFile,
+                buffer.byteLength,
+                metadata.identifier,
+                metadata.pubdate,
+                metadata.publisher,
+                metadata.language
+              )
+              console.log('🚀 ~ file: book.ts:35 ~ addBook ~ createdBook:', createdBook)
+
+              bookCoverList.value.push({
+                id: createdBook.id,
+                title: metadata.title,
+                creator: metadata.creator,
+                bookCover: coverUrl,
+                size: buffer.byteLength,
+                identifier: metadata.identifier,
+                pubdate: metadata.identifier,
+                publisher: metadata.publisher,
+                language: metadata.language,
+                addedDate: createdBook.addedDate,
+                lastOpenedDate: createdBook.lastOpenedDate
+              })
+            }
+          }
+        }
+
+        reader.onerror = (error) => {
+          console.error(error)
+        }
+
+        reader.readAsArrayBuffer(file)
+      }
     }
   }
 

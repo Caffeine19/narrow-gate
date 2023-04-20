@@ -2,18 +2,13 @@ import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 
 import * as path from 'path'
 
-import { readFileSync, writeFileSync, existsSync } from 'fs'
+import { writeFileSync, existsSync } from 'fs'
 
-import {
-  CreateBook,
-  GetBookContent,
-  GetBookCoverList,
-  ReadBookFile
-} from '../src/types/electronAPI'
+import { CreateBook, GetBookContent, GetBookCoverList } from '../src/types/electronAPI'
 
 import { createBook, deleteBook, getBookContent, getBookList } from '../data/book'
 
-import { createReading } from '../data/reading'
+import { createRecord } from '../data/record'
 
 import { readFile } from 'fs/promises'
 import { platform } from 'os'
@@ -43,23 +38,6 @@ function createWindow() {
   win.webContents.on('did-finish-load', () => {
     win.webContents.send('platform', platform()) // 将操作系统信息传递到渲染进程
   })
-}
-
-const onReadBookFile: ReadBookFile = async () => {
-  try {
-    const res = await dialog.showOpenDialog({ properties: ['openFile'] })
-
-    if (res.filePaths.length > 0) {
-      const file = res.filePaths[0]
-      console.log('🚀 ~ file: main.ts:40 ~ constonReadBookFile:ReadBookFile= ~ file:', file)
-
-      const data = readFileSync(file)
-      const arrayBuffer = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength)
-      return arrayBuffer
-    }
-  } catch (error) {
-    console.log('🚀 ~ file: main.ts:49 ~ constreadBookFile:ReadBookFile= ~ error:', error)
-  }
 }
 
 const onCreateBook: CreateBook = async (
@@ -146,10 +124,9 @@ const onDeleteBook = async (idList: number[]) => {
   }
 }
 
-const onCreateReading = async () => {}
+const onCreateRecord = async () => {}
 
 app.whenReady().then(() => {
-  ipcMain.handle('readBookFile', onReadBookFile)
   ipcMain.handle('createBook', async (event, data) => {
     console.log('🚀 ~ file: main.ts:101 ~ ipcMain.handle ~ data:', data)
     const createdBook = await onCreateBook(
