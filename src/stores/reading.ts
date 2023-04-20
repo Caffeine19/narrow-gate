@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-import ePub, { Rendition, type NavItem } from 'epubjs'
+import ePub, { Rendition, type NavItem, Book } from 'epubjs'
 
 import type Section from 'epubjs/types/section'
 
@@ -118,7 +118,18 @@ export const useReadingStore = defineStore('reading', () => {
     recordGaps.value[recordGaps.value.length - 1].end = new Date()
   }
 
-  const addRecord = () => {}
+  const createRecord = (id: BookCover['id']) => {
+    try {
+      window.electronAPI.createRecord(
+        id,
+        recordGaps.value[0].begin,
+        recordGaps.value[recordGaps.value.length - 1].end,
+        recordDuration.value
+      )
+    } catch (error) {
+      console.log('🚀 ~ file: reading.ts:125 ~ addRecord ~ error:', error)
+    }
+  }
   return {
     openedBook,
     openBook,
@@ -136,6 +147,7 @@ export const useReadingStore = defineStore('reading', () => {
     isRecording,
     recordGaps,
     addRecordGap,
-    setLastRecordGapEnd
+    setLastRecordGapEnd,
+    createRecord
   }
 })

@@ -1,4 +1,4 @@
-import { Book } from '@prisma/client'
+import { Book, Record } from '@prisma/client'
 import { contextBridge, ipcRenderer } from 'electron'
 
 // window.addEventListener('DOMContentLoaded', () => {
@@ -45,5 +45,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getBookContent: (id: Book['id']) => ipcRenderer.invoke('getBookContent', id),
   platform: (callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) =>
     ipcRenderer.on('platform', callback),
-  deleteBook: (idList: Book['id'][]) => ipcRenderer.send('deleteBook', idList)
+  deleteBook: (idList: Book['id'][]) => ipcRenderer.send('deleteBook', idList),
+  createRecord: (
+    bookId: Record['bookId'],
+    end: Record['end'],
+    begin: Record['begin'],
+    duration: Record['duration']
+  ) => ipcRenderer.invoke('createRecord', { bookId, end, begin, duration })
 })

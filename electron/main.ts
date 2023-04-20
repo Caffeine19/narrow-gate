@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 
 import * as path from 'path'
 
@@ -13,6 +13,8 @@ import { createRecord } from '../data/record'
 import { readFile } from 'fs/promises'
 import { platform } from 'os'
 import { BookCover } from '../src/types/book'
+
+import type { Record } from '@prisma/client'
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -124,7 +126,19 @@ const onDeleteBook = async (idList: number[]) => {
   }
 }
 
-const onCreateRecord = async () => {}
+const onCreateRecord = async (
+  bookId: Record['bookId'],
+  end: Record['end'],
+  begin: Record['begin'],
+  duration: Record['duration']
+) => {
+  try {
+    const createdRecord = await createRecord(bookId, begin, end, duration)
+    console.log('🚀 ~ file: main.ts:137 ~ createdRecord:', createdRecord)
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:136 ~ error:', error)
+  }
+}
 
 app.whenReady().then(() => {
   ipcMain.handle('createBook', async (event, data) => {
@@ -150,6 +164,11 @@ app.whenReady().then(() => {
   })
   ipcMain.on('deleteBook', (event, data) => {
     onDeleteBook(data)
+  })
+
+  ipcMain.handle('createRecord', (event, data) => {
+    console.log('🚀 ~ file: main.ts:170 ~ ipcMain.handle ~ data:', data)
+    onCreateRecord(data.bookId, data.end, data.begin, data.duration)
   })
   createWindow()
 

@@ -43,9 +43,10 @@ model Book {
 }
 
 model Record {
-  id     Int      @id @default(autoincrement())
-  begin  DateTime
-  end    DateTime
-  book   Book     @relation(fields: [bookId], references: [id])
-  bookId Int
+  id       Int      @id @default(autoincrement())
+  begin    DateTime
+  end      DateTime
+  duration Int
+  book     Book     @relation(fields: [bookId], references: [id])
+  bookId   Int
 }

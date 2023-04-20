@@ -21,7 +21,7 @@ onDeactivated(() => {
 </script>
 <template>
   <div
-    class="bg-zinc-900/60 border-zinc-800 backdrop-blur-2xl custom-scrollbar xl:w-1/3 md:w-1/2 absolute z-10 flex flex-col w-2/3 h-full max-w-lg p-8 space-y-5 overflow-y-auto border-r"
+    class="bg-zinc-950/60 border-zinc-800 backdrop-blur-2xl custom-scrollbar xl:w-1/3 md:w-1/2 absolute z-10 flex flex-col w-2/3 h-full max-w-lg p-8 space-y-5 overflow-y-auto border-r"
   >
     <div class="border-zinc-600 text-zinc-50 flex items-center pb-5 space-x-3 border-b">
       <i class="ri-list-unordered" style="font-size: 28px"></i>

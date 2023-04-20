@@ -1,4 +1,4 @@
-import { type Book } from '@prisma/client'
+import { type Book, type Record } from '@prisma/client'
 import type { BookCover } from './book'
 
 export interface CreateBook {
@@ -34,12 +34,22 @@ export interface DeleteBook {
   (idList: Book['id'][]): void
 }
 
+export interface CreateRecord {
+  (
+    bookId: Record['bookId'],
+    end: Record['end'],
+    begin: Record['begin'],
+    duration: Record['duration']
+  ): Promise<void>
+}
+
 export interface IElectronAPI {
   createBook: CreateBook
   getBookCoverList: GetBookCoverList
   getBookContent: GetBookContent
   platform: IPlatform
   deleteBook: DeleteBook
+  createRecord: CreateRecord
 }
 
 declare global {

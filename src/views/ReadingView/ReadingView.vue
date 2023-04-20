@@ -19,6 +19,9 @@ const { platform } = storeToRefs(useOSStore())
 
 const router = useRouter()
 const goLibrary = () => {
+  clearInterval(setLastRecordGapEndTimer)
+  console.log(route.query.id)
+  readingStore.createRecord(Number(route.query.id))
   router.push({ name: 'library' })
 }
 
@@ -26,8 +29,8 @@ const readingStore = useReadingStore()
 const { openedBook, recordDuration, isRecording } = storeToRefs(readingStore)
 // eslint-disable-next-line no-undef
 let setLastRecordGapEndTimer: string | number | undefined | NodeJS.Timer
+const route = useRoute()
 onActivated(() => {
-  const route = useRoute()
   if (route.query.id) {
     isRecording.value = true
     readingStore.openBook(Number(route.query.id))
@@ -35,25 +38,21 @@ onActivated(() => {
     setLastRecordGapEndTimer = setInterval(() => readingStore.setLastRecordGapEnd(), 1000)
   }
 })
-onDeactivated(() => {
-  clearInterval(setLastRecordGapEndTimer)
-})
 
 const formattedDuration = computed(() => dayjs.duration(recordDuration.value).format('HH:mm:ss'))
 
 const onTimerButtonClick = () => {
   if (isRecording.value) {
     clearInterval(setLastRecordGapEndTimer)
-
     isRecording.value = false
   } else {
     isRecording.value = true
-
     readingStore.addRecordGap()
     setLastRecordGapEndTimer = setInterval(() => readingStore.setLastRecordGapEnd(), 1000)
   }
 }
 const onKeyDown = (event: KeyboardEvent) => {
+  if (!isRecording.value) return
   // console.log('🚀 ~ file: ReadingView.vue:24 ~ onKeyDown ~ event:', event)
   switch (event.key) {
     case 'ArrowUp':
@@ -70,10 +69,10 @@ const onKeyDown = (event: KeyboardEvent) => {
       break
   }
 }
-onMounted(() => {
+onActivated(() => {
   window.addEventListener('keydown', onKeyDown)
 })
-onBeforeMount(() => {
+onDeactivated(() => {
   window.removeEventListener('keydown', onKeyDown)
 })
 
@@ -125,6 +124,15 @@ const toggleChapterNavigator = (flag: boolean) => {
       class="grow text-slate-50 relative flex justify-between"
       style="-webkit-app-region: no-drag"
     >
+      <div
+        class="bg-zinc-950/60 backdrop-blur-2xl absolute top-0 bottom-0 left-0 right-0 z-20 flex items-center justify-center w-full h-full"
+        v-if="!isRecording"
+      >
+        <div class="animate-pulse flex flex-col items-center justify-center space-y-1">
+          <i style="font-size: 64px" class="ri-play-circle-fill text-tea-400"></i>
+          <p class="text-tea-50">Stopping</p>
+        </div>
+      </div>
       <Transition name="slide">
         <ChapterNavigator v-show="openingChapterNavigator" />
       </Transition>
