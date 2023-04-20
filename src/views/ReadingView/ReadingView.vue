@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { onActivated, onBeforeMount, onDeactivated, onMounted, ref } from 'vue'
+import { computed, onActivated, onBeforeMount, onDeactivated, onMounted, ref } from 'vue'
 
 import { useRoute, useRouter } from 'vue-router'
+
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 import ChapterNavigator from './ChapterNavigator.vue'
@@ -9,6 +12,8 @@ import ChapterNavigator from './ChapterNavigator.vue'
 import { storeToRefs } from 'pinia'
 import { useOSStore } from '@/stores/os'
 import { useReadingStore } from '@/stores/reading'
+
+dayjs.extend(duration)
 
 const { platform } = storeToRefs(useOSStore())
 
@@ -18,29 +23,34 @@ const goLibrary = () => {
 }
 
 const readingStore = useReadingStore()
-const { openedBook, readingDuration } = storeToRefs(readingStore)
+const { openedBook, recordDuration, isRecording } = storeToRefs(readingStore)
 // eslint-disable-next-line no-undef
-let setReadingEndTimer: string | number | undefined | NodeJS.Timer
+let setLastRecordGapEndTimer: string | number | undefined | NodeJS.Timer
 onActivated(() => {
   const route = useRoute()
   if (route.query.id) {
+    isRecording.value = true
     readingStore.openBook(Number(route.query.id))
-    readingStore.setRecordBegin(new Date(), Number(route.query.id))
-
-    setReadingEndTimer = setInterval(() => readingStore.setRecordEnd(new Date()), 1000)
+    readingStore.addRecordGap()
+    setLastRecordGapEndTimer = setInterval(() => readingStore.setLastRecordGapEnd(), 1000)
   }
 })
 onDeactivated(() => {
-  clearInterval(setReadingEndTimer)
+  clearInterval(setLastRecordGapEndTimer)
 })
 
+const formattedDuration = computed(() => dayjs.duration(recordDuration.value).format('HH:mm:ss'))
+
 const onTimerButtonClick = () => {
-  if (setReadingEndTimer) {
-    clearInterval(setReadingEndTimer)
-    setReadingEndTimer = undefined
+  if (isRecording.value) {
+    clearInterval(setLastRecordGapEndTimer)
+
+    isRecording.value = false
   } else {
-    clearInterval(setReadingEndTimer)
-    setReadingEndTimer = setInterval(() => readingStore.setRecordEnd(new Date()), 1000)
+    isRecording.value = true
+
+    readingStore.addRecordGap()
+    setLastRecordGapEndTimer = setInterval(() => readingStore.setLastRecordGapEnd(), 1000)
   }
 }
 const onKeyDown = (event: KeyboardEvent) => {
@@ -94,17 +104,19 @@ const toggleChapterNavigator = (flag: boolean) => {
       </p>
       <div class="justify-self-end flex items-center space-x-3">
         <NarrowButton
-          iconStyle="ri-stop-circle-line"
+          :iconStyle="isRecording ? 'ri-stop-circle-line' : 'ri-play-circle-line'"
           class="bg-zinc-800 px-3 py-1 space-x-2"
           :class="
-            setReadingEndTimer
+            isRecording
               ? '!text-passion-400 hover:!text-passion-400'
               : '!text-tea-400 hover:!text-tea-400'
           "
           labelStyle="text-zinc-50"
-          :label="readingDuration"
+          :label="formattedDuration"
           :action="onTimerButtonClick"
-        ></NarrowButton>
+        >
+          ></NarrowButton
+        >
 
         <NarrowButton iconStyle="ri-equalizer-line" />
       </div>

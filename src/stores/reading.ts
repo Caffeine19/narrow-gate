@@ -5,7 +5,7 @@ import ePub, { Rendition, type NavItem } from 'epubjs'
 
 import type Section from 'epubjs/types/section'
 
-import type { RecordCreateParams } from '@/types/record'
+import type { RecordCreateParams, RecordGap } from '@/types/record'
 import type { BookCover, OpenedBook } from '@/types/book'
 
 import { useBookStore } from './book'
@@ -102,29 +102,23 @@ export const useReadingStore = defineStore('reading', () => {
   }
 
   const record = ref<RecordCreateParams>({})
-  const setRecordBegin = (
-    time: Required<RecordCreateParams['begin']>,
-    bookId: Required<RecordCreateParams['bookId']>
-  ) => {
-    record.value.begin = time
-    record.value.bookId = bookId
-  }
-  const setRecordEnd = (time: Required<RecordCreateParams>['end']) => {
-    record.value.end = time
-  }
-  const readingDuration = computed(() => {
-    if (record.value.end && record.value.begin) {
-      // const a = readingRecord.value.end.getTime()
-      // console.log('🚀 ~ file: reading.ts:118 ~ readingDuration ~ a:', a)
-      // const b = readingRecord.value.begin.getTime()
-      // console.log('🚀 ~ file: reading.ts:120 ~ readingDuration ~ b:', b)
-      // const c = a - b
-      // console.log('🚀 ~ file: reading.ts:122 ~ readingDuration ~ c:', c)
-      return dayjs(record.value.end.getTime() - record.value.begin.getTime()).format('mm:ss')
-    } else {
-      return '00:00'
-    }
+  const recordGaps = ref<RecordGap[]>([])
+  const isRecording = ref(false)
+
+  const recordDuration = computed(() => {
+    return recordGaps.value.reduce((acc, cur) => {
+      return acc + (cur.end.getTime() - cur.begin.getTime())
+    }, 0)
   })
+
+  const addRecordGap = () => {
+    recordGaps.value.push({ begin: new Date(), end: new Date() })
+  }
+  const setLastRecordGapEnd = () => {
+    recordGaps.value[recordGaps.value.length - 1].end = new Date()
+  }
+
+  const addRecord = () => {}
   return {
     openedBook,
     openBook,
@@ -138,8 +132,10 @@ export const useReadingStore = defineStore('reading', () => {
     currentChapterHref,
     goChapter,
     record,
-    setRecordBegin,
-    setRecordEnd,
-    readingDuration
+    recordDuration,
+    isRecording,
+    recordGaps,
+    addRecordGap,
+    setLastRecordGapEnd
   }
 })
