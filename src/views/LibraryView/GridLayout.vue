@@ -23,16 +23,18 @@ defineProps({ bookCoverList: Array as PropType<BookCover[]> })
 const { selectedBook } = storeToRefs(bookStore)
 </script>
 <template>
-  <div
-    class="gap-y-8 gap-x-8 justify-items-stretch 2xl:grid-cols-4 xl:grid-cols-3 grid grid-cols-2 gap-8 p-8"
-  >
-    <BookCard
-      v-for="(bookCover, index) in bookCoverList"
-      :key="index"
-      :bookCover="bookCover"
-      :action="() => goReading(bookCover)"
-      :selected="bookCover.id == selectedBook?.id"
-    ></BookCard>
+  <div class="@container">
+    <div
+      class="gap-y-8 gap-x-8 justify-items-stretch grid grid-cols-1 gap-8 p-8 @lg:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-4 @9xl:grid-cols-5"
+    >
+      <BookCard
+        v-for="(bookCover, index) in bookCoverList"
+        :key="index"
+        :bookCover="bookCover"
+        :action="() => goReading(bookCover)"
+        :selected="bookCover.id == selectedBook?.id"
+      ></BookCard>
+    </div>
   </div>
 </template>
 <style>

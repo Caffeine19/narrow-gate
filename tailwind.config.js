@@ -57,9 +57,13 @@ module.exports = {
           900: '#1b3a1a',
           950: '#0e200e'
         }
+      },
+      containers: {
+        '8xl': '88rem',
+        '9xl': '96rem'
       }
     }
   },
   // eslint-disable-next-line no-undef
-  plugins: [require('@tailwindcss/container-queries'),]
+  plugins: [require('@tailwindcss/container-queries')]
 }
