@@ -25,9 +25,9 @@ onActivated(() => {
   const route = useRoute()
   if (route.query.id) {
     readingStore.openBook(Number(route.query.id))
-    readingStore.setReadingBegin(new Date(), Number(route.query.id))
+    readingStore.setRecordBegin(new Date(), Number(route.query.id))
 
-    setReadingEndTimer = setInterval(() => readingStore.setReadingEnd(new Date()), 1000)
+    setReadingEndTimer = setInterval(() => readingStore.setRecordEnd(new Date()), 1000)
   }
 })
 onDeactivated(() => {
@@ -40,7 +40,7 @@ const onTimerButtonClick = () => {
     setReadingEndTimer = undefined
   } else {
     clearInterval(setReadingEndTimer)
-    setReadingEndTimer = setInterval(() => readingStore.setReadingEnd(new Date()), 1000)
+    setReadingEndTimer = setInterval(() => readingStore.setRecordEnd(new Date()), 1000)
   }
 }
 const onKeyDown = (event: KeyboardEvent) => {

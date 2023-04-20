@@ -5,7 +5,7 @@ import ePub, { Rendition, type NavItem } from 'epubjs'
 
 import type Section from 'epubjs/types/section'
 
-import type { ReadingCreateParams } from '@/types/reading'
+import type { RecordCreateParams } from '@/types/record'
 import type { BookCover, OpenedBook } from '@/types/book'
 
 import { useBookStore } from './book'
@@ -101,28 +101,26 @@ export const useReadingStore = defineStore('reading', () => {
     rendition.prev()
   }
 
-  const readingRecord = ref<ReadingCreateParams>({})
-  const setReadingBegin = (
-    time: Required<ReadingCreateParams['begin']>,
-    bookId: Required<ReadingCreateParams['bookId']>
+  const record = ref<RecordCreateParams>({})
+  const setRecordBegin = (
+    time: Required<RecordCreateParams['begin']>,
+    bookId: Required<RecordCreateParams['bookId']>
   ) => {
-    readingRecord.value.begin = time
-    readingRecord.value.bookId = bookId
+    record.value.begin = time
+    record.value.bookId = bookId
   }
-  const setReadingEnd = (time: Required<ReadingCreateParams>['end']) => {
-    readingRecord.value.end = time
+  const setRecordEnd = (time: Required<RecordCreateParams>['end']) => {
+    record.value.end = time
   }
   const readingDuration = computed(() => {
-    if (readingRecord.value.end && readingRecord.value.begin) {
+    if (record.value.end && record.value.begin) {
       // const a = readingRecord.value.end.getTime()
       // console.log('🚀 ~ file: reading.ts:118 ~ readingDuration ~ a:', a)
       // const b = readingRecord.value.begin.getTime()
       // console.log('🚀 ~ file: reading.ts:120 ~ readingDuration ~ b:', b)
       // const c = a - b
       // console.log('🚀 ~ file: reading.ts:122 ~ readingDuration ~ c:', c)
-      return dayjs(readingRecord.value.end.getTime() - readingRecord.value.begin.getTime()).format(
-        'mm:ss'
-      )
+      return dayjs(record.value.end.getTime() - record.value.begin.getTime()).format('mm:ss')
     } else {
       return '00:00'
     }
@@ -139,9 +137,9 @@ export const useReadingStore = defineStore('reading', () => {
     collapseChapter,
     currentChapterHref,
     goChapter,
-    readingRecord,
-    setReadingBegin,
-    setReadingEnd,
+    record,
+    setRecordBegin,
+    setRecordEnd,
     readingDuration
   }
 })

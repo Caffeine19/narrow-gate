@@ -39,10 +39,10 @@ model Book {
   language       String
   addedDate      DateTime  @default(now())
   lastOpenedDate DateTime?
-  readings       Reading[]
+  recording      Record[]
 }
 
-model Reading {
+model Record {
   id     Int      @id @default(autoincrement())
   begin  DateTime
   end    DateTime
