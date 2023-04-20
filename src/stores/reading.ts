@@ -9,7 +9,7 @@ import type { RecordCreateParams, RecordGap } from '@/types/record'
 import type { BookCover, OpenedBook } from '@/types/book'
 
 import { useBookStore } from './book'
-import dayjs from 'dayjs'
+
 export const useReadingStore = defineStore('reading', () => {
   const bookStore = useBookStore()
 

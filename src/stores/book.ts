@@ -15,6 +15,28 @@ export const useBookStore = defineStore('book', () => {
   const book: Book = ePub()
 
   const bookCoverList = ref<BookCover[]>([])
+
+  const readFileAsync = (file: File): Promise<ArrayBuffer> => {
+    return new Promise<ArrayBuffer>((resolve, reject) => {
+      const reader = new FileReader()
+
+      reader.onload = () => {
+        const result = reader.result
+        if (result && result instanceof ArrayBuffer) {
+          resolve(result)
+        } else {
+          reject(new Error('Failed to read file.'))
+        }
+      }
+
+      reader.onerror = () => {
+        reject(reader.error || new Error('Failed to read file.'))
+      }
+
+      reader.readAsArrayBuffer(file)
+    })
+  }
+
   const addBook = async (event: Event) => {
     if (event.target && (event.target as HTMLInputElement).files) {
       const files = (event.target as HTMLInputElement).files
@@ -23,67 +45,60 @@ export const useBookStore = defineStore('book', () => {
         return
       }
 
-      for (const file of files) {
+      const promises = Array.from(files).map(async (file) => {
         if (!file.name.endsWith('.epub')) {
-          alert(`Invalid file type: ${file.name}. Please select an EPUB file.`)
-          return
+          throw new Error(`Invalid file type: ${file.name}. Please select an EPUB file.`)
         }
 
-        const reader = new FileReader()
+        const buffer = await readFileAsync(file)
+        const book = ePub()
+        await book.open(buffer)
 
-        reader.onload = async () => {
-          const buffer = reader.result
-          if (buffer && buffer instanceof ArrayBuffer) {
-            const book = ePub()
-            await book.open(buffer)
+        //获取元信息
+        // const metadata = await book.loaded.metadata
+        // console.log('🚀 ~ file: NarrowGallery.vue:20 ~ openDialog ~ metadata:', metadata)
 
-            //获取元信息
-            const metadata = await book.loaded.metadata
-            console.log('🚀 ~ file: NarrowGallery.vue:20 ~ openDialog ~ metadata:', metadata)
+        // 获取封面URL
+        // const coverUrl = await book.coverUrl()
+        // console.log('🚀 ~ file: NarrowGallery.vue:14 ~ openDialog ~ coverUrl:', coverUrl)
 
-            // 获取封面URL
-            const coverUrl = await book.coverUrl()
-            console.log('🚀 ~ file: NarrowGallery.vue:14 ~ openDialog ~ coverUrl:', coverUrl)
+        const [metadata, coverUrl] = await Promise.all([book.loaded.metadata, book.coverUrl()])
 
-            if (coverUrl) {
-              const coverFile = await (await fetch(coverUrl)).arrayBuffer()
+        if (coverUrl) {
+          const coverFile = await (await fetch(coverUrl)).arrayBuffer()
 
-              const createdBook = await window.electronAPI.createBook(
-                metadata.title,
-                metadata.creator,
-                buffer,
-                coverFile,
-                buffer.byteLength,
-                metadata.identifier,
-                metadata.pubdate,
-                metadata.publisher,
-                metadata.language
-              )
-              console.log('🚀 ~ file: book.ts:35 ~ addBook ~ createdBook:', createdBook)
+          const createdBook = await window.electronAPI.createBook(
+            metadata.title,
+            metadata.creator,
+            buffer,
+            coverFile,
+            buffer.byteLength,
+            metadata.identifier,
+            metadata.pubdate,
+            metadata.publisher,
+            metadata.language
+          )
 
-              bookCoverList.value.push({
-                id: createdBook.id,
-                title: metadata.title,
-                creator: metadata.creator,
-                bookCover: coverUrl,
-                size: buffer.byteLength,
-                identifier: metadata.identifier,
-                pubdate: metadata.identifier,
-                publisher: metadata.publisher,
-                language: metadata.language,
-                addedDate: createdBook.addedDate,
-                lastOpenedDate: createdBook.lastOpenedDate
-              })
-            }
+          return {
+            id: createdBook.id,
+            title: metadata.title,
+            creator: metadata.creator,
+            bookCover: coverUrl,
+            size: buffer.byteLength,
+            identifier: metadata.identifier,
+            pubdate: metadata.identifier,
+            publisher: metadata.publisher,
+            language: metadata.language,
+            addedDate: createdBook.addedDate,
+            lastOpenedDate: createdBook.lastOpenedDate
           }
+        } else {
+          return null
         }
-
-        reader.onerror = (error) => {
-          console.error(error)
-        }
-
-        reader.readAsArrayBuffer(file)
-      }
+      })
+      const books = await Promise.all(promises)
+      console.log('🚀 ~ file: book.ts:97 ~ addBook ~ books:', books)
+      bookCoverList.value.push(...(books.filter((book) => book != null) as BookCover[]))
     }
   }
 
