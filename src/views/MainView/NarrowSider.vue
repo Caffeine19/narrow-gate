@@ -31,7 +31,8 @@ const routeLinkOptions = reactive<RouteLink[]>([
           :key="index"
           :to="{ name: link.to }"
           style="-webkit-app-region: no-drag"
-          class="text-zinc-400 flex items-center justify-center"
+          activeClass="!text-apathetic-400"
+          class="text-zinc-400 flex items-center justify-center transition-colors"
         >
           <i style="font-size: 28px" :class="link.iconStyle"></i>
         </RouterLink>

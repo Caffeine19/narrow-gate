@@ -201,7 +201,7 @@ const onMultiCheckButtonClick = () => {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 table {
   border-collapse: separate !important;
   border-spacing: 0;
