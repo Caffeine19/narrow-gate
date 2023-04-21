@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onActivated, onBeforeMount, onDeactivated, onMounted, ref } from 'vue'
+import { computed, onActivated, onDeactivated, ref } from 'vue'
 
 import { useRoute, useRouter } from 'vue-router'
 
@@ -26,7 +26,7 @@ const goLibrary = () => {
 }
 
 const readingStore = useReadingStore()
-const { openedBook, recordDuration, isRecording } = storeToRefs(readingStore)
+const { openedBook, recordDuration, isRecording, recordGaps } = storeToRefs(readingStore)
 // eslint-disable-next-line no-undef
 let setLastRecordGapEndTimer: string | number | undefined | NodeJS.Timer
 const route = useRoute()
@@ -34,6 +34,7 @@ onActivated(() => {
   if (route.query.id) {
     isRecording.value = true
     readingStore.openBook(Number(route.query.id))
+    recordGaps.value = []
     readingStore.addRecordGap()
     setLastRecordGapEndTimer = setInterval(() => readingStore.setLastRecordGapEnd(), 1000)
   }

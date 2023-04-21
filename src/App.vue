@@ -1,23 +1,5 @@
-<script setup lang="ts">
-import { onMounted } from 'vue'
-import { useOSStore } from '@/stores/os'
-
-const osStore = useOSStore()
-
-onMounted(() => {
-  window.electronAPI.platform((event, value) => {
-    console.log('🚀 ~ file: App.vue:4 ~ window.electronAPI.platform ~ value:', value)
-    osStore.setPlatform(value)
-  })
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="flex w-screen h-screen overflow-hidden">
-    <router-view v-slot="{ Component }">
-      <keep-alive>
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
-  </div>
+  <router-view />
 </template>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NarrowSider from './NarrowSider.vue'
 import BookShelf from './BookShelf.vue'
 import DetailSider from './DetailSider.vue'
 import { storeToRefs } from 'pinia'
@@ -8,7 +7,6 @@ import { useBookStore } from '@/stores/book'
 const { openingDetail } = storeToRefs(useBookStore())
 </script>
 <template>
-  <NarrowSider />
   <div class="grow relative flex overflow-hidden" style="-webkit-app-region: no-drag">
     <BookShelf class="basis-7/12 grow overflow-hidden" />
     <DetailSider

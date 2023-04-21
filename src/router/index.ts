@@ -6,13 +6,34 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'library',
-      component: LibraryView
+      redirect: {
+        name: 'main'
+      }
     },
     {
-      path: '/reading',
-      name: 'reading',
-      component: () => import('../views/ReadingView/ReadingView.vue')
+      path: '/main',
+      name: 'main',
+      component: () => import('../views/MainView/MainView.vue'),
+      redirect: {
+        name: 'library'
+      },
+      children: [
+        {
+          path: '/main/library',
+          name: 'library',
+          component: LibraryView
+        },
+        {
+          path: '/main/record',
+          name: 'record',
+          component: () => import('../views/RecordView/RecordView.vue')
+        },
+        {
+          path: '/main/reading',
+          name: 'reading',
+          component: () => import('../views/ReadingView/ReadingView.vue')
+        }
+      ]
     }
   ]
 })
