@@ -24,9 +24,9 @@ const router = createRouter({
           component: LibraryView
         },
         {
-          path: '/main/record',
+          path: '/main/overview',
           name: 'record',
-          component: () => import('../views/RecordView/RecordView.vue')
+          component: () => import('../views/OverviewView/OverviewView.vue')
         },
         {
           path: '/main/reading',

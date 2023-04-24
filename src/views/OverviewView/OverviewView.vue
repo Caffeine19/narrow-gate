@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 
-import GridCalendar from './GridCalendar.vue'
+import ActivityCalendar from './ActivityCalendar.vue'
+import AmountCard from './AmountCard.vue'
+import NarrowDivider from '@/components/NarrowDivider.vue'
+import BookCard from './BookCard.vue'
 
-const summaryOptions = reactive([
+const AmountCardOptions = reactive([
   {
     name: 'Books',
     value: 326,
@@ -29,28 +32,29 @@ const summaryOptions = reactive([
 </script>
 <template>
   <div class="grow gap-x-8 grid grid-cols-12 p-8 overflow-hidden">
-    <div class="col-span-8">
+    <div class="col-span-8 space-y-6" name="leftGrid">
       <div class="gap-x-8 grid grid-cols-3">
-        <div
-          class="bg-zinc-800 border-zinc-700 flex justify-between px-5 py-4 border rounded"
-          v-for="(summary, index) in summaryOptions"
+        <AmountCard
+          v-for="(card, index) in AmountCardOptions"
           :key="index"
-        >
-          <div class="space-y-1.5">
-            <p class="text-zinc-300 text-xl font-medium">{{ summary.name }}</p>
-            <p class="text-zinc-50 text-3xl font-semibold">{{ summary.value }}</p>
-            <p class="text-zinc-400"><span :class="summary.textColor">+ 12</span> from last week</p>
-          </div>
-          <div
-            :class="[summary.textColor, summary.bgColor]"
-            class="w-14 h-14 flex items-center justify-center rounded-full"
-          >
-            <i :class="summary.iconStyle" style="font-size: 36px"></i>
+          v-bind="card"
+        ></AmountCard>
+      </div>
+      <NarrowDivider></NarrowDivider>
+      <div name="readMost" class="space-y-6">
+        <div class="flex items-end justify-between">
+          <div class="text-zinc-50 flex items-center space-x-3 text-2xl">
+            <i class="ri-hearts-line" style="font-size: 32px"></i>
+            <p class="font-semibold">Read Most</p>
           </div>
         </div>
+        <div class="custom-scrollbar flex pb-2 space-x-6 overflow-x-auto">
+          <BookCard v-for="(card, index) in 10" :key="index"></BookCard>
+        </div>
       </div>
+      <NarrowDivider></NarrowDivider>
     </div>
-    <div class="col-span-4 space-y-8 overflow-hidden">
+    <div class="col-span-4 space-y-8 overflow-hidden" name="rightGrid">
       <div class="space-y-6">
         <div class="flex items-center justify-between">
           <div class="text-zinc-50 flex items-end space-x-3 text-2xl">
@@ -65,9 +69,9 @@ const summaryOptions = reactive([
             <button>04</button>
           </div>
         </div>
-        <div><GridCalendar></GridCalendar></div>
+        <div><ActivityCalendar></ActivityCalendar></div>
       </div>
-      <div class="h-[1px] w-full border-b border-zinc-700"></div>
+      <NarrowDivider></NarrowDivider>
 
       <div class="space-y-6">
         <div class="flex items-end justify-between">

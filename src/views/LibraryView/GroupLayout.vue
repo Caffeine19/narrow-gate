@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useBookStore } from '@/stores/book'
-import BookCard from './BookCard.vue'
+import BookCover from './BookCover.vue'
 import { onMounted, ref } from 'vue'
 import NarrowButton from '@/components/NarrowButton.vue'
 
@@ -91,12 +91,12 @@ const onExpandButtonClick = (key: string) => {
           class="gap-y-8 gap-x-8 justify-items-stretch grid grid-cols-1 gap-8 @lg:grid-cols-2 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5"
           v-show="!collapsedGroupList.includes(group.key)"
         >
-          <BookCard
+          <BookCover
             v-for="(bookCover, index) in group.val"
             :key="index"
             :action="() => {}"
             :bookCover="bookCover"
-          ></BookCard>
+          ></BookCover>
         </div>
       </div>
     </div>
