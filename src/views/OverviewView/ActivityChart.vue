@@ -2,26 +2,18 @@
 import Chart from 'chart.js/auto'
 import { onMounted, ref } from 'vue'
 
-const data = [
-  { year: 2010, count: 10 },
-  { year: 2011, count: 20 },
-  { year: 2012, count: 15 },
-  { year: 2013, count: 25 },
-  { year: 2014, count: 22 },
-  { year: 2015, count: 30 },
-  { year: 2016, count: 28 }
-]
-
 const chartRef = ref<null | HTMLCanvasElement>(null)
 
 onMounted(() => {
   if (!chartRef.value) return
-  var ctx = chartRef.value.getContext('2d')
+  const ctx = chartRef.value.getContext('2d')
   if (!ctx) return
-  var gradient = ctx.createLinearGradient(0, 0, 0, 400)
-  gradient.addColorStop(0, 'rgba(250,174,50,1)')
-  gradient.addColorStop(1, 'rgba(250,174,50,0)')
-
+  const gradientApathetic = ctx.createLinearGradient(0, 0, 0, 400)
+  gradientApathetic.addColorStop(0, 'rgba(139,145,238,0.2)')
+  gradientApathetic.addColorStop(1, 'rgba(139,145,238,0)')
+  const gradientTea = ctx.createLinearGradient(0, 0, 0, 400)
+  gradientTea.addColorStop(0, 'rgba(106,166,97,0.2)')
+  gradientTea.addColorStop(1, 'rgba(106,166,97,0)')
   new Chart(chartRef.value, {
     type: 'line',
     data: {
@@ -41,20 +33,48 @@ onMounted(() => {
       ],
       datasets: [
         {
-          backgroundColor: gradient, // Put the gradient here as a fill color
+          backgroundColor: gradientApathetic, // Put the gradient here as a fill color
           fill: true,
-          data: [25.0, 32.4, 22.2, 39.4, 34.2, 22.0, 23.2, 24.1, 20.0, 18.4, 19.1, 17.4]
+          data: [25.0, 32.4, 22.2, 39.4, 34.2, 22.0, 23.2, 24.1, 20.0, 18.4, 19.1, 17.4],
+          borderColor: '#8B91EE',
+          yAxisID: 'A',
+          label: 'A'
         },
         {
-          backgroundColor: gradient, // Put the gradient here as a fill color
+          backgroundColor: gradientTea, // Put the gradient here as a fill color
           fill: true,
-          data: [25.0, 32.4, 22.2, 39.4, 34.2, 22.0, 23.2, 24.1, 20.0, 18.4, 19.1, 17.4]
+          data: [
+            120.0, 109.1, 122.2, 139.4, 125.0, 134.2, 118.4, 122.0, 123.2, 132.4, 124.1, 117.4
+          ],
+          borderColor: '#6AA661',
+          yAxisID: 'B',
+          label: 'B'
         }
       ]
     },
 
     options: {
-      borderColor: '#0ff'
+      responsive: true,
+      scales: {
+        A: {
+          position: 'left',
+          beginAtZero: true,
+
+          ticks: { color: '#a1a1aa', font: { size: 14 }, padding: 12 },
+          grid: { display: false }
+          // Hide grid lines, otherwise you have separate grid lines for the 2 y axes
+        },
+        B: {
+          position: 'right',
+          ticks: { color: '#a1a1aa', font: { size: 14 }, padding: 12 },
+          grid: { display: true, color: '#27272a' }
+        },
+        x: {
+          grid: { display: true, color: '#27272a' },
+          ticks: { color: '#a1a1aa', font: { size: 14 }, padding: 12 }
+        }
+      },
+      plugins: {}
     }
   })
 })

@@ -33,7 +33,7 @@ const AmountCardOptions = reactive([
 </script>
 <template>
   <div class="grow gap-x-8 grid grid-cols-12 p-8 overflow-hidden">
-    <div class="col-span-8 space-y-6" name="leftGrid">
+    <div class="custom-scrollbar col-span-8 pr-2 space-y-6 overflow-y-auto" name="leftGrid">
       <div class="gap-x-8 grid grid-cols-3">
         <AmountCard
           v-for="(card, index) in AmountCardOptions"
@@ -41,7 +41,21 @@ const AmountCardOptions = reactive([
           v-bind="card"
         ></AmountCard>
       </div>
+
       <NarrowDivider></NarrowDivider>
+
+      <div>
+        <div class="flex items-end justify-between">
+          <div class="text-zinc-50 flex items-center space-x-3 text-2xl">
+            <i class="ri-line-chart-line" style="font-size: 32px"></i>
+            <p class="font-semibold">Read Most</p>
+          </div>
+        </div>
+        <ActivityChart></ActivityChart>
+      </div>
+
+      <NarrowDivider></NarrowDivider>
+
       <div name="readMost" class="space-y-6">
         <div class="flex items-end justify-between">
           <div class="text-zinc-50 flex items-center space-x-3 text-2xl">
@@ -53,8 +67,6 @@ const AmountCardOptions = reactive([
           <BookCard v-for="(card, index) in 10" :key="index"></BookCard>
         </div>
       </div>
-      <NarrowDivider></NarrowDivider>
-      <ActivityChart></ActivityChart>
     </div>
     <div class="col-span-4 space-y-8 overflow-hidden" name="rightGrid">
       <div class="space-y-6">
