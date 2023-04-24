@@ -5,6 +5,7 @@ import ActivityCalendar from './ActivityCalendar.vue'
 import AmountCard from './AmountCard.vue'
 import NarrowDivider from '@/components/NarrowDivider.vue'
 import BookCard from './BookCard.vue'
+import ActivityChart from './ActivityChart.vue'
 
 const AmountCardOptions = reactive([
   {
@@ -53,6 +54,7 @@ const AmountCardOptions = reactive([
         </div>
       </div>
       <NarrowDivider></NarrowDivider>
+      <ActivityChart></ActivityChart>
     </div>
     <div class="col-span-4 space-y-8 overflow-hidden" name="rightGrid">
       <div class="space-y-6">
