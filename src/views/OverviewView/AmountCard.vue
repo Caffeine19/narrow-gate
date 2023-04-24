@@ -8,7 +8,9 @@ defineProps<{
 }>()
 </script>
 <template>
-  <div class="bg-zinc-800 border-zinc-700 flex justify-between px-5 py-4 border rounded">
+  <div
+    class="bg-zinc-800 hover:bg-zinc-800/80 border-zinc-700 flex justify-between px-5 py-4 transition-colors border rounded"
+  >
     <div class="space-y-1.5">
       <p class="text-zinc-300 text-xl font-medium">{{ name }}</p>
       <p class="text-zinc-50 text-3xl font-semibold">{{ value }}</p>

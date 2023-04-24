@@ -1,19 +1,45 @@
 <script setup lang="ts">
-import Chart from 'chart.js/auto'
+import Chart, { type ChartOptions } from 'chart.js/auto'
 import { onMounted, ref } from 'vue'
 
 const chartRef = ref<null | HTMLCanvasElement>(null)
 
+const chartOptions: ChartOptions = {
+  scales: {
+    A: {
+      position: 'left',
+      beginAtZero: true,
+
+      ticks: { color: '#a1a1aa', font: { size: 14 }, padding: 12 },
+      grid: { display: false }
+      // Hide grid lines, otherwise you have separate grid lines for the 2 y axes
+    },
+    B: {
+      position: 'right',
+      ticks: { color: '#a1a1aa', font: { size: 14 }, padding: 12 },
+      grid: { display: true, color: '#27272a' }
+    },
+    x: {
+      grid: { display: true, color: '#27272a' },
+      ticks: { color: '#a1a1aa', font: { size: 14 }, padding: 12 }
+    }
+  },
+  plugins: {}
+}
 onMounted(() => {
   if (!chartRef.value) return
+  const height = chartRef.value.clientHeight
+  console.log('🚀 ~ file: ActivityChart.vue:33 ~ onMounted ~ height:', height)
   const ctx = chartRef.value.getContext('2d')
+
   if (!ctx) return
-  const gradientApathetic = ctx.createLinearGradient(0, 0, 0, 400)
-  gradientApathetic.addColorStop(0, 'rgba(139,145,238,0.2)')
-  gradientApathetic.addColorStop(1, 'rgba(139,145,238,0)')
-  const gradientTea = ctx.createLinearGradient(0, 0, 0, 400)
-  gradientTea.addColorStop(0, 'rgba(106,166,97,0.2)')
-  gradientTea.addColorStop(1, 'rgba(106,166,97,0)')
+  const gradientApathetic = ctx.createLinearGradient(0, 0, 0, 224)
+
+  gradientApathetic.addColorStop(0, 'rgba(139,145,238,0.6)')
+  gradientApathetic.addColorStop(0.9, 'rgba(139,145,238,0)')
+  const gradientTea = ctx.createLinearGradient(0, 0, 0, 224)
+  gradientTea.addColorStop(0, 'rgba(106,166,97,0.6)')
+  gradientTea.addColorStop(0.9, 'rgba(106,166,97,0)')
   new Chart(chartRef.value, {
     type: 'line',
     data: {
@@ -52,31 +78,8 @@ onMounted(() => {
         }
       ]
     },
-
-    options: {
-      responsive: true,
-      scales: {
-        A: {
-          position: 'left',
-          beginAtZero: true,
-
-          ticks: { color: '#a1a1aa', font: { size: 14 }, padding: 12 },
-          grid: { display: false }
-          // Hide grid lines, otherwise you have separate grid lines for the 2 y axes
-        },
-        B: {
-          position: 'right',
-          ticks: { color: '#a1a1aa', font: { size: 14 }, padding: 12 },
-          grid: { display: true, color: '#27272a' }
-        },
-        x: {
-          grid: { display: true, color: '#27272a' },
-          ticks: { color: '#a1a1aa', font: { size: 14 }, padding: 12 }
-        }
-      },
-      plugins: {}
-    }
+    options: chartOptions
   })
 })
 </script>
-<template><canvas ref="chartRef"></canvas></template>
+<template><canvas ref="chartRef" class="max-h-64"></canvas></template>
