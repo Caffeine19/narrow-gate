@@ -179,6 +179,7 @@ const onGetMonthlyRecordActivity = async () => {
       '🚀 ~ file: main.ts:178 ~ onGetMonthlyRecordActivity ~ monthlyRecordActivity:',
       monthlyRecordActivity
     )
+    return monthlyRecordActivity
   } catch (error) {
     console.log('🚀 ~ file: main.ts:179 ~ onGetMonthlyRecordActivity ~ error:', error)
   }

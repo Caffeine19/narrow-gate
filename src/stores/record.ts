@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 
 import type { BookCover } from '@/types/book'
 import type { RecordActivity, RecordCreateParams, RecordGap } from '@/types/record'
+import dayjs from 'dayjs'
 
 export const useRecordStore = defineStore('record', () => {
   const record = ref<RecordCreateParams>({})
@@ -29,7 +30,7 @@ export const useRecordStore = defineStore('record', () => {
         id,
         recordGaps.value[0].begin,
         recordGaps.value[recordGaps.value.length - 1].end,
-        recordDuration.value
+        dayjs.duration(recordDuration.value).asSeconds()
       )
     } catch (error) {
       console.log('🚀 ~ file: reading.ts:125 ~ addRecord ~ error:', error)
@@ -53,6 +54,37 @@ export const useRecordStore = defineStore('record', () => {
     try {
       const res = await window.electronAPI.getMonthlyRecordActivity()
       console.log('🚀 ~ file: record.ts:55 ~ getMonthlyRecordActivity ~ res:', res)
+
+      const curMonthLen = dayjs('2023-04').daysInMonth()
+      const curMonth = Array.from({ length: curMonthLen }, (day, index) =>
+        dayjs('2023-04').add(index, 'day').format('YYYY-MM-DD')
+      )
+
+      const prevMonthLen = dayjs('2023-04').day() - 1
+      const prevMonth = Array.from({ length: prevMonthLen }, (day, index) =>
+        dayjs('2023-04')
+          .subtract(index + 1, 'day')
+          .format('YYYY-MM-DD')
+      )
+
+      const nextMonthLen = 42 - curMonthLen - prevMonthLen
+      const nextMonth = Array.from({ length: nextMonthLen }, (day, index) =>
+        dayjs('2023-04')
+          .add(index + curMonthLen, 'day')
+          .format('YYYY-MM-DD')
+      )
+
+      const fullMonth = [...prevMonth, ...curMonth, ...nextMonth]
+
+      monthlyRecordActivity.value = fullMonth.map((day) => {
+        let val
+        res.forEach((d) => {
+          if (d.key == day) {
+            val = d.val
+          }
+        })
+        return { key: day, val }
+      })
     } catch (error) {
       console.log('🚀 ~ file: record.ts:56 ~ getMonthlyRecordActivity ~ error:', error)
     }
