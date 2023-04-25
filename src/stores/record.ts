@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import type { BookCover } from '@/types/book'
-import type { RecordCreateParams, RecordGap } from '@/types/record'
+import type { RecordActivity, RecordCreateParams, RecordGap } from '@/types/record'
 
 export const useRecordStore = defineStore('record', () => {
   const record = ref<RecordCreateParams>({})
@@ -47,6 +47,16 @@ export const useRecordStore = defineStore('record', () => {
       console.log('🚀 ~ file: record.ts:44 ~ getRecordDurationAmount ~ error:', error)
     }
   }
+
+  const monthlyRecordActivity = ref<RecordActivity[]>([])
+  const getMonthlyRecordActivity = async () => {
+    try {
+      const res = await window.electronAPI.getMonthlyRecordActivity()
+      console.log('🚀 ~ file: record.ts:55 ~ getMonthlyRecordActivity ~ res:', res)
+    } catch (error) {
+      console.log('🚀 ~ file: record.ts:56 ~ getMonthlyRecordActivity ~ error:', error)
+    }
+  }
   return {
     record,
     recordDuration,
@@ -56,6 +66,8 @@ export const useRecordStore = defineStore('record', () => {
     setLastRecordGapEnd,
     createRecord,
     recordDurationAmount,
-    getRecordDurationAmount
+    getRecordDurationAmount,
+    monthlyRecordActivity,
+    getMonthlyRecordActivity
   }
 })

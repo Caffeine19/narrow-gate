@@ -14,7 +14,7 @@ import {
 
 import { createBook, deleteBook, getBookAmount, getBookContent, getBookList } from '../data/book'
 
-import { createRecord, getRecordDurationAmount } from '../data/record'
+import { createRecord, getMonthlyRecordActivity, getRecordDurationAmount } from '../data/record'
 
 import { readFile } from 'fs/promises'
 import { platform } from 'os'
@@ -172,6 +172,18 @@ const onGetRecordDurationAmount: GetRecordDurationAmount = async () => {
   }
 }
 
+const onGetMonthlyRecordActivity = async () => {
+  try {
+    const monthlyRecordActivity = await getMonthlyRecordActivity()
+    console.log(
+      '🚀 ~ file: main.ts:178 ~ onGetMonthlyRecordActivity ~ monthlyRecordActivity:',
+      monthlyRecordActivity
+    )
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:179 ~ onGetMonthlyRecordActivity ~ error:', error)
+  }
+}
+
 app.whenReady().then(() => {
   ipcMain.handle('createBook', async (event, data) => {
     console.log('🚀 ~ file: main.ts:101 ~ ipcMain.handle ~ data:', data)
@@ -197,13 +209,15 @@ app.whenReady().then(() => {
   ipcMain.on('deleteBook', (event, data) => {
     onDeleteBook(data)
   })
+  ipcMain.handle('getBookAmount', onGetBookAmount)
+  createWindow()
+
   ipcMain.handle('createRecord', (event, data) => {
     console.log('🚀 ~ file: main.ts:170 ~ ipcMain.handle ~ data:', data)
     onCreateRecord(data.bookId, data.end, data.begin, data.duration)
   })
-  ipcMain.handle('getBookAmount', onGetBookAmount)
-  createWindow()
   ipcMain.handle('getRecordDurationAmount', onGetRecordDurationAmount)
+  ipcMain.handle('getMonthlyRecordActivity', onGetMonthlyRecordActivity)
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

@@ -52,6 +52,7 @@ const AmountCardOptions = reactive([
 onMounted(() => {
   bookStore.getBookAmount()
   recordStore.getRecordDurationAmount()
+  recordStore.getMonthlyRecordActivity()
 })
 </script>
 <template>

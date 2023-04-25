@@ -1,4 +1,7 @@
 import { Record } from '@prisma/client'
+
+import * as dayjs from 'dayjs'
+
 import prisma from './main'
 
 export const createRecord = async (
@@ -34,5 +37,56 @@ export const getRecordDurationAmount = async () => {
     return
   } catch (error) {
     console.log('🚀 ~ file: record.ts:31 ~ getRecordDurationAmount ~ error:', error)
+  }
+}
+
+type RecordGroupedByDay = {
+  [key: string]: Record[]
+}
+
+export const getMonthlyRecordActivity = async () => {
+  try {
+    const recordList = await prisma.record.findMany({
+      where: {
+        begin: {
+          lte: new Date('2023-05-25'),
+          gte: new Date('2023-03-25')
+        }
+      }
+    })
+
+    console.log('🚀 ~ file: record.ts:50 ~ getMonthlyRecordActivity ~ recordList:', recordList)
+
+    const a = recordList.reduce((acc, cur) => {
+      const key = dayjs(cur.begin).format('YYYY-MM-DD')
+      if (!acc[key]) {
+        acc[key] = []
+      }
+      acc[key].push(cur)
+      return acc
+    }, {} as RecordGroupedByDay)
+    console.log('🚀 ~ file: record.ts:66 ~ a ~ a:', a)
+
+    const b = Object.entries(a).map(([key, value]) => {
+      return { key: key, val: value }
+    })
+    console.log('🚀 ~ file: record.ts:71 ~ b ~ b:', b)
+
+    const c = b.map((day) => {
+      const val = day.val.reduce(
+        (acc, cur) => {
+          acc.duration = acc.duration + cur.duration
+          acc.times++
+          return acc
+        },
+        { times: 0, duration: 0 }
+      )
+      return { key: day.key, val }
+    })
+    console.log('🚀 ~ file: record.ts:84 ~ c ~ c:', c)
+
+    return c
+  } catch (error) {
+    console.log('🚀 ~ file: record.ts:44 ~ getMonthlyRecordActivity ~ error:', error)
   }
 }
