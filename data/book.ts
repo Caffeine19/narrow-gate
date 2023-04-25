@@ -68,3 +68,12 @@ export const deleteBook = async (idList: Book['id'][]) => {
   const res = await Promise.all(task)
   console.log('🚀 ~ file: main.ts:74 ~ deleteBook ~ res:', res)
 }
+
+export const getBookAmount = async () => {
+  try {
+    const bookAmount = await prisma.book.count()
+    return bookAmount
+  } catch (error) {
+    console.log('🚀 ~ file: book.ts:77 ~ getBookAmount ~ error:', error)
+  }
+}

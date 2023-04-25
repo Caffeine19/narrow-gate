@@ -269,6 +269,16 @@ export const useBookStore = defineStore('book', () => {
     selectedBook.value = book
   }
 
+  const bookAmount = ref<number>(0)
+  const getBookAmount = async () => {
+    try {
+      const res = await window.electronAPI.getBookAmount()
+      console.log('🚀 ~ file: book.ts:276 ~ getBookAmount ~ res:', res)
+      bookAmount.value = res
+    } catch (error) {
+      console.log('🚀 ~ file: book.ts:278 ~ getBookAmount ~ error:', error)
+    }
+  }
   return {
     bookCoverList,
     addBook,
@@ -291,6 +301,8 @@ export const useBookStore = defineStore('book', () => {
     isBookGrouped,
     collapsedGroupList,
     expandGroup,
-    collapseGroup
+    collapseGroup,
+    bookAmount,
+    getBookAmount
   }
 })

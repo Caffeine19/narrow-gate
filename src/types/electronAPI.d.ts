@@ -43,6 +43,13 @@ export interface CreateRecord {
   ): Promise<void>
 }
 
+export interface GetBookAmount {
+  (): Promise<number>
+}
+
+export interface GetRecordDurationAmount {
+  (): Promise<number>
+}
 export interface IElectronAPI {
   createBook: CreateBook
   getBookCoverList: GetBookCoverList
@@ -50,6 +57,8 @@ export interface IElectronAPI {
   platform: IPlatform
   deleteBook: DeleteBook
   createRecord: CreateRecord
+  getBookAmount: GetBookAmount
+  getRecordDurationAmount: GetRecordDurationAmount
 }
 
 declare global {

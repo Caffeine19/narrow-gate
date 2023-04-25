@@ -4,11 +4,17 @@ import * as path from 'path'
 
 import { writeFileSync, existsSync } from 'fs'
 
-import { CreateBook, GetBookContent, GetBookCoverList } from '../src/types/electronAPI'
+import {
+  CreateBook,
+  GetBookAmount,
+  GetBookContent,
+  GetBookCoverList,
+  GetRecordDurationAmount
+} from '../src/types/electronAPI'
 
-import { createBook, deleteBook, getBookContent, getBookList } from '../data/book'
+import { createBook, deleteBook, getBookAmount, getBookContent, getBookList } from '../data/book'
 
-import { createRecord } from '../data/record'
+import { createRecord, getRecordDurationAmount } from '../data/record'
 
 import { readFile } from 'fs/promises'
 import { platform } from 'os'
@@ -140,6 +146,32 @@ const onCreateRecord = async (
   }
 }
 
+const onGetBookAmount: GetBookAmount = async () => {
+  try {
+    const bookAmount = await getBookAmount()
+    console.log(
+      '🚀 ~ file: main.ts:151 ~ constonGetBookAmount:GetBookAmount= ~ bookAmount:',
+      bookAmount
+    )
+    return bookAmount
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:152 ~ constonGetBookAmount:GetBookAmount= ~ error:', error)
+  }
+}
+
+const onGetRecordDurationAmount: GetRecordDurationAmount = async () => {
+  try {
+    const durationAmount = await getRecordDurationAmount()
+    console.log(
+      '🚀 ~ file: main.ts:165 ~ constonGetRecordDurationAmount:GetRecordDurationAmount= ~ durationAmount:',
+      durationAmount
+    )
+    return durationAmount
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:166 ~ onGetRecordDurationAmount ~ error:', error)
+  }
+}
+
 app.whenReady().then(() => {
   ipcMain.handle('createBook', async (event, data) => {
     console.log('🚀 ~ file: main.ts:101 ~ ipcMain.handle ~ data:', data)
@@ -165,12 +197,13 @@ app.whenReady().then(() => {
   ipcMain.on('deleteBook', (event, data) => {
     onDeleteBook(data)
   })
-
   ipcMain.handle('createRecord', (event, data) => {
     console.log('🚀 ~ file: main.ts:170 ~ ipcMain.handle ~ data:', data)
     onCreateRecord(data.bookId, data.end, data.begin, data.duration)
   })
+  ipcMain.handle('getBookAmount', onGetBookAmount)
   createWindow()
+  ipcMain.handle('getRecordDurationAmount', onGetRecordDurationAmount)
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

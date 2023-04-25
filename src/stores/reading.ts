@@ -1,11 +1,9 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
-import ePub, { Rendition, type NavItem, Book } from 'epubjs'
-
+import ePub, { Rendition, type NavItem } from 'epubjs'
 import type Section from 'epubjs/types/section'
 
-import type { RecordCreateParams, RecordGap } from '@/types/record'
 import type { BookCover, OpenedBook } from '@/types/book'
 
 import { useBookStore } from './book'
@@ -101,35 +99,6 @@ export const useReadingStore = defineStore('reading', () => {
     rendition.prev()
   }
 
-  const record = ref<RecordCreateParams>({})
-  const recordGaps = ref<RecordGap[]>([])
-  const isRecording = ref(false)
-
-  const recordDuration = computed(() => {
-    return recordGaps.value.reduce((acc, cur) => {
-      return acc + (cur.end.getTime() - cur.begin.getTime())
-    }, 0)
-  })
-
-  const addRecordGap = () => {
-    recordGaps.value.push({ begin: new Date(), end: new Date() })
-  }
-  const setLastRecordGapEnd = () => {
-    recordGaps.value[recordGaps.value.length - 1].end = new Date()
-  }
-
-  const createRecord = (id: BookCover['id']) => {
-    try {
-      window.electronAPI.createRecord(
-        id,
-        recordGaps.value[0].begin,
-        recordGaps.value[recordGaps.value.length - 1].end,
-        recordDuration.value
-      )
-    } catch (error) {
-      console.log('🚀 ~ file: reading.ts:125 ~ addRecord ~ error:', error)
-    }
-  }
   return {
     openedBook,
     openBook,
@@ -141,13 +110,6 @@ export const useReadingStore = defineStore('reading', () => {
     expandChapter,
     collapseChapter,
     currentChapterHref,
-    goChapter,
-    record,
-    recordDuration,
-    isRecording,
-    recordGaps,
-    addRecordGap,
-    setLastRecordGapEnd,
-    createRecord
+    goChapter
   }
 })

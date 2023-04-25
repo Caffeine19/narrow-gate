@@ -22,3 +22,17 @@ export const createRecord = async (
     console.log('🚀 ~ file: reading.ts:20 ~ error:', error)
   }
 }
+
+export const getRecordDurationAmount = async () => {
+  try {
+    const recordDuration = await prisma.record.findMany({ select: { duration: true } })
+
+    const recordDurationAmount = recordDuration.reduce((acc, cur) => {
+      return acc + cur.duration
+    }, 0)
+    return recordDurationAmount
+    return
+  } catch (error) {
+    console.log('🚀 ~ file: record.ts:31 ~ getRecordDurationAmount ~ error:', error)
+  }
+}

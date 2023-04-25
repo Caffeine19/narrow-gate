@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 
 import ActivityCalendar from './ActivityCalendar.vue'
 import AmountCard from './AmountCard.vue'
@@ -7,29 +7,52 @@ import NarrowDivider from '@/components/NarrowDivider.vue'
 import BookCard from './BookCard.vue'
 import ActivityChart from './ActivityChart.vue'
 
+import { useBookStore } from '@/stores/book'
+import { storeToRefs } from 'pinia'
+import { useRecordStore } from '@/stores/record'
+
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+
+dayjs.extend(duration)
+
+const bookStore = useBookStore()
+const { bookAmount } = storeToRefs(bookStore)
+
+const recordStore = useRecordStore()
+const { recordDurationAmount } = storeToRefs(recordStore)
+const formattedRecordDurationAmount = computed(() =>
+  dayjs.duration(recordDurationAmount.value).format('HH:mm:ss')
+)
+
 const AmountCardOptions = reactive([
   {
     name: 'Books',
-    value: 326,
+    value: bookAmount,
     iconStyle: 'ri-book-3-line',
     textColor: 'text-apathetic-400',
     bgColor: 'bg-apathetic-400/10'
   },
   {
     name: 'Bookmarks',
-    value: 326,
+    value: 323,
     iconStyle: 'ri-bookmark-line',
     textColor: 'text-passion-400',
     bgColor: 'bg-passion-400/10'
   },
   {
     name: 'Duration',
-    value: 326,
+    value: formattedRecordDurationAmount.value,
     iconStyle: 'ri-timer-line',
     textColor: 'text-tea-400',
     bgColor: 'bg-tea-400/10'
   }
 ])
+
+onMounted(() => {
+  bookStore.getBookAmount()
+  recordStore.getRecordDurationAmount()
+})
 </script>
 <template>
   <div class="grow gap-x-8 grid grid-cols-12 p-8 overflow-hidden">

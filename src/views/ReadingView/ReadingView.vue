@@ -12,21 +12,18 @@ import ChapterNavigator from './ChapterNavigator.vue'
 import { storeToRefs } from 'pinia'
 import { useOSStore } from '@/stores/os'
 import { useReadingStore } from '@/stores/reading'
+import { useRecordStore } from '@/stores/record'
 
 dayjs.extend(duration)
 
 const { platform } = storeToRefs(useOSStore())
 
-const router = useRouter()
-const goLibrary = () => {
-  clearInterval(setLastRecordGapEndTimer)
-  console.log(route.query.id)
-  readingStore.createRecord(Number(route.query.id))
-  router.push({ name: 'library' })
-}
-
 const readingStore = useReadingStore()
-const { openedBook, recordDuration, isRecording, recordGaps } = storeToRefs(readingStore)
+const { openedBook } = storeToRefs(readingStore)
+
+const recordStore = useRecordStore()
+const { recordDuration, isRecording, recordGaps } = storeToRefs(recordStore)
+
 // eslint-disable-next-line no-undef
 let setLastRecordGapEndTimer: string | number | undefined | NodeJS.Timer
 const route = useRoute()
@@ -35,8 +32,8 @@ onActivated(() => {
     isRecording.value = true
     readingStore.openBook(Number(route.query.id))
     recordGaps.value = []
-    readingStore.addRecordGap()
-    setLastRecordGapEndTimer = setInterval(() => readingStore.setLastRecordGapEnd(), 1000)
+    recordStore.addRecordGap()
+    setLastRecordGapEndTimer = setInterval(() => recordStore.setLastRecordGapEnd(), 1000)
   }
 })
 
@@ -48,10 +45,18 @@ const onTimerButtonClick = () => {
     isRecording.value = false
   } else {
     isRecording.value = true
-    readingStore.addRecordGap()
-    setLastRecordGapEndTimer = setInterval(() => readingStore.setLastRecordGapEnd(), 1000)
+    recordStore.addRecordGap()
+    setLastRecordGapEndTimer = setInterval(() => recordStore.setLastRecordGapEnd(), 1000)
   }
 }
+
+const router = useRouter()
+const goLibrary = () => {
+  clearInterval(setLastRecordGapEndTimer)
+  recordStore.createRecord(Number(route.query.id))
+  router.push({ name: 'library' })
+}
+
 const onKeyDown = (event: KeyboardEvent) => {
   if (!isRecording.value) return
   // console.log('🚀 ~ file: ReadingView.vue:24 ~ onKeyDown ~ event:', event)
