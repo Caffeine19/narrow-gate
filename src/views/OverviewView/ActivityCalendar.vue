@@ -20,7 +20,7 @@ const generateActivityColor = (duration: number) => {
     return 'bg-tea-600'
   } else if (duration > 20 && duration < 30) {
     return 'bg-tea-500'
-  } else if (duration > 30 && duration < 40) {
+  } else {
     return 'bg-tea-400'
   }
 }
