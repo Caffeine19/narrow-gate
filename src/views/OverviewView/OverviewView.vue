@@ -13,6 +13,7 @@ import { useRecordStore } from '@/stores/record'
 
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import DatePicker from '@/components/DatePicker.vue'
 
 dayjs.extend(duration)
 
@@ -22,7 +23,7 @@ const { bookAmount } = storeToRefs(bookStore)
 const recordStore = useRecordStore()
 const { recordDurationAmount } = storeToRefs(recordStore)
 const formattedRecordDurationAmount = computed(() =>
-  dayjs.duration(recordDurationAmount.value).format('HH:mm:ss')
+  dayjs.duration(recordDurationAmount.value, 'minutes').format('HH:mm:ss')
 )
 
 const AmountCardOptions = reactive([
@@ -42,7 +43,7 @@ const AmountCardOptions = reactive([
   },
   {
     name: 'Duration',
-    value: formattedRecordDurationAmount.value,
+    value: formattedRecordDurationAmount,
     iconStyle: 'ri-timer-line',
     textColor: 'text-tea-400',
     bgColor: 'bg-tea-400/10'
@@ -99,13 +100,7 @@ onMounted(() => {
             <i class="ri-polaroid-2-line" style="font-size: 32px"></i>
             <p class="font-semibold">Monthly Activity</p>
           </div>
-          <div
-            class="bg-zinc-800 space-x-1.5 border-zinc-700 flex items-stretch rounded text-zinc-50 py-1 px-1.5 border"
-          >
-            <button>2023</button>
-            <div class="w-[1px] border-zinc-700 border-r"></div>
-            <button>04</button>
-          </div>
+          <DatePicker></DatePicker>
         </div>
         <div><ActivityCalendar></ActivityCalendar></div>
       </div>

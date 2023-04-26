@@ -8,10 +8,6 @@ const route = useRoute()
 <template>
   <div class="flex w-screen h-screen overflow-hidden" style="-webkit-app-region: no-drag">
     <NarrowSider v-show="route.name !== 'reading'" />
-    <router-view v-slot="{ Component }">
-      <keep-alive>
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
+    <router-view></router-view>
   </div>
 </template>

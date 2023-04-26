@@ -31,44 +31,38 @@ const sortMenu = reactive<MenuItem[]>([
   {
     iconStyle: 'ri-attachment-line',
     label: 'title',
-    value: 'title',
-    action: () => console.log('')
+    value: 'title'
   },
   {
     iconStyle: 'ri-user-smile-line',
     label: 'creator',
-    value: 'creator',
-    action: () => console.log('')
+    value: 'creator'
   },
   {
     iconStyle: 'ri-file-zip-line',
     label: 'size',
-    value: 'size',
-    action: () => console.log('')
+    value: 'size'
   },
   {
     iconStyle: 'ri-calendar-check-line',
     label: 'pubdate',
-    value: 'pubdate',
-    action: () => console.log('')
+    value: 'pubdate'
   },
   {
     iconStyle: 'ri-inbox-archive-line',
     label: 'addedDate',
-    value: 'addedDate',
-    action: () => console.log('')
+    value: 'addedDate'
   },
   {
     iconStyle: 'ri-folder-open-line',
     label: 'lastOpenedDate',
-    value: 'lastOpenedDate',
-    action: () => console.log('')
+    value: 'lastOpenedDate'
   },
   {
     iconStyle: 'ri-eraser-line',
     label: 'clear',
     value: 'clear',
-    action: () => console.log(''),
+
     buttonStyle: '!text-passion-500/80 hover:!text-passion-500 mt-0.5 border-zinc-700 border-t',
     activeStyle: 'bg-transparent'
   }
@@ -92,26 +86,23 @@ const groupMenu = reactive<MenuItem[]>([
   {
     iconStyle: 'ri-attachment-line',
     label: 'title',
-    value: 'title',
-    action: () => console.log('')
+    value: 'title'
   },
   {
     iconStyle: 'ri-user-smile-line',
     label: 'creator',
-    value: 'creator',
-    action: () => console.log('')
+    value: 'creator'
   },
   {
     iconStyle: 'ri-mail-send-line',
     label: 'publisher',
-    value: 'publisher',
-    action: () => console.log('')
+    value: 'publisher'
   },
   {
     iconStyle: 'ri-eraser-line',
     label: 'clear',
     value: 'clear',
-    action: () => console.log(''),
+
     buttonStyle: '!text-passion-500/80 hover:!text-passion-500 mt-0.5 border-zinc-700 border-t',
     activeStyle: 'bg-transparent'
   }

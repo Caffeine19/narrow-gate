@@ -33,7 +33,9 @@ const hoveredDay = ref<RecordActivity>()
 const gridTooltipRef = ref<null | HTMLElement>(null)
 
 const gridToolTipPosition = reactive({ top: 0, left: 0 })
+const openingGridTooltip = ref(false)
 const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
+  openingGridTooltip.value = true
   const tooltipRect = gridTooltipRef.value?.getBoundingClientRect()
 
   if (!tooltipRect) return
@@ -47,17 +49,14 @@ const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
 }
 </script>
 <template>
-  <table class="mx-auto">
+  <table class="mx-auto" @mouseleave="openingGridTooltip = false">
     <tr v-for="(day, i) in week" :key="i">
       <td>{{ day }}</td>
-      <td
-        v-for="(nth, j) in nthWeek"
-        :key="j"
-        @mouseenter="(event) => onGridMouseEnter(event, i, j)"
-      >
+      <td v-for="(nth, j) in nthWeek" :key="j">
         <div
-          class="h-7 hover:opacity-80 w-12 transition-opacity rounded cursor-pointer"
+          class="h-7 hover:opacity-80 hover:border-tea-200 w-12 transition-[opacity,border-color] border border-transparent rounded cursor-pointer"
           :class="generateActivityColor(monthlyRecordActivity[i + j * 7]?.val?.duration || 0)"
+          @mouseenter="(event) => onGridMouseEnter(event, i, j)"
         ></div>
       </td>
     </tr>
@@ -66,30 +65,42 @@ const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
       <td v-for="(nth, j) in nthWeek" :key="j">{{ nth }}</td>
     </tr>
   </table>
-  <ul
-    class="bg-zinc-950/60 backdrop-blur-md text-zinc-50 w-fit border-zinc-700 fixed flex flex-col p-2 transition-all border rounded pointer-events-none"
-    :style="{ top: gridToolTipPosition.top + 'px', left: gridToolTipPosition.left + 'px' }"
-    ref="gridTooltipRef"
+  <transition name="zoom">
+    <ul
+      class="bg-zinc-950/60 backdrop-blur-md text-zinc-50 w-fit border-zinc-700 fixed flex flex-col p-2 border rounded pointer-events-none transition-[top,left]"
+      :style="{ top: gridToolTipPosition.top + 'px', left: gridToolTipPosition.left + 'px' }"
+      ref="gridTooltipRef"
+      v-show="openingGridTooltip"
+    >
+      <li class="text-apathetic-400 text-lg font-medium">{{ hoveredDay?.key }}</li>
+      <li class="flex items-center justify-between space-x-8">
+        <div class="text-zinc-50 flex items-center space-x-2">
+          <i class="ri-hourglass-2-line" style="font-size: 24px"></i>
+          <p>Duration</p>
+        </div>
+        <p class="text-zinc-300 whitespace-nowrap">{{ hoveredDay?.val?.duration || 0 }} minutes</p>
+      </li>
+      <li class="flex items-center justify-between space-x-8">
+        <div class="text-zinc-50 flex items-center space-x-2">
+          <i class="ri-functions" style="font-size: 24px"></i>
+          <p>Times</p>
+        </div>
+        <p class="text-zinc-300 whitespace-nowrap">{{ hoveredDay?.val?.times || 0 }} times</p>
+      </li>
+    </ul></transition
   >
-    <li class="text-apathetic-400 text-lg font-medium">{{ hoveredDay?.key }}</li>
-    <li class="flex items-center justify-between space-x-8">
-      <div class="text-zinc-50 flex items-center space-x-2">
-        <i class="ri-hourglass-2-line" style="font-size: 24px"></i>
-        <p>Duration</p>
-      </div>
-      <p class="text-zinc-300 whitespace-nowrap">{{ hoveredDay?.val?.duration || 0 }} minutes</p>
-    </li>
-    <li class="flex items-center justify-between space-x-8">
-      <div class="text-zinc-50 flex items-center space-x-2">
-        <i class="ri-functions" style="font-size: 24px"></i>
-        <p>Times</p>
-      </div>
-      <p class="text-zinc-300 whitespace-nowrap">{{ hoveredDay?.val?.times || 0 }} times</p>
-    </li>
-  </ul>
 </template>
 <style scoped>
 td {
   @apply text-zinc-300 px-1.5 py-1.5;
+}
+.zoom-enter-active,
+.zoom-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.zoom-enter-from,
+.zoom-leave-to {
+  opacity: 0;
+  transform: scale(0);
 }
 </style>

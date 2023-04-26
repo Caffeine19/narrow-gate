@@ -27,6 +27,7 @@ const onMenuItemClick = (index: number) => {
   emits('select', index)
 }
 
+const menuRef = ref<null | HTMLElement>()
 const menuPosition = reactive({ top: 0, left: 0 })
 
 const slots = useSlots()
@@ -40,12 +41,20 @@ watch(
     nextTick(() => {
       if (TriggerSlotRenderer.value.children) {
         const triggerSlot = (TriggerSlotRenderer.value.children as VNodeArrayChildren)[0]
-        if (triggerSlot) {
+
+        const menuRect = menuRef.value?.getBoundingClientRect()
+
+        if (triggerSlot && menuRect) {
           const triggerEl = (triggerSlot as any).el
-          const rect = triggerEl.getBoundingClientRect()
-          console.log('🚀 ~ file: DropMenu.vue:54 ~ onMounted ~ rect:', rect)
-          menuPosition.top = rect.bottom + 20
-          menuPosition.left = rect.left
+          const triggerRect = triggerEl.getBoundingClientRect()
+          console.log('🚀 ~ file: DropMenu.vue:54 ~ onMounted ~ rect:', triggerRect)
+          menuPosition.top = triggerRect.bottom + 20
+
+          if (triggerRect.left + menuRect.width > window.innerWidth) {
+            menuPosition.left = triggerRect.right - menuRect.width
+          } else {
+            menuPosition.left = triggerRect.left
+          }
         }
       }
     })
@@ -60,8 +69,9 @@ watch(
       <transition name="zoom">
         <div
           v-if="visible"
-          class="bg-zinc-950/60 border-zinc-700 backdrop-blur-xl fixed z-20 flex flex-col items-stretch space-y-2 border rounded py-1.5 top-20 left-20"
+          class="bg-zinc-950/60 border-zinc-700 backdrop-blur-xl fixed z-20 flex flex-col items-stretch space-y-2 border rounded py-1.5 top-20 left-20 max-h-64 overflow-y-auto"
           :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
+          ref="menuRef"
         >
           <NarrowButton
             :action="() => onMenuItemClick(index)"
@@ -85,14 +95,13 @@ watch(
   </div>
 </template>
 
-<style>
+<style scoped>
 .zoom-enter-active,
 .zoom-leave-active {
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 .zoom-enter-from,
 .zoom-leave-to {
   opacity: 0;
-  transform: scale(0);
 }
 </style>
