@@ -30,7 +30,7 @@ export const useRecordStore = defineStore('record', () => {
         id,
         recordGaps.value[0].begin,
         recordGaps.value[recordGaps.value.length - 1].end,
-        dayjs.duration(recordDuration.value).asSeconds()
+        Math.round(dayjs.duration(recordDuration.value).asMinutes())
       )
     } catch (error) {
       console.log('🚀 ~ file: reading.ts:125 ~ addRecord ~ error:', error)
@@ -65,7 +65,7 @@ export const useRecordStore = defineStore('record', () => {
         dayjs('2023-04')
           .subtract(index + 1, 'day')
           .format('YYYY-MM-DD')
-      )
+      ).reverse()
 
       const nextMonthLen = 42 - curMonthLen - prevMonthLen
       const nextMonth = Array.from({ length: nextMonthLen }, (day, index) =>
