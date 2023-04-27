@@ -77,3 +77,37 @@ export const getBookAmount = async () => {
     console.log('🚀 ~ file: book.ts:77 ~ getBookAmount ~ error:', error)
   }
 }
+
+export const getReadMostBooks = async (begin: string, end: string) => {
+  const res = await prisma.record.groupBy({
+    by: ['bookId'],
+    _count: {
+      bookId: true
+    },
+    orderBy: {
+      _count: {
+        bookId: 'desc'
+      }
+    },
+    take: 12
+  })
+
+  const res2 = (
+    await prisma.book.findMany({
+      include: {
+        _count: {
+          select: { recording: true }
+        }
+      },
+      orderBy: {}
+    })
+  )
+    .sort((prev, next) => {
+      return next._count.recording - prev._count.recording
+    })
+    .slice(0, 12)
+  console.log('🚀 ~ file: record.ts:118 ~ getReadMostBooks ~ res2:', res2)
+
+  console.log('🚀 ~ file: record.ts:107 ~ getReadMostBooks ~ res:', res)
+}
+getReadMostBooks('2023-03-04', '2023-06-06')
