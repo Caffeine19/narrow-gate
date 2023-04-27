@@ -106,8 +106,19 @@ export const getReadMostBooks = async (begin: string, end: string) => {
       return next._count.recording - prev._count.recording
     })
     .slice(0, 12)
-  console.log('🚀 ~ file: record.ts:118 ~ getReadMostBooks ~ res2:', res2)
 
-  console.log('🚀 ~ file: record.ts:107 ~ getReadMostBooks ~ res:', res)
+  const c = await Promise.all(res2.map((r) => prisma.record.findMany({ where: { bookId: r.id } })))
+  c.map((cc) => {
+    const d = cc.reduce(
+      (acc, cur) => {
+        acc.duration = acc.duration + cur.duration
+        acc.times++
+        return acc
+      },
+      { times: 0, duration: 0 }
+    )
+    return d
+  })
+  console.log('🚀 ~ file: book.ts:122 ~ c.map ~ c:', c)
 }
 getReadMostBooks('2023-03-04', '2023-06-06')
