@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onActivated, onDeactivated, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import { useRoute, useRouter } from 'vue-router'
 
@@ -27,7 +27,7 @@ const { recordDuration, isRecording, recordGaps } = storeToRefs(recordStore)
 // eslint-disable-next-line no-undef
 let setLastRecordGapEndTimer: string | number | undefined | NodeJS.Timer
 const route = useRoute()
-onActivated(() => {
+onMounted(() => {
   if (route.query.id) {
     isRecording.value = true
     readingStore.openBook(Number(route.query.id))
@@ -75,10 +75,10 @@ const onKeyDown = (event: KeyboardEvent) => {
       break
   }
 }
-onActivated(() => {
+onMounted(() => {
   window.addEventListener('keydown', onKeyDown)
 })
-onDeactivated(() => {
+onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeyDown)
 })
 
@@ -91,13 +91,14 @@ const toggleChapterNavigator = (flag: boolean) => {
   <div class="bg-zinc-900 flex flex-col items-stretch justify-between w-full h-full">
     <div
       class="bg-zinc-950 border-zinc-800 grid items-center px-8 py-3 border-b"
-      style="grid-template-columns: 1fr min-content 1fr"
+      style="grid-template-columns: 1fr min-content 1fr; -webkit-app-region: drag"
       :class="platform == 'darwin' ? 'pl-24' : ''"
     >
       <NarrowButton
         iconStyle="ri-logout-circle-line"
         :action="goLibrary"
         class="justify-self-start"
+        style="-webkit-app-region: no-drag"
       />
       <p class="text-zinc-200 justify-self-center whitespace-nowrap text-xl italic font-medium">
         {{
@@ -119,11 +120,12 @@ const toggleChapterNavigator = (flag: boolean) => {
           labelStyle="text-zinc-50"
           :label="formattedDuration"
           :action="onTimerButtonClick"
+          style="-webkit-app-region: no-drag"
         >
           ></NarrowButton
         >
 
-        <NarrowButton iconStyle="ri-equalizer-line" />
+        <NarrowButton iconStyle="ri-equalizer-line" style="-webkit-app-region: no-drag" />
       </div>
     </div>
     <div

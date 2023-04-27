@@ -36,9 +36,14 @@ const onDeleteButtonClick = () => {
   <div class="border-zinc-800 custom-scrollbar bg-zinc-900 overflow-y-auto border-l">
     <div
       class="bg-zinc-950/80 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b h-[67px]"
+      style="-webkit-app-region: drag"
     >
-      <NarrowButton iconStyle="ri-side-bar-fill" :action="() => bookStore.toggleDetail(false)" />
-      <div class="flex items-center space-x-3">
+      <NarrowButton
+        iconStyle="ri-side-bar-fill"
+        :action="() => bookStore.toggleDetail(false)"
+        style="-webkit-app-region: no-drag"
+      />
+      <div class="flex items-center space-x-3" style="-webkit-app-region: no-drag">
         <NarrowButton
           icon-style="ri-play-line"
           :action="onReadingButtonClick"

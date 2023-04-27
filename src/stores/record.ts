@@ -50,12 +50,12 @@ export const useRecordStore = defineStore('record', () => {
   }
 
   const monthlyRecordActivity = ref<RecordActivity[]>([])
-  const getMonthlyRecordActivity = async () => {
+  const getMonthlyRecordActivity = async (month: string): Promise<RecordActivity[]> => {
     try {
-      const res = await window.electronAPI.getMonthlyRecordActivity()
+      const res = await window.electronAPI.getMonthlyRecordActivity(month)
       console.log('🚀 ~ file: record.ts:55 ~ getMonthlyRecordActivity ~ res:', res)
 
-      const curMonthLen = dayjs('2023-04').daysInMonth()
+      const curMonthLen = dayjs(month).daysInMonth()
       const curMonth = Array.from({ length: curMonthLen }, (day, index) =>
         dayjs('2023-04').add(index, 'day').format('YYYY-MM-DD')
       )
@@ -76,7 +76,7 @@ export const useRecordStore = defineStore('record', () => {
 
       const fullMonth = [...prevMonth, ...curMonth, ...nextMonth]
 
-      monthlyRecordActivity.value = fullMonth.map((day) => {
+      const fullMonthVal = fullMonth.map((day) => {
         let val
         res.forEach((d) => {
           if (d.key == day) {
@@ -84,9 +84,11 @@ export const useRecordStore = defineStore('record', () => {
           }
         })
         return { key: day, val }
-      })
+      }) as RecordActivity[]
+      return fullMonthVal
     } catch (error) {
       console.log('🚀 ~ file: record.ts:56 ~ getMonthlyRecordActivity ~ error:', error)
+      throw error
     }
   }
   return {

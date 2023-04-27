@@ -44,13 +44,16 @@ type RecordGroupedByDay = {
   [key: string]: Record[]
 }
 
-export const getMonthlyRecordActivity = async () => {
+export const getMonthlyRecordActivity = async (month: string) => {
+  console.log('🚀 ~ file: record.ts:48 ~ getMonthlyRecordActivity ~ month:', month)
   try {
+    const begin = dayjs(month).format('YYYY-MM-DD')
+    const end = dayjs(month).add(1, 'month').format('YYYY-MM-DD')
     const recordList = await prisma.record.findMany({
       where: {
         begin: {
-          lte: new Date('2023-05-25'),
-          gte: new Date('2023-03-25')
+          lte: new Date(end),
+          gte: new Date(begin)
         }
       }
     })

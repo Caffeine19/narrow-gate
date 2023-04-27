@@ -8,9 +8,7 @@
         @apply bg-zinc-900
     }
 
-    button {
-        -webkit-app-region: no-drag;
-    }
+ 
 }
 
 @font-face {

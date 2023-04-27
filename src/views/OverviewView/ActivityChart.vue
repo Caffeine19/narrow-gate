@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { useRecordStore } from '@/stores/record'
-import { storeToRefs } from 'pinia'
+import { onMounted, ref } from 'vue'
 
 import Chart, { type ChartOptions } from 'chart.js/auto'
-import { ref, watch } from 'vue'
+
+import { useRecordStore } from '@/stores/record'
+
+import type { RecordActivity } from '@/types/record'
 
 const chartRef = ref<null | HTMLCanvasElement>(null)
 
@@ -31,54 +33,53 @@ const chartOptions: ChartOptions = {
 }
 
 const recordStore = useRecordStore()
-const { monthlyRecordActivity } = storeToRefs(recordStore)
+const monthlyRecordActivity = ref<RecordActivity[]>([])
 
-watch(monthlyRecordActivity, (newVal) => {
-  if (newVal.length > 0) {
-    if (!chartRef.value) return
-    const height = chartRef.value.clientHeight
-    console.log('🚀 ~ file: ActivityChart.vue:33 ~ onMounted ~ height:', height)
-    const ctx = chartRef.value.getContext('2d')
+onMounted(async () => {
+  monthlyRecordActivity.value = await recordStore.getMonthlyRecordActivity('2023-04')
+  if (!chartRef.value) return
+  const height = chartRef.value.clientHeight
+  console.log('🚀 ~ file: ActivityChart.vue:33 ~ onMounted ~ height:', height)
+  const ctx = chartRef.value.getContext('2d')
 
-    if (!ctx) return
-    const gradientApathetic = ctx.createLinearGradient(0, 0, 0, 324)
+  if (!ctx) return
+  const gradientApathetic = ctx.createLinearGradient(0, 0, 0, 324)
 
-    gradientApathetic.addColorStop(0, 'rgba(139,145,238,0.6)')
-    gradientApathetic.addColorStop(0.9, 'rgba(139,145,238,0)')
-    const gradientTea = ctx.createLinearGradient(0, 0, 0, 324)
-    gradientTea.addColorStop(0, 'rgba(106,166,97,0.6)')
-    gradientTea.addColorStop(0.9, 'rgba(106,166,97,0)')
+  gradientApathetic.addColorStop(0, 'rgba(139,145,238,0.6)')
+  gradientApathetic.addColorStop(0.9, 'rgba(139,145,238,0)')
+  const gradientTea = ctx.createLinearGradient(0, 0, 0, 324)
+  gradientTea.addColorStop(0, 'rgba(106,166,97,0.6)')
+  gradientTea.addColorStop(0.9, 'rgba(106,166,97,0)')
 
-    const chartLabel = newVal.map((day) => day.key)
-    const chartDataTimes = newVal.map((day) => day.val?.times || 0)
-    const chartDataDuration = newVal.map((day) => day.val?.duration || 0)
+  const chartLabel = monthlyRecordActivity.value.map((day) => day.key)
+  const chartDataTimes = monthlyRecordActivity.value.map((day) => day.val?.times || 0)
+  const chartDataDuration = monthlyRecordActivity.value.map((day) => day.val?.duration || 0)
 
-    new Chart(chartRef.value, {
-      type: 'line',
-      data: {
-        labels: chartLabel,
-        datasets: [
-          {
-            backgroundColor: gradientApathetic, // Put the gradient here as a fill color
-            fill: true,
-            data: chartDataTimes,
-            borderColor: '#8B91EE',
-            yAxisID: 'times',
-            label: 'times'
-          },
-          {
-            backgroundColor: gradientTea, // Put the gradient here as a fill color
-            fill: true,
-            data: chartDataDuration,
-            borderColor: '#6AA661',
-            yAxisID: 'Duration',
-            label: 'Duration'
-          }
-        ]
-      },
-      options: chartOptions
-    })
-  }
+  new Chart(chartRef.value, {
+    type: 'line',
+    data: {
+      labels: chartLabel,
+      datasets: [
+        {
+          backgroundColor: gradientApathetic, // Put the gradient here as a fill color
+          fill: true,
+          data: chartDataTimes,
+          borderColor: '#8B91EE',
+          yAxisID: 'times',
+          label: 'times'
+        },
+        {
+          backgroundColor: gradientTea, // Put the gradient here as a fill color
+          fill: true,
+          data: chartDataDuration,
+          borderColor: '#6AA661',
+          yAxisID: 'Duration',
+          label: 'Duration'
+        }
+      ]
+    },
+    options: chartOptions
+  })
 })
 </script>
 <template><canvas ref="chartRef" class="max-h-[33.3vh]"></canvas></template>

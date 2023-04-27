@@ -127,7 +127,7 @@ const dispatchInputClick = () => {
       class="bg-zinc-950/80 border-zinc-800 backdrop-blur-2xl sticky top-0 z-10 flex items-center justify-between px-8 py-3 border-b"
       style="-webkit-app-region: drag"
     >
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-3" style="-webkit-app-region: no-drag">
         <div class="border-zinc-700 flex p-1 space-x-1 border rounded">
           <NarrowButton
             :action="() => toggleLayout(Layout.Grid)"
@@ -175,7 +175,7 @@ const dispatchInputClick = () => {
           ></template>
         </DropMenu>
       </div>
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-3" style="-webkit-app-region: no-drag">
         <NarrowButton
           iconStyle="ri-add-line"
           :action="dispatchInputClick"

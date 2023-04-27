@@ -9,6 +9,7 @@ import {
   GetBookAmount,
   GetBookContent,
   GetBookCoverList,
+  GetMonthlyRecordActivity,
   GetRecordDurationAmount
 } from '../src/types/electronAPI'
 
@@ -172,9 +173,9 @@ const onGetRecordDurationAmount: GetRecordDurationAmount = async () => {
   }
 }
 
-const onGetMonthlyRecordActivity = async () => {
+const onGetMonthlyRecordActivity: GetMonthlyRecordActivity = async (month: string) => {
   try {
-    const monthlyRecordActivity = await getMonthlyRecordActivity()
+    const monthlyRecordActivity = await getMonthlyRecordActivity(month)
     console.log(
       '🚀 ~ file: main.ts:178 ~ onGetMonthlyRecordActivity ~ monthlyRecordActivity:',
       monthlyRecordActivity
@@ -218,7 +219,7 @@ app.whenReady().then(() => {
     onCreateRecord(data.bookId, data.end, data.begin, data.duration)
   })
   ipcMain.handle('getRecordDurationAmount', onGetRecordDurationAmount)
-  ipcMain.handle('getMonthlyRecordActivity', onGetMonthlyRecordActivity)
+  ipcMain.handle('getMonthlyRecordActivity', (event, data) => onGetMonthlyRecordActivity(data))
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

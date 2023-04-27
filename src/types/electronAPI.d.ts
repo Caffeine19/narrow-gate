@@ -52,7 +52,7 @@ export interface GetRecordDurationAmount {
   (): Promise<number>
 }
 export interface GetMonthlyRecordActivity {
-  (): Promise<RecordActivity[]>
+  (month: string): Promise<RecordActivity[]>
 }
 export interface IElectronAPI {
   createBook: CreateBook

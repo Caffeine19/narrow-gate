@@ -57,5 +57,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getBookAmount: () => ipcRenderer.invoke('getBookAmount'),
 
   getRecordDurationAmount: () => ipcRenderer.invoke('getRecordDurationAmount'),
-  getMonthlyRecordActivity: () => ipcRenderer.invoke('getMonthlyRecordActivity')
+  getMonthlyRecordActivity: (month: string) => ipcRenderer.invoke('getMonthlyRecordActivity', month)
 })

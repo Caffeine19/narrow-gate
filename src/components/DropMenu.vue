@@ -15,10 +15,13 @@ import NarrowButton from './NarrowButton.vue'
 import type { MenuItem } from '@/types/menuItem'
 const props = defineProps({
   menuItemList: Array as PropType<MenuItem[]>,
+  selectedMenuItemIndex: Number,
   visible: { type: Boolean, defaults: false }
 })
 
-const selectedMenuItemIndex = ref(-1)
+const selectedMenuItemIndex = ref(
+  props.selectedMenuItemIndex === undefined ? -1 : props.selectedMenuItemIndex
+)
 
 const emits = defineEmits<{ (e: 'select', index: number): void }>()
 const onMenuItemClick = (index: number) => {
@@ -50,7 +53,7 @@ watch(
           console.log('🚀 ~ file: DropMenu.vue:54 ~ onMounted ~ rect:', triggerRect)
           menuPosition.top = triggerRect.bottom + 20
 
-          if (triggerRect.left + menuRect.width > window.innerWidth) {
+          if (triggerRect.left + menuRect.width > window.innerWidth - 40) {
             menuPosition.left = triggerRect.right - menuRect.width
           } else {
             menuPosition.left = triggerRect.left
@@ -69,7 +72,7 @@ watch(
       <transition name="zoom">
         <div
           v-if="visible"
-          class="bg-zinc-950/60 border-zinc-700 backdrop-blur-xl fixed z-20 flex flex-col items-stretch space-y-2 border rounded py-1.5 top-20 left-20 max-h-64 overflow-y-auto"
+          class="bg-zinc-950/60 border-zinc-700 backdrop-blur-xl fixed z-20 flex flex-col items-stretch space-y-2 border rounded py-1.5 top-20 left-20 max-h-64 overflow-y-auto custom-scrollbar"
           :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
           ref="menuRef"
         >
@@ -98,7 +101,7 @@ watch(
 <style scoped>
 .zoom-enter-active,
 .zoom-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 .zoom-enter-from,
 .zoom-leave-to {

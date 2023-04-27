@@ -4,10 +4,14 @@ import duration from 'dayjs/plugin/duration'
 
 import { storeToRefs } from 'pinia'
 import { useRecordStore } from '@/stores/record'
-import { reactive, ref } from 'vue'
+import { reactive, ref, type PropType } from 'vue'
 import type { RecordActivity } from '@/types/record'
 
 dayjs.extend(duration)
+
+const props = defineProps({
+  monthlyRecordActivity: { type: Array as PropType<RecordActivity[]>, required: true }
+})
 
 const week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 const nthWeek = ['1st', '2nd', '3rd', '4th', '5th', '6th']
@@ -26,9 +30,6 @@ const generateActivityColor = (duration: number) => {
   }
 }
 
-const recordStore = useRecordStore()
-const { monthlyRecordActivity } = storeToRefs(recordStore)
-
 const hoveredDay = ref<RecordActivity>()
 const gridTooltipRef = ref<null | HTMLElement>(null)
 
@@ -45,7 +46,7 @@ const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
 
   gridToolTipPosition.left = rect.left - tooltipRect?.width + rect.width
   gridToolTipPosition.top = rect.top - tooltipRect?.height - 6
-  hoveredDay.value = monthlyRecordActivity.value[i + j * 7]
+  hoveredDay.value = props.monthlyRecordActivity[i + j * 7]
 }
 </script>
 <template>
@@ -54,7 +55,7 @@ const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
       <td>{{ day }}</td>
       <td v-for="(nth, j) in nthWeek" :key="j">
         <div
-          class="h-7 hover:opacity-80 hover:border-tea-200 w-12 transition-[opacity,border-color] border border-transparent rounded cursor-pointer"
+          class="h-7 hover:opacity-80 hover:border-tea-200 w-12 transition-[opacity,border-color,background-color] border border-transparent rounded cursor-pointer"
           :class="generateActivityColor(monthlyRecordActivity[i + j * 7]?.val?.duration || 0)"
           @mouseenter="(event) => onGridMouseEnter(event, i, j)"
         ></div>
