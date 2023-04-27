@@ -70,8 +70,6 @@ onMounted(async () => {
 watch(
   () => monthlyRecordActivityDate.value,
   async (newVal) => {
-    console.log('🚀 ~ file: OverviewView.vue:71 ~ watch ~ newVal:', newVal)
-
     monthlyRecordActivity.value = await recordStore.getMonthlyRecordActivity(
       newVal.year + newVal.month
     )

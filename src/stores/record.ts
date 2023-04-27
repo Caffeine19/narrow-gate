@@ -57,19 +57,19 @@ export const useRecordStore = defineStore('record', () => {
 
       const curMonthLen = dayjs(month).daysInMonth()
       const curMonth = Array.from({ length: curMonthLen }, (day, index) =>
-        dayjs('2023-04').add(index, 'day').format('YYYY-MM-DD')
+        dayjs(month).add(index, 'day').format('YYYY-MM-DD')
       )
 
-      const prevMonthLen = dayjs('2023-04').day() - 1
+      const prevMonthLen = dayjs(month).day() - 1
       const prevMonth = Array.from({ length: prevMonthLen }, (day, index) =>
-        dayjs('2023-04')
+        dayjs(month)
           .subtract(index + 1, 'day')
           .format('YYYY-MM-DD')
       ).reverse()
 
       const nextMonthLen = 42 - curMonthLen - prevMonthLen
       const nextMonth = Array.from({ length: nextMonthLen }, (day, index) =>
-        dayjs('2023-04')
+        dayjs(month)
           .add(index + curMonthLen, 'day')
           .format('YYYY-MM-DD')
       )

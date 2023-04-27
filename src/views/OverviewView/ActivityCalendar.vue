@@ -2,8 +2,6 @@
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 
-import { storeToRefs } from 'pinia'
-import { useRecordStore } from '@/stores/record'
 import { reactive, ref, type PropType } from 'vue'
 import type { RecordActivity } from '@/types/record'
 
@@ -46,6 +44,8 @@ const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
 
   gridToolTipPosition.left = rect.left - tooltipRect?.width + rect.width
   gridToolTipPosition.top = rect.top - tooltipRect?.height - 6
+  if (gridToolTipPosition.top < 0) gridToolTipPosition.top = rect.top + rect.height + 6
+
   hoveredDay.value = props.monthlyRecordActivity[i + j * 7]
 }
 </script>
