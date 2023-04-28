@@ -78,21 +78,9 @@ export const getBookAmount = async () => {
   }
 }
 
-export const getReadMostBooks = async (begin: string, end: string) => {
-  const res = await prisma.record.groupBy({
-    by: ['bookId'],
-    _count: {
-      bookId: true
-    },
-    orderBy: {
-      _count: {
-        bookId: 'desc'
-      }
-    },
-    take: 12
-  })
-
-  const res2 = (
+export const getMostReadBooks = async (begin: string, end: string) => {
+  //top 12 books with the highest number of records
+  const a = (
     await prisma.book.findMany({
       include: {
         _count: {
@@ -107,8 +95,11 @@ export const getReadMostBooks = async (begin: string, end: string) => {
     })
     .slice(0, 12)
 
-  const c = await Promise.all(res2.map((r) => prisma.record.findMany({ where: { bookId: r.id } })))
-  c.map((cc) => {
+  //The records related to each book
+  const c = await Promise.all(a.map((r) => prisma.record.findMany({ where: { bookId: r.id } })))
+
+  //Count the number of times and duration of each book's related records
+  const d = c.map((cc) => {
     const d = cc.reduce(
       (acc, cur) => {
         acc.duration = acc.duration + cur.duration
@@ -119,6 +110,13 @@ export const getReadMostBooks = async (begin: string, end: string) => {
     )
     return d
   })
-  console.log('🚀 ~ file: book.ts:122 ~ c.map ~ c:', c)
+
+  const e = a.map((book, index) => {
+    const { _count, ...rest } = book
+    return { ...rest, ...d[index] }
+  })
+  console.log('🚀 ~ file: book.ts:115 ~ getMostReadBooks ~ e :', e)
+
+  return e
 }
-getReadMostBooks('2023-03-04', '2023-06-06')
+getMostReadBooks('2023-03-04', '2023-06-06')

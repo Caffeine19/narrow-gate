@@ -10,16 +10,24 @@ import {
   GetBookContent,
   GetBookCoverList,
   GetMonthlyRecordActivity,
+  GetMostReadBooks,
   GetRecordDurationAmount
 } from '../src/types/electronAPI'
 
-import { createBook, deleteBook, getBookAmount, getBookContent, getBookList } from '../data/book'
+import {
+  createBook,
+  deleteBook,
+  getBookAmount,
+  getBookContent,
+  getBookList,
+  getMostReadBooks
+} from '../data/book'
 
 import { createRecord, getMonthlyRecordActivity, getRecordDurationAmount } from '../data/record'
 
 import { readFile } from 'fs/promises'
 import { platform } from 'os'
-import { BookCover } from '../src/types/book'
+import { BookCover, MostReadBook } from '../src/types/book'
 
 import type { Record } from '@prisma/client'
 
@@ -160,6 +168,27 @@ const onGetBookAmount: GetBookAmount = async () => {
   }
 }
 
+const onGetMostReadBooks: GetMostReadBooks = async (begin: string, end: string) => {
+  try {
+    const mostReadBooks = await getMostReadBooks(begin, end)
+    const mostReadBooksWithCover: MostReadBook[] = []
+
+    for (const book of mostReadBooks) {
+      const bookCover = await readFile(book.bookCoverPath)
+      mostReadBooksWithCover.push({
+        ...book,
+        bookCover: `data:image/png;base64,${Buffer.from(bookCover).toString('base64')}`
+      })
+    }
+    return mostReadBooksWithCover
+  } catch (error) {
+    console.log(
+      '🚀 ~ file: main.ts:176 ~ constonGetMostReadBooks:GetMostReadBooks= ~ error:',
+      error
+    )
+  }
+}
+
 const onGetRecordDurationAmount: GetRecordDurationAmount = async () => {
   try {
     const durationAmount = await getRecordDurationAmount()
@@ -187,6 +216,7 @@ const onGetMonthlyRecordActivity: GetMonthlyRecordActivity = async (month: strin
 }
 
 app.whenReady().then(() => {
+  //book
   ipcMain.handle('createBook', async (event, data) => {
     console.log('🚀 ~ file: main.ts:101 ~ ipcMain.handle ~ data:', data)
     const createdBook = await onCreateBook(
@@ -214,12 +244,14 @@ app.whenReady().then(() => {
   ipcMain.handle('getBookAmount', onGetBookAmount)
   createWindow()
 
+  //record
   ipcMain.handle('createRecord', (event, data) => {
     console.log('🚀 ~ file: main.ts:170 ~ ipcMain.handle ~ data:', data)
     onCreateRecord(data.bookId, data.end, data.begin, data.duration)
   })
   ipcMain.handle('getRecordDurationAmount', onGetRecordDurationAmount)
   ipcMain.handle('getMonthlyRecordActivity', (event, data) => onGetMonthlyRecordActivity(data))
+  ipcMain.handle('getMostReadBooks', (event, data) => onGetMostReadBooks(data.begin, data.end))
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

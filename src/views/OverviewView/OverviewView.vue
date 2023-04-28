@@ -19,7 +19,7 @@ import type { RecordActivity } from '@/types/record'
 dayjs.extend(duration)
 
 const bookStore = useBookStore()
-const { bookAmount } = storeToRefs(bookStore)
+const { bookAmount, mostReadBooks } = storeToRefs(bookStore)
 
 const recordStore = useRecordStore()
 const { recordDurationAmount } = storeToRefs(recordStore)
@@ -53,13 +53,16 @@ const AmountCardOptions = reactive([
 
 onMounted(() => {
   bookStore.getBookAmount()
+  bookStore.getMostReadBooks()
   recordStore.getRecordDurationAmount()
 })
 
 const monthlyRecordActivityDate = ref({ year: '2023', month: '04' })
+
 const onMonthlyRecordActivityDateChange = (date: { year: string; month: string }) => {
   monthlyRecordActivityDate.value = date
 }
+
 const monthlyRecordActivity = ref<RecordActivity[]>([])
 onMounted(async () => {
   monthlyRecordActivity.value = await recordStore.getMonthlyRecordActivity(
@@ -68,7 +71,7 @@ onMounted(async () => {
 })
 
 watch(
-  () => monthlyRecordActivityDate.value,
+  monthlyRecordActivityDate,
   async (newVal) => {
     monthlyRecordActivity.value = await recordStore.getMonthlyRecordActivity(
       newVal.year + newVal.month
@@ -108,9 +111,14 @@ watch(
             <i class="ri-hearts-line" style="font-size: 32px"></i>
             <p class="font-semibold">Read Most</p>
           </div>
+          <p class="text-zinc-300 italic">Top {{ mostReadBooks.length }} Book</p>
         </div>
         <div class="custom-scrollbar flex pb-2 space-x-6 overflow-x-auto">
-          <BookCard v-for="(card, index) in 10" :key="index"></BookCard>
+          <BookCard
+            v-for="(book, index) in mostReadBooks"
+            :key="index"
+            :mostReadBook="book"
+          ></BookCard>
         </div>
       </div>
     </div>

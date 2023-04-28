@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   platform: (callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) =>
     ipcRenderer.on('platform', callback),
 
+  //book
   readBookFile: () => ipcRenderer.invoke('readBookFile'),
   createBook: (
     title: Book['title'],
@@ -46,7 +47,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     }),
   getBookCoverList: () => ipcRenderer.invoke('getBookCoverList'),
   getBookContent: (id: Book['id']) => ipcRenderer.invoke('getBookContent', id),
-
   deleteBook: (idList: Book['id'][]) => ipcRenderer.send('deleteBook', idList),
   createRecord: (
     bookId: Record['bookId'],
@@ -55,7 +55,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     duration: Record['duration']
   ) => ipcRenderer.invoke('createRecord', { bookId, end, begin, duration }),
   getBookAmount: () => ipcRenderer.invoke('getBookAmount'),
+  getMostReadBooks: (begin: string, end: string) =>
+    ipcRenderer.invoke('getMostReadBooks', { begin, end }),
 
+  //record
   getRecordDurationAmount: () => ipcRenderer.invoke('getRecordDurationAmount'),
   getMonthlyRecordActivity: (month: string) => ipcRenderer.invoke('getMonthlyRecordActivity', month)
 })

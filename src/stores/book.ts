@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 
 import pinyin from 'pinyin'
 
-import type { BookCover } from '@/types/book'
+import type { MostReadBook, BookCover } from '@/types/book'
 import type { BookSortParams } from '@/types/bookSortParams'
 import type { BookGroupParams } from '@/types/bookGroupParams'
 
@@ -279,6 +279,17 @@ export const useBookStore = defineStore('book', () => {
       console.log('🚀 ~ file: book.ts:278 ~ getBookAmount ~ error:', error)
     }
   }
+
+  const mostReadBooks = ref<MostReadBook[]>([])
+  const getMostReadBooks = async () => {
+    try {
+      const res = await window.electronAPI.getMostReadBooks('2023-01', '2023-02')
+      mostReadBooks.value = res
+      console.log('🚀 ~ file: book.ts:286 ~ getMostReadBooks ~ res:', res)
+    } catch (error) {
+      console.log('🚀 ~ file: book.ts:288 ~ getMostReadBooks ~ error:', error)
+    }
+  }
   return {
     bookCoverList,
     addBook,
@@ -303,6 +314,8 @@ export const useBookStore = defineStore('book', () => {
     expandGroup,
     collapseGroup,
     bookAmount,
-    getBookAmount
+    getBookAmount,
+    getMostReadBooks,
+    mostReadBooks
   }
 })
