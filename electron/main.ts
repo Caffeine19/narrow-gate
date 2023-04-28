@@ -27,7 +27,7 @@ import { createRecord, getMonthlyRecordActivity, getRecordDurationAmount } from 
 
 import { readFile } from 'fs/promises'
 import { platform } from 'os'
-import { BookCover, MostReadBook } from '../src/types/book'
+import { MostReadBook } from '../src/types/book'
 
 import type { Record } from '@prisma/client'
 
@@ -102,18 +102,18 @@ const onCreateBook: CreateBook = async (
 
 const onGetBookCoverList: GetBookCoverList = async () => {
   try {
-    const bookList = await getBookList()
-    const bookCoverList: BookCover[] = []
+    const books = await getBookList()
 
-    for (const book of bookList) {
-      const bookCover = await readFile(book.bookCoverPath)
-      bookCoverList.push({
-        ...book,
-        bookCover: `data:image/png;base64,${Buffer.from(bookCover).toString('base64')}`
-      })
-    }
-
-    return bookCoverList
+    const covers = await Promise.all(books.map((book) => readFile(book.bookCoverPath)))
+    const bookCovers = books.map((book, index) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { bookCoverPath, ...rest } = book
+      return {
+        ...rest,
+        bookCover: `data:image/png;base64,${Buffer.from(covers[index]).toString('base64')}`
+      }
+    })
+    return bookCovers
   } catch (error) {
     console.log('🚀 ~ file: main.ts:78 ~ onGetBookList ~ error:', error)
   }
@@ -170,16 +170,19 @@ const onGetBookAmount: GetBookAmount = async () => {
 
 const onGetMostReadBooks: GetMostReadBooks = async (begin: string, end: string) => {
   try {
-    const mostReadBooks = await getMostReadBooks(begin, end)
-    const mostReadBooksWithCover: MostReadBook[] = []
+    const books = await getMostReadBooks(begin, end)
 
-    for (const book of mostReadBooks) {
-      const bookCover = await readFile(book.bookCoverPath)
-      mostReadBooksWithCover.push({
-        ...book,
-        bookCover: `data:image/png;base64,${Buffer.from(bookCover).toString('base64')}`
-      })
-    }
+    const covers = await Promise.all(books.map((book) => readFile(book.bookCoverPath)))
+
+    const mostReadBooksWithCover = books.map((book, index) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { bookCoverPath, ...rest } = book
+      return {
+        ...rest,
+        bookCover: `data:image/png;base64,${Buffer.from(covers[index]).toString('base64')}`
+      }
+    })
+
     return mostReadBooksWithCover
   } catch (error) {
     console.log(
