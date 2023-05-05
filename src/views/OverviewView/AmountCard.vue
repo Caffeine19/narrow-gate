@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { animate } from 'motion'
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps<{
   name: string
@@ -13,14 +13,14 @@ const props = defineProps<{
 const displayValue = ref()
 watch(
   () => props.value,
-  () => {
-    if (typeof props.value === 'number') {
-      animate((progress) => (displayValue.value = Math.round(progress * props.value)), {
+  (newVal) => {
+    if (typeof newVal === 'number') {
+      animate((progress) => (displayValue.value = Math.round(progress * newVal)), {
         duration: 2,
         easing: 'ease-out'
       })
     } else {
-      displayValue.value = props.value
+      displayValue.value = newVal
     }
   },
   { immediate: true }
