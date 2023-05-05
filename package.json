@@ -23,6 +23,7 @@
     "dayjs": "^1.11.7",
     "electron": "^24.0.0",
     "epubjs": "^0.3.93",
+    "motion": "^10.15.5",
     "pinia": "^2.0.32",
     "pinyin": "^3.0.0-alpha.5",
     "remixicon": "^3.1.1",
