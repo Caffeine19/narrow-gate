@@ -40,6 +40,7 @@ model Book {
   addedDate      DateTime  @default(now())
   lastOpenedDate DateTime?
   recording      Record[]
+  deleted        Boolean   @default(false)
 }
 
 model Record {

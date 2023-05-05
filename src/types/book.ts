@@ -2,7 +2,7 @@ import type { Book } from '@prisma/client'
 
 import type { RecordActivity } from './record'
 
-export type BookCover = Omit<Book, 'bookCoverPath' | 'bookFilePath'> & {
+export type BookCover = Omit<Book, 'bookCoverPath' | 'bookFilePath' | 'deleted'> & {
   bookCover: string
 }
 
