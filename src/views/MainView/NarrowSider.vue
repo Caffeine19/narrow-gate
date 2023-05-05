@@ -13,7 +13,7 @@ type RouteLink = {
 
 const routeLinkOptions = reactive<RouteLink[]>([
   { to: 'library', iconStyle: 'ri-book-open-line' },
-  // { to: 'bookmark', iconStyle: 'ri-bookmark-line' },
+  { to: 'bookmark', iconStyle: 'ri-bookmark-line' },
   { to: 'record', iconStyle: 'ri-hourglass-2-line' }
 ])
 </script>
@@ -30,7 +30,8 @@ const routeLinkOptions = reactive<RouteLink[]>([
         <RouterLink
           v-for="(link, index) in routeLinkOptions"
           :key="index"
-          :to="{ name: link.to }"   style="-webkit-app-region: no-drag"
+          :to="{ name: link.to }"
+          style="-webkit-app-region: no-drag"
           activeClass="!text-apathetic-400"
           class="text-zinc-400 flex items-center justify-center transition-colors"
         >
@@ -39,7 +40,7 @@ const routeLinkOptions = reactive<RouteLink[]>([
       </div>
     </div>
 
-    <button class="text-zinc-50"    style="-webkit-app-region: no-drag">
+    <button class="text-zinc-50" style="-webkit-app-region: no-drag">
       <i class="ri-settings-4-line" style="font-size: 28px"></i>
     </button>
   </div>
