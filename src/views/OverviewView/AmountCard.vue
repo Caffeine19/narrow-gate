@@ -1,11 +1,30 @@
 <script setup lang="ts">
-defineProps<{
+import { animate } from 'motion'
+import { onMounted, ref, watch } from 'vue'
+
+const props = defineProps<{
   name: string
   value: string | number
   textColor: string
   bgColor: string
   iconStyle: string
 }>()
+
+const displayValue = ref()
+watch(
+  () => props.value,
+  () => {
+    if (typeof props.value === 'number') {
+      animate((progress) => (displayValue.value = Math.round(progress * props.value)), {
+        duration: 2,
+        easing: 'ease-out'
+      })
+    } else {
+      displayValue.value = props.value
+    }
+  },
+  { immediate: true }
+)
 </script>
 <template>
   <div
@@ -13,7 +32,7 @@ defineProps<{
   >
     <div class="space-y-1.5">
       <p class="text-zinc-300 text-xl font-medium">{{ name }}</p>
-      <p class="text-zinc-50 text-3xl font-semibold">{{ value }}</p>
+      <h1 class="text-zinc-50 amount-number text-3xl font-semibold">{{ displayValue }}</h1>
       <p class="text-zinc-400"><span :class="textColor">+ 12</span> from last week</p>
     </div>
     <div
