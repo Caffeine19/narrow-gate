@@ -9,6 +9,7 @@ import {
   GetBookAmount,
   GetBookContent,
   GetBookCoverList,
+  GetDailyRecords,
   GetMonthlyRecordActivity,
   GetMostReadBooks,
   GetRecordDurationAmount
@@ -23,11 +24,15 @@ import {
   getMostReadBooks
 } from '../data/book'
 
-import { createRecord, getMonthlyRecordActivity, getRecordDurationAmount } from '../data/record'
+import {
+  createRecord,
+  getDailyRecords,
+  getMonthlyRecordActivity,
+  getRecordDurationAmount
+} from '../data/record'
 
 import { readFile } from 'fs/promises'
 import { platform } from 'os'
-import { MostReadBook } from '../src/types/book'
 
 import type { Record } from '@prisma/client'
 
@@ -218,6 +223,18 @@ const onGetMonthlyRecordActivity: GetMonthlyRecordActivity = async (month: strin
   }
 }
 
+const onGetDailyRecords: GetDailyRecords = async (begin, end) => {
+  try {
+    const dailyRecords = await getDailyRecords(begin, end)
+    console.log(
+      '🚀 ~ file: main.ts:229 ~ constonGetDailyRecords:GetDailyRecords= ~ dailyRecords:',
+      dailyRecords
+    )
+    return dailyRecords
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:225 ~ constonGetDailyRecords:GetDailyRecords= ~ error:', error)
+  }
+}
 app.whenReady().then(() => {
   //book
   ipcMain.handle('createBook', async (event, data) => {
@@ -255,6 +272,7 @@ app.whenReady().then(() => {
   ipcMain.handle('getRecordDurationAmount', onGetRecordDurationAmount)
   ipcMain.handle('getMonthlyRecordActivity', (event, data) => onGetMonthlyRecordActivity(data))
   ipcMain.handle('getMostReadBooks', (event, data) => onGetMostReadBooks(data.begin, data.end))
+  ipcMain.handle('getDailyRecords', (event, data) => onGetDailyRecords(data.begin, data.end))
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

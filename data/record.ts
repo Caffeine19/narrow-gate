@@ -93,3 +93,26 @@ export const getMonthlyRecordActivity = async (month: string) => {
     console.log('🚀 ~ file: record.ts:44 ~ getMonthlyRecordActivity ~ error:', error)
   }
 }
+
+export const getDailyRecords = async (begin: string, end: string) => {
+  try {
+    const dailyRecords = await prisma.record.findMany({
+      where: {
+        begin: { lte: new Date(end), gte: new Date(begin) }
+      },
+      include: {
+        book: {
+          select: {
+            title: true,
+            creator: true
+          }
+        }
+      }
+    })
+    console.log('🚀 ~ file: record.ts:112 ~ getDailyRecords ~ dailyRecords:', dailyRecords)
+
+    return dailyRecords
+  } catch (error) {
+    console.log('🚀 ~ file: record.ts:101 ~ getDailyRecords ~ error:', error)
+  }
+}

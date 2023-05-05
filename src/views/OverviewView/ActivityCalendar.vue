@@ -2,9 +2,12 @@
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 
-import { reactive, ref, type PropType } from 'vue'
+import { reactive, ref, type PropType, onMounted } from 'vue'
+
 import type { RecordActivity } from '@/types/record'
 
+import { useRecordStore } from '@/stores/record'
+import { storeToRefs } from 'pinia'
 dayjs.extend(duration)
 
 const props = defineProps({
@@ -48,6 +51,17 @@ const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
 
   hoveredDay.value = props.monthlyRecordActivity[i + j * 7]
 }
+
+const recordStore = useRecordStore()
+const { dailyRecordDate } = storeToRefs(recordStore)
+const onGridClick = (i: number, j: number) => {
+  const clickedValue = props.monthlyRecordActivity[i + j * 7]
+  console.log('🚀 ~ file: ActivityCalendar.vue:54 ~ onGridClick ~ clickedValue:', clickedValue)
+  const begin = clickedValue.key
+  const end = dayjs(clickedValue.key).add(1, 'day').format('YYYY-MM-DD')
+  dailyRecordDate.value = begin
+  recordStore.getDailyRecords(begin, end)
+}
 </script>
 <template>
   <table class="mx-auto" @mouseleave="openingGridTooltip = false">
@@ -58,6 +72,7 @@ const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
           class="h-7 hover:opacity-80 hover:border-tea-200 w-12 transition-[opacity,border-color,background-color] border border-transparent rounded cursor-pointer"
           :class="generateActivityColor(monthlyRecordActivity[i + j * 7]?.val?.duration || 0)"
           @mouseenter="(event) => onGridMouseEnter(event, i, j)"
+          @click="onGridClick(i, j)"
         ></div>
       </td>
     </tr>

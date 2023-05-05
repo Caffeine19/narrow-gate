@@ -1,6 +1,6 @@
 import { type Book, type Record } from '@prisma/client'
 import type { BookCover, MostReadBook } from './book'
-import type { RecordActivity } from './record'
+import type { DailyRecord, RecordActivity } from './record'
 
 export interface CreateBook {
   (
@@ -58,6 +58,10 @@ export interface GetRecordDurationAmount {
 export interface GetMonthlyRecordActivity {
   (month: string): Promise<RecordActivity[]>
 }
+
+export interface GetDailyRecords {
+  (begin: string, end: string): Promise<DailyRecord[]>
+}
 export interface IElectronAPI {
   createBook: CreateBook
   getBookCoverList: GetBookCoverList
@@ -70,6 +74,7 @@ export interface IElectronAPI {
 
   getRecordDurationAmount: GetRecordDurationAmount
   getMonthlyRecordActivity: GetMonthlyRecordActivity
+  getDailyRecords: GetDailyRecords
 }
 
 declare global {

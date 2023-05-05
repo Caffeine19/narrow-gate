@@ -1,5 +1,6 @@
 import { Book, Record } from '@prisma/client'
 import { contextBridge, ipcRenderer } from 'electron'
+import { getDailyRecords } from '../data/record'
 
 // window.addEventListener('DOMContentLoaded', () => {
 //   const replaceText = (selector, text) => {
@@ -60,5 +61,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   //record
   getRecordDurationAmount: () => ipcRenderer.invoke('getRecordDurationAmount'),
-  getMonthlyRecordActivity: (month: string) => ipcRenderer.invoke('getMonthlyRecordActivity', month)
+  getMonthlyRecordActivity: (month: string) =>
+    ipcRenderer.invoke('getMonthlyRecordActivity', month),
+  getDailyRecords: (begin: string, end: string) =>
+    ipcRenderer.invoke('getDailyRecords', { begin, end })
 })

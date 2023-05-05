@@ -8,3 +8,10 @@ export type RecordActivity = {
     duration: Record['duration']
   }
 }
+
+export type DailyRecord = Record & {
+  book: {
+    title: string
+    creator: string
+  }
+}

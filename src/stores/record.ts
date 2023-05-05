@@ -3,8 +3,9 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import type { BookCover } from '@/types/book'
-import type { RecordActivity, RecordCreateParams, RecordGap } from '@/types/record'
+import type { DailyRecord, RecordActivity, RecordCreateParams, RecordGap } from '@/types/record'
 import dayjs from 'dayjs'
+import type { Record } from '@prisma/client'
 
 export const useRecordStore = defineStore('record', () => {
   const record = ref<RecordCreateParams>({})
@@ -91,6 +92,17 @@ export const useRecordStore = defineStore('record', () => {
       throw error
     }
   }
+
+  const dailyRecords = ref<DailyRecord[]>([])
+  const dailyRecordDate = ref('')
+  const getDailyRecords = async (begin: string, end: string) => {
+    try {
+      const dailyRecords = await window.electronAPI.getDailyRecords(begin, end)
+      console.log('🚀 ~ file: record.ts:104 ~ getDailyRecords ~ dailyRecords:', dailyRecords)
+    } catch (error) {
+      console.log('🚀 ~ file: record.ts:102 ~ getDailyRecords ~ error:', error)
+    }
+  }
   return {
     record,
     recordDuration,
@@ -102,6 +114,9 @@ export const useRecordStore = defineStore('record', () => {
     recordDurationAmount,
     getRecordDurationAmount,
     monthlyRecordActivity,
-    getMonthlyRecordActivity
+    getMonthlyRecordActivity,
+    dailyRecordDate,
+    dailyRecords,
+    getDailyRecords
   }
 })
