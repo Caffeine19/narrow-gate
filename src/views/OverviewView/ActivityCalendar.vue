@@ -30,6 +30,12 @@ onMounted(async () => {
   monthlyRecordActivity.value = await recordStore.getMonthlyRecordActivity(
     monthlyRecordActivityDate.value.year + monthlyRecordActivityDate.value.month
   )
+
+  const day = monthlyRecordActivity.value.find((record) => record.val)
+  if (!day) return
+  const begin = dayjs(day.key).format('YYYY-MM-DD')
+  const end = dayjs(day.key).add(1, 'day').format('YYYY-MM-DD')
+  recordStore.getDailyRecords(begin, end)
 })
 
 watch(
@@ -80,13 +86,12 @@ const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
   hoveredDay.value = monthlyRecordActivity.value[i + j * 7]
 }
 
-const { dailyRecordDate } = storeToRefs(recordStore)
 const onGridClick = (i: number, j: number) => {
   const clickedValue = monthlyRecordActivity.value[i + j * 7]
   console.log('🚀 ~ file: ActivityCalendar.vue:54 ~ onGridClick ~ clickedValue:', clickedValue)
   const begin = clickedValue.key
   const end = dayjs(clickedValue.key).add(1, 'day').format('YYYY-MM-DD')
-  dailyRecordDate.value = begin
+
   recordStore.getDailyRecords(begin, end)
 }
 </script>

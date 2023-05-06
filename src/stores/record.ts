@@ -99,6 +99,7 @@ export const useRecordStore = defineStore('record', () => {
       const res = await window.electronAPI.getDailyRecords(begin, end)
       console.log('🚀 ~ file: record.ts:104 ~ getDailyRecords ~ dailyRecords:', res)
       dailyRecords.value = res
+      dailyRecordDate.value = begin
     } catch (error) {
       console.log('🚀 ~ file: record.ts:102 ~ getDailyRecords ~ error:', error)
     }
