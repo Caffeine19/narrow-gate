@@ -3,6 +3,8 @@ import { onMounted, ref } from 'vue'
 
 import Chart, { type ChartOptions } from 'chart.js/auto'
 
+import dayjs from 'dayjs'
+
 import { useRecordStore } from '@/stores/record'
 
 import type { RecordActivity } from '@/types/record'
@@ -36,7 +38,9 @@ const recordStore = useRecordStore()
 const monthlyRecordActivity = ref<RecordActivity[]>([])
 
 onMounted(async () => {
-  monthlyRecordActivity.value = await recordStore.getMonthlyRecordActivity('2023-04')
+  monthlyRecordActivity.value = await recordStore.getMonthlyRecordActivity(
+    dayjs().format('YYYY-MM')
+  )
   if (!chartRef.value) return
   const height = chartRef.value.clientHeight
   console.log('🚀 ~ file: ActivityChart.vue:33 ~ onMounted ~ height:', height)

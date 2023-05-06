@@ -50,7 +50,6 @@ export const useRecordStore = defineStore('record', () => {
     }
   }
 
-  const monthlyRecordActivity = ref<RecordActivity[]>([])
   const getMonthlyRecordActivity = async (month: string): Promise<RecordActivity[]> => {
     try {
       const res = await window.electronAPI.getMonthlyRecordActivity(month)
@@ -97,8 +96,9 @@ export const useRecordStore = defineStore('record', () => {
   const dailyRecordDate = ref('')
   const getDailyRecords = async (begin: string, end: string) => {
     try {
-      const dailyRecords = await window.electronAPI.getDailyRecords(begin, end)
-      console.log('🚀 ~ file: record.ts:104 ~ getDailyRecords ~ dailyRecords:', dailyRecords)
+      const res = await window.electronAPI.getDailyRecords(begin, end)
+      console.log('🚀 ~ file: record.ts:104 ~ getDailyRecords ~ dailyRecords:', res)
+      dailyRecords.value = res
     } catch (error) {
       console.log('🚀 ~ file: record.ts:102 ~ getDailyRecords ~ error:', error)
     }
@@ -113,7 +113,6 @@ export const useRecordStore = defineStore('record', () => {
     createRecord,
     recordDurationAmount,
     getRecordDurationAmount,
-    monthlyRecordActivity,
     getMonthlyRecordActivity,
     dailyRecordDate,
     dailyRecords,

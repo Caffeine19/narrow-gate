@@ -6,6 +6,7 @@ import AmountCard from './AmountCard.vue'
 import NarrowDivider from '@/components/NarrowDivider.vue'
 import BookCard from './BookCard.vue'
 import ActivityChart from './ActivityChart.vue'
+import DailyTimeline from './DailyTimeline.vue'
 
 import { useBookStore } from '@/stores/book'
 import { storeToRefs } from 'pinia'
@@ -97,19 +98,10 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="col-span-4 space-y-8 overflow-hidden" name="rightGrid">
+    <div class="flex flex-col col-span-4 space-y-8 overflow-hidden" name="rightGrid">
       <ActivityCalendar></ActivityCalendar>
       <NarrowDivider></NarrowDivider>
-
-      <div class="space-y-6">
-        <div class="flex items-end justify-between">
-          <div class="text-zinc-50 flex items-center space-x-3 text-2xl">
-            <i class="ri-film-line" style="font-size: 32px"></i>
-            <p class="font-semibold">Daily Timeline</p>
-          </div>
-          <p class="text-zinc-300">4Hours 32Minutes</p>
-        </div>
-      </div>
+      <DailyTimeline></DailyTimeline>
     </div>
   </div>
 </template>

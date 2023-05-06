@@ -14,6 +14,8 @@ import DatePicker from '@/components/DatePicker.vue'
 
 dayjs.extend(duration)
 
+const recordStore = useRecordStore()
+
 const monthlyRecordActivityDate = ref({
   year: dayjs().format('YYYY'),
   month: dayjs().format('MMM')
@@ -78,7 +80,6 @@ const onGridMouseEnter = (event: MouseEvent, i: number, j: number) => {
   hoveredDay.value = monthlyRecordActivity.value[i + j * 7]
 }
 
-const recordStore = useRecordStore()
 const { dailyRecordDate } = storeToRefs(recordStore)
 const onGridClick = (i: number, j: number) => {
   const clickedValue = monthlyRecordActivity.value[i + j * 7]
