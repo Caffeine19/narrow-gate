@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { ref } from 'vue'
 
 import ePub, { Rendition, type NavItem } from 'epubjs'
@@ -7,6 +7,7 @@ import type Section from 'epubjs/types/section'
 import type { BookCover, OpenedBook } from '@/types/book'
 
 import { useBookStore } from './book'
+import { useRecordStore } from './record'
 
 export const useReadingStore = defineStore('reading', () => {
   const bookStore = useBookStore()
@@ -31,6 +32,7 @@ export const useReadingStore = defineStore('reading', () => {
     rendition.display(href)
   }
   let rendition: Rendition
+
   const openBook = async (id: BookCover['id']) => {
     rendition?.destroy()
     const bookContent = await window.electronAPI.getBookContent(id)
@@ -57,7 +59,8 @@ export const useReadingStore = defineStore('reading', () => {
     // rendition.themes.register('tan', 'themes.css')
 
     // rendition.themes.select('tan')
-    rendition.themes.fontSize('120%')
+    // rendition.themes.fontSize('120%')
+    //set fontsize会在下一章节切换到上一章节时出现页面晃动闪烁的问题
 
     rendition.themes.default({
       body: { 'background-color': 'transparent !important', color: '#fafafa !important' },
@@ -66,6 +69,10 @@ export const useReadingStore = defineStore('reading', () => {
         color: '#fafafa !important',
         'font-family': 'misans !important',
         'border-color': '#818cf8 !important'
+      },
+      '*::selection': {
+        color: '#8b91ee !important',
+        background: 'rgba(139, 145, 238,0.1) !important'
       },
       a: { color: '#818cf8 !important' },
       h1: { color: '#fafafa !important' },
@@ -88,15 +95,35 @@ export const useReadingStore = defineStore('reading', () => {
     rendition.on('rendered', (section: Section) => {
       currentChapterHref.value = section.href
     })
+
+    rendition.on('keyup', onKeyUp)
   }
 
   const nextPage = () => {
-    console.log('🚀 ~ file: book.ts:124 ~ nextPage ~ nextPage:', nextPage)
     rendition.next()
   }
   const prevPage = () => {
-    console.log('🚀 ~ file: book.ts:129 ~ prevPage ~ prevPage:', prevPage)
     rendition.prev()
+  }
+
+  const recordStore = useRecordStore()
+  const { isRecording } = storeToRefs(recordStore)
+  const onKeyUp = (event: KeyboardEvent) => {
+    if (!isRecording.value) return
+    switch (event.key) {
+      case 'ArrowUp':
+        prevPage()
+        break
+      case 'ArrowDown':
+        nextPage()
+        break
+      case 'ArrowLeft':
+        prevPage()
+        break
+      case 'ArrowRight':
+        nextPage()
+        break
+    }
   }
 
   return {
@@ -110,6 +137,7 @@ export const useReadingStore = defineStore('reading', () => {
     expandChapter,
     collapseChapter,
     currentChapterHref,
-    goChapter
+    goChapter,
+    onKeyUp
   }
 })

@@ -5,7 +5,6 @@ import { defineStore } from 'pinia'
 import type { BookCover } from '@/types/book'
 import type { DailyRecord, RecordActivity, RecordCreateParams, RecordGap } from '@/types/record'
 import dayjs from 'dayjs'
-import type { Record } from '@prisma/client'
 
 export const useRecordStore = defineStore('record', () => {
   const record = ref<RecordCreateParams>({})

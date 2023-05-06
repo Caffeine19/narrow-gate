@@ -57,29 +57,11 @@ const goLibrary = () => {
   router.push({ name: 'library' })
 }
 
-const onKeyDown = (event: KeyboardEvent) => {
-  if (!isRecording.value) return
-  // console.log('🚀 ~ file: ReadingView.vue:24 ~ onKeyDown ~ event:', event)
-  switch (event.key) {
-    case 'ArrowUp':
-      readingStore.prevPage()
-      break
-    case 'ArrowDown':
-      readingStore.nextPage()
-      break
-    case 'ArrowLeft':
-      readingStore.prevPage()
-      break
-    case 'ArrowRight':
-      readingStore.nextPage()
-      break
-  }
-}
 onMounted(() => {
-  window.addEventListener('keydown', onKeyDown)
+  window.addEventListener('keydown', readingStore.onKeyUp)
 })
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', onKeyDown)
+  window.removeEventListener('keydown', readingStore.onKeyUp)
 })
 
 const openingChapterNavigator = ref(false)
