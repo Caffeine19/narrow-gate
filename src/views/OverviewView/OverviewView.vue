@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 
 import ActivityCalendar from './ActivityCalendar.vue'
 import AmountCard from './AmountCard.vue'
@@ -13,8 +13,6 @@ import { useRecordStore } from '@/stores/record'
 
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import DatePicker from '@/components/DatePicker.vue'
-import type { RecordActivity } from '@/types/record'
 
 dayjs.extend(duration)
 
@@ -56,29 +54,6 @@ onMounted(() => {
   bookStore.getMostReadBooks()
   recordStore.getRecordDurationAmount()
 })
-
-const monthlyRecordActivityDate = ref({ year: '2023', month: '04' })
-
-const onMonthlyRecordActivityDateChange = (date: { year: string; month: string }) => {
-  monthlyRecordActivityDate.value = date
-}
-
-const monthlyRecordActivity = ref<RecordActivity[]>([])
-onMounted(async () => {
-  monthlyRecordActivity.value = await recordStore.getMonthlyRecordActivity(
-    monthlyRecordActivityDate.value.year + monthlyRecordActivityDate.value.month
-  )
-})
-
-watch(
-  monthlyRecordActivityDate,
-  async (newVal) => {
-    monthlyRecordActivity.value = await recordStore.getMonthlyRecordActivity(
-      newVal.year + newVal.month
-    )
-  },
-  { deep: true }
-)
 </script>
 <template>
   <div class="grow gap-x-8 grid grid-cols-12 p-8 overflow-hidden">
@@ -123,21 +98,7 @@ watch(
       </div>
     </div>
     <div class="col-span-4 space-y-8 overflow-hidden" name="rightGrid">
-      <div class="space-y-6">
-        <div class="flex items-center justify-between">
-          <div class="text-zinc-50 flex items-end space-x-3 text-2xl">
-            <i class="ri-polaroid-2-line" style="font-size: 32px"></i>
-            <p class="font-semibold">Monthly Activity</p>
-          </div>
-          <DatePicker
-            :dateValue="monthlyRecordActivityDate"
-            @dateChange="onMonthlyRecordActivityDateChange"
-          ></DatePicker>
-        </div>
-        <div>
-          <ActivityCalendar :monthlyRecordActivity="monthlyRecordActivity"></ActivityCalendar>
-        </div>
-      </div>
+      <ActivityCalendar></ActivityCalendar>
       <NarrowDivider></NarrowDivider>
 
       <div class="space-y-6">
