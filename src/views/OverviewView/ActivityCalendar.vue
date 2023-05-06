@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref, watch } from 'vue'
 
-import { storeToRefs } from 'pinia'
-
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 

@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 import ePub, { Rendition, type NavItem } from 'epubjs'
 import type Section from 'epubjs/types/section'
@@ -92,11 +92,39 @@ export const useReadingStore = defineStore('reading', () => {
     })
 
     await rendition.display()
-    rendition.on('rendered', (section: Section) => {
+    rendition.on('rendered', (section: Section, i: any) => {
       currentChapterHref.value = section.href
+
+      //IframeView
+      i.document.documentElement.addEventListener('mouseup', (e: MouseEvent) => {
+        let selection
+
+        if (i.window.getSelection) {
+          selection = i.window.getSelection()
+        } else if (i.document.selection) {
+          selection = i.document.selection.createRange()
+        }
+
+        //判断是否是select事件
+        if (selection && selection.toString()) {
+          console.log(
+            '🚀 ~ file: reading.ts:114 ~ i.document.documentElement.addEventListener ~ e:',
+            e
+          )
+          onTextSelected(e.clientX, e.clientY)
+        }
+      })
     })
 
     rendition.on('keyup', onKeyUp)
+
+    rendition.on('selected', async (cfiRange: string, contents: any) => {
+      // console.log('🚀 ~ file: reading.ts:108 ~ rendition.on ~ cfiRange:', cfiRange)
+      const range = (await bookStore.book.getRange(cfiRange)).toString()
+      // console.log('🚀 ~ file: reading.ts:110 ~ rendition.on ~ range:', range)
+      highlightSelection(cfiRange)
+      contents.window.getSelection().removeAllRanges()
+    })
   }
 
   const nextPage = () => {
@@ -126,6 +154,22 @@ export const useReadingStore = defineStore('reading', () => {
     }
   }
 
+  const openingSelectionMenu = ref(false)
+  const selectionMenuPosition = reactive({ top: 0, left: 0 })
+  const onTextSelected = (top: number, left: number) => {
+    openingSelectionMenu.value = true
+    selectionMenuPosition.top = top
+    selectionMenuPosition.left = left
+  }
+  const highlightSelection = (cfiRange: string) => {
+    rendition.annotations.add('highlight', cfiRange, {}, undefined, 'hl', {
+      color: '#8b91ee !important',
+      background: 'rgba(139, 145, 238,0.1) !important',
+      fill: 'rgba(139, 145, 238)',
+      'fill-opacity': '0.3',
+      'mix-blend-mode': 'multiply'
+    })
+  }
   return {
     openedBook,
     openBook,
@@ -138,6 +182,8 @@ export const useReadingStore = defineStore('reading', () => {
     collapseChapter,
     currentChapterHref,
     goChapter,
-    onKeyUp
+    onKeyUp,
+    openingSelectionMenu,
+    selectionMenuPosition
   }
 })

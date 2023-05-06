@@ -8,6 +8,7 @@ import duration from 'dayjs/plugin/duration'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 import ChapterNavigator from './ChapterNavigator.vue'
+import SelectionMenu from './SelectionMenu.vue'
 
 import { storeToRefs } from 'pinia'
 import { useOSStore } from '@/stores/os'
@@ -123,9 +124,12 @@ const toggleChapterNavigator = (flag: boolean) => {
           <p class="text-tea-50">Stopping</p>
         </div>
       </div>
+
       <Transition name="slide">
         <ChapterNavigator v-show="openingChapterNavigator" />
       </Transition>
+
+      <SelectionMenu></SelectionMenu>
 
       <button
         @click="readingStore.prevPage"
