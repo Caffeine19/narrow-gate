@@ -11,6 +11,7 @@ import {
   GetBookContent,
   GetBookCoverList,
   GetDailyRecords,
+  GetHasBookmarkBooks,
   GetMonthlyRecordActivity,
   GetMostReadBooks,
   GetRecordDurationAmount
@@ -22,6 +23,7 @@ import {
   getBookAmount,
   getBookContent,
   getBookList,
+  getHasBookmarkBooks,
   getMostReadBooks
 } from '../data/book'
 
@@ -199,6 +201,24 @@ const onGetMostReadBooks: GetMostReadBooks = async (begin: string, end: string) 
   }
 }
 
+const onGetHasBookmarkBooks: GetHasBookmarkBooks = async () => {
+  try {
+    const books = await getHasBookmarkBooks()
+    const covers = await Promise.all(books.map((book) => readFile(book.bookCoverPath)))
+
+    const hasBookmarkBooks = books.map((book, index) => {
+      const { bookCoverPath, ...rest } = book
+      return {
+        ...rest,
+        bookCover: `data:image/png;base64,${Buffer.from(covers[index]).toString('base64')}`
+      }
+    })
+    return hasBookmarkBooks
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:220 ~ error:', error)
+  }
+}
+
 const onGetRecordDurationAmount: GetRecordDurationAmount = async () => {
   try {
     const durationAmount = await getRecordDurationAmount()
@@ -262,7 +282,6 @@ const onGetBookmarkAmount = async () => {
 app.whenReady().then(() => {
   //book
   ipcMain.handle('createBook', async (event, data) => {
-    console.log('🚀 ~ file: main.ts:101 ~ ipcMain.handle ~ data:', data)
     const createdBook = await onCreateBook(
       data.title,
       data.creator,
@@ -278,7 +297,6 @@ app.whenReady().then(() => {
   })
   ipcMain.handle('getBookCoverList', onGetBookCoverList)
   ipcMain.handle('getBookContent', async (event, data) => {
-    console.log('🚀 ~ file: main.ts:126 ~ ipcMain.handle ~ data:', data)
     const bookContent = await onGetBookContent(data)
     return bookContent
   })
@@ -287,10 +305,10 @@ app.whenReady().then(() => {
   })
   ipcMain.handle('getBookAmount', onGetBookAmount)
   createWindow()
+  ipcMain.handle('getHasBookmarkBooks', onGetHasBookmarkBooks)
 
   //record
   ipcMain.handle('createRecord', (event, data) => {
-    console.log('🚀 ~ file: main.ts:170 ~ ipcMain.handle ~ data:', data)
     onCreateRecord(data.bookId, data.end, data.begin, data.duration)
   })
   ipcMain.handle('getRecordDurationAmount', onGetRecordDurationAmount)

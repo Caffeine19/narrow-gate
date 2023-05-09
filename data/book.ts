@@ -119,4 +119,31 @@ export const getMostReadBooks = async (begin: string, end: string) => {
 
   return e
 }
-getMostReadBooks('2023-03-04', '2023-06-06')
+
+export const getHasBookmarkBooks = async () => {
+  try {
+    const hasBookmarkBooks = await prisma.book.findMany({
+      where: {
+        NOT: {
+          Bookmark: {
+            none: {}
+          }
+        }
+      },
+      include: {
+        _count: {
+          select: {
+            Bookmark: true
+          }
+        }
+      }
+    })
+    console.log(
+      '🚀 ~ file: book.ts:134 ~ getHasBookmarkBooks ~ hasBookmarkBooks:',
+      hasBookmarkBooks
+    )
+    return hasBookmarkBooks
+  } catch (error) {
+    console.log('🚀 ~ file: book.ts:127 ~ getHasBookmarkBooks ~ error:', error)
+  }
+}

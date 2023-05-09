@@ -9,3 +9,5 @@ export type BookCover = Omit<Book, 'bookCoverPath' | 'bookFilePath' | 'deleted'>
 export type OpenedBook = Pick<BookCover, 'id' | 'creator' | 'title'>
 
 export type MostReadBook = BookCover & RecordActivity['val']
+
+export type HasBookmarkBook = BookCover & { _count: { Bookmark: number } }

@@ -58,6 +58,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getBookAmount: () => ipcRenderer.invoke('getBookAmount'),
   getMostReadBooks: (begin: string, end: string) =>
     ipcRenderer.invoke('getMostReadBooks', { begin, end }),
+  getHasBookmarkBooks: () => ipcRenderer.invoke('getHasBookmarkBooks'),
 
   //record
   getRecordDurationAmount: () => ipcRenderer.invoke('getRecordDurationAmount'),

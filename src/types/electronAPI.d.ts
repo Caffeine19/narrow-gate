@@ -1,5 +1,5 @@
 import { type Book, type Record } from '@prisma/client'
-import type { BookCover, MostReadBook } from './book'
+import type { BookCover, HasBookmarkBook, MostReadBook } from './book'
 import type { DailyRecord, RecordActivity } from './record'
 import type { BookmarkCreateParams } from './bookmark'
 
@@ -53,6 +53,9 @@ export interface GetMostReadBooks {
   (begin: string, end: string): Promise<MostReadBook[]>
 }
 
+export interface GetHasBookmarkBooks {
+  (): Promise<HasBookmarkBook[]>
+}
 export interface GetRecordDurationAmount {
   (): Promise<number>
 }
@@ -81,6 +84,7 @@ export interface IElectronAPI {
   createRecord: CreateRecord
   getBookAmount: GetBookAmount
   getMostReadBooks: GetMostReadBooks
+  getHasBookmarkBooks: GetHasBookmarkBooks
 
   getRecordDurationAmount: GetRecordDurationAmount
   getMonthlyRecordActivity: GetMonthlyRecordActivity
