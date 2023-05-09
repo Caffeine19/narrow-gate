@@ -66,9 +66,12 @@ export interface GetDailyRecords {
 
 //bookmarks
 export interface CreateBookmark {
-  (params: BookmarkCreateParams): void
+  (params: BookmarkCreateParams): Promise<void>
 }
 
+export interface GetBookmarkAmount {
+  (): Promise<number>
+}
 export interface IElectronAPI {
   createBook: CreateBook
   getBookCoverList: GetBookCoverList
@@ -84,6 +87,7 @@ export interface IElectronAPI {
   getDailyRecords: GetDailyRecords
 
   createBookmark: CreateBookmark
+  getBookmarkAmount: GetBookmarkAmount
 }
 
 declare global {

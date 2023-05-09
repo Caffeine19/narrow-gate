@@ -8,9 +8,10 @@ import BookCard from './BookCard.vue'
 import ActivityChart from './ActivityChart.vue'
 import DailyTimeline from './DailyTimeline.vue'
 
-import { useBookStore } from '@/stores/book'
 import { storeToRefs } from 'pinia'
+import { useBookStore } from '@/stores/book'
 import { useRecordStore } from '@/stores/record'
+import { useBookmarkStore } from '@/stores/bookmark'
 
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
@@ -26,6 +27,8 @@ const formattedRecordDurationAmount = computed(() =>
   dayjs.duration(recordDurationAmount.value, 'minutes').format('HH:mm:ss')
 )
 
+const bookmarkStore = useBookmarkStore()
+const { bookmarkAmount } = storeToRefs(bookmarkStore)
 const AmountCardOptions = reactive([
   {
     name: 'Books',
@@ -36,7 +39,7 @@ const AmountCardOptions = reactive([
   },
   {
     name: 'Bookmarks',
-    value: 323,
+    value: bookmarkAmount,
     iconStyle: 'ri-bookmark-line',
     textColor: 'text-passion-400',
     bgColor: 'bg-passion-400/10'
@@ -54,6 +57,7 @@ onMounted(() => {
   bookStore.getBookAmount()
   bookStore.getMostReadBooks()
   recordStore.getRecordDurationAmount()
+  bookmarkStore.getBookmarkAmount()
 })
 </script>
 <template>
