@@ -10,6 +10,7 @@ import {
   GetBookAmount,
   GetBookContent,
   GetBookCoverList,
+  GetBookmarksByBook,
   GetDailyRecords,
   GetHasBookmarkBooks,
   GetMonthlyRecordActivity,
@@ -38,7 +39,7 @@ import { readFile } from 'fs/promises'
 import { platform } from 'os'
 
 import type { Record } from '@prisma/client'
-import { createBookmark, getBookmarkAmount } from '../data/bookmark'
+import { createBookmark, getBookmarkAmount, getBookmarksByBook } from '../data/bookmark'
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -279,6 +280,15 @@ const onGetBookmarkAmount = async () => {
     console.log('🚀 ~ file: main.ts:257 ~ onGetBookmarkAmount ~ error:', error)
   }
 }
+
+const onGetBookmarksByBook: GetBookmarksByBook = async (bookId) => {
+  try {
+    const bookmarks = await getBookmarksByBook(bookId)
+    return bookmarks
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:286 ~ onGetBookmarksByBook ~ error:', error)
+  }
+}
 app.whenReady().then(() => {
   //book
   ipcMain.handle('createBook', async (event, data) => {
@@ -319,6 +329,7 @@ app.whenReady().then(() => {
   //bookmark
   ipcMain.handle('createBookmark', (event, data) => onCreateBookmark(data))
   ipcMain.handle('getBookmarkAmount', onGetBookmarkAmount)
+  ipcMain.handle('getBookmarksByBook', (event, data) => onGetBookmarksByBook(data))
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

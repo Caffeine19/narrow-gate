@@ -1,4 +1,4 @@
-import { type Book, type Record } from '@prisma/client'
+import { type Book, type Bookmark, type Record } from '@prisma/client'
 import type { BookCover, HasBookmarkBook, MostReadBook } from './book'
 import type { DailyRecord, RecordActivity } from './record'
 import type { BookmarkCreateParams } from './bookmark'
@@ -75,6 +75,10 @@ export interface CreateBookmark {
 export interface GetBookmarkAmount {
   (): Promise<number>
 }
+
+export interface GetBookmarksByBook {
+  (bookId: Book['id']): Promise<Bookmark[]>
+}
 export interface IElectronAPI {
   createBook: CreateBook
   getBookCoverList: GetBookCoverList
@@ -92,6 +96,7 @@ export interface IElectronAPI {
 
   createBookmark: CreateBookmark
   getBookmarkAmount: GetBookmarkAmount
+  getBookmarksByBook: GetBookmarksByBook
 }
 
 declare global {

@@ -69,5 +69,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   //bookmark
   createBookmark: (params: BookmarkCreateParams) => ipcRenderer.invoke('createBookmark', params),
-  getBookmarkAmount: () => ipcRenderer.invoke('getBookmarkAmount')
+  getBookmarkAmount: () => ipcRenderer.invoke('getBookmarkAmount'),
+  getBookmarksByBook: (bookId: Book['id']) => ipcRenderer.invoke('getBookmarksByBook', bookId)
 })
