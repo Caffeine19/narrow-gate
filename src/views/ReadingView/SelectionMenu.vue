@@ -8,7 +8,7 @@ const { openingSelectionMenu, selectionMenuPosition } = storeToRefs(readingStore
 <template>
   <div
     class="bg-zinc-950/60 backdrop-blur-2xl w-fit border-zinc-700 absolute flex border rounded transition-[top,left] p-2 z-10 divide-x divide-zinc-700"
-    :style="{ top: selectionMenuPosition.left + 24 + 'px', left: selectionMenuPosition.top + 'px' }"
+    :style="{ top: selectionMenuPosition.top + 24 + 'px', left: selectionMenuPosition.left + 'px' }"
   >
     <button class="flex items-center pr-2 space-x-2">
       <i class="ri-bookmark-line" style="font-size: 24px"></i>

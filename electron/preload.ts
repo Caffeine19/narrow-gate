@@ -1,6 +1,6 @@
 import { Book, Record } from '@prisma/client'
 import { contextBridge, ipcRenderer } from 'electron'
-import { getDailyRecords } from '../data/record'
+import { BookmarkCreateParams } from '../src/types/bookmark'
 
 // window.addEventListener('DOMContentLoaded', () => {
 //   const replaceText = (selector, text) => {
@@ -64,5 +64,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getMonthlyRecordActivity: (month: string) =>
     ipcRenderer.invoke('getMonthlyRecordActivity', month),
   getDailyRecords: (begin: string, end: string) =>
-    ipcRenderer.invoke('getDailyRecords', { begin, end })
+    ipcRenderer.invoke('getDailyRecords', { begin, end }),
+
+  //bookmark
+  createBookmark: (params: BookmarkCreateParams) => ipcRenderer.invoke('createBookmark', params)
 })

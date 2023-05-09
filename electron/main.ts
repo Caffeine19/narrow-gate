@@ -6,6 +6,7 @@ import { writeFileSync, existsSync } from 'fs'
 
 import {
   CreateBook,
+  CreateBookmark,
   GetBookAmount,
   GetBookContent,
   GetBookCoverList,
@@ -35,6 +36,7 @@ import { readFile } from 'fs/promises'
 import { platform } from 'os'
 
 import type { Record } from '@prisma/client'
+import { createBookmark } from '../data/bookmark'
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -235,6 +237,18 @@ const onGetDailyRecords: GetDailyRecords = async (begin, end) => {
     console.log('🚀 ~ file: main.ts:225 ~ constonGetDailyRecords:GetDailyRecords= ~ error:', error)
   }
 }
+
+const onCreateBookmark: CreateBookmark = async (params) => {
+  try {
+    const createdBookmark = await createBookmark(params)
+    console.log(
+      '🚀 ~ file: main.ts:244 ~ constonCreateBookmark:CreateBookmark= ~ createdBookmark:',
+      createdBookmark
+    )
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:244 ~ constonCreateBookmark:CreateBookmark= ~ error:', error)
+  }
+}
 app.whenReady().then(() => {
   //book
   ipcMain.handle('createBook', async (event, data) => {
@@ -273,6 +287,9 @@ app.whenReady().then(() => {
   ipcMain.handle('getMonthlyRecordActivity', (event, data) => onGetMonthlyRecordActivity(data))
   ipcMain.handle('getMostReadBooks', (event, data) => onGetMostReadBooks(data.begin, data.end))
   ipcMain.handle('getDailyRecords', (event, data) => onGetDailyRecords(data.begin, data.end))
+
+  //bookmark
+  ipcMain.handle('createBookmark', (event, data) => onCreateBookmark(data))
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

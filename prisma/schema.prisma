@@ -27,7 +27,7 @@ model Post {
 }
 
 model Book {
-  id             Int       @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   title          String
   creator        String
   bookCoverPath  String
@@ -37,10 +37,11 @@ model Book {
   pubdate        String
   publisher      String
   language       String
-  addedDate      DateTime  @default(now())
+  addedDate      DateTime   @default(now())
   lastOpenedDate DateTime?
   recording      Record[]
-  deleted        Boolean   @default(false)
+  deleted        Boolean    @default(false)
+  Bookmark       Bookmark[]
 }
 
 model Record {
@@ -50,4 +51,14 @@ model Record {
   duration Int
   book     Book     @relation(fields: [bookId], references: [id])
   bookId   Int
+}
+
+model Bookmark {
+  id          Int      @id @default(autoincrement())
+  book        Book     @relation(fields: [bookId], references: [id])
+  bookId      Int
+  content     String
+  location    String
+  deleted     Boolean  @default(false)
+  createdDate DateTime @default(now())
 }

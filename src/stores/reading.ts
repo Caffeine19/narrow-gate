@@ -8,9 +8,12 @@ import type { BookCover, OpenedBook } from '@/types/book'
 
 import { useBookStore } from './book'
 import { useRecordStore } from './record'
+import { useBookmarkStore } from './bookmark'
 
 export const useReadingStore = defineStore('reading', () => {
   const bookStore = useBookStore()
+  const bookmarkStore = useBookmarkStore()
+  const recordStore = useRecordStore()
 
   const openedBook = ref<OpenedBook>()
   const setOpenedBook = async (cover: BookCover) => {
@@ -107,11 +110,12 @@ export const useReadingStore = defineStore('reading', () => {
 
         //判断是否是select事件
         if (selection && selection.toString()) {
+          //TODO:fix this
           console.log(
             '🚀 ~ file: reading.ts:114 ~ i.document.documentElement.addEventListener ~ e:',
             e
           )
-          onTextSelected(e.clientX, e.clientY)
+          onTextSelected(e.clientY, e.clientX)
         }
       })
     })
@@ -121,9 +125,17 @@ export const useReadingStore = defineStore('reading', () => {
     rendition.on('selected', async (cfiRange: string, contents: any) => {
       // console.log('🚀 ~ file: reading.ts:108 ~ rendition.on ~ cfiRange:', cfiRange)
       const range = (await bookStore.book.getRange(cfiRange)).toString()
-      // console.log('🚀 ~ file: reading.ts:110 ~ rendition.on ~ range:', range)
+      console.log('🚀 ~ file: reading.ts:110 ~ rendition.on ~ range:', range)
       highlightSelection(cfiRange)
       contents.window.getSelection().removeAllRanges()
+
+      console.log(openedBook.value?.id)
+      if (!openedBook.value?.id) return
+      bookmarkStore.createBookmark({
+        bookId: openedBook.value.id,
+        content: range,
+        location: cfiRange
+      })
     })
   }
 
@@ -134,7 +146,6 @@ export const useReadingStore = defineStore('reading', () => {
     rendition.prev()
   }
 
-  const recordStore = useRecordStore()
   const { isRecording } = storeToRefs(recordStore)
   const onKeyUp = (event: KeyboardEvent) => {
     if (!isRecording.value) return
