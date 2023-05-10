@@ -14,6 +14,7 @@ import { storeToRefs } from 'pinia'
 import { useOSStore } from '@/stores/os'
 import { useReadingStore } from '@/stores/reading'
 import { useRecordStore } from '@/stores/record'
+import BookmarkNavigator from './BookmarkNavigator.vue'
 
 dayjs.extend(duration)
 
@@ -127,6 +128,9 @@ const toggleChapterNavigator = (flag: boolean) => {
 
       <Transition name="slide">
         <ChapterNavigator v-show="openingChapterNavigator" />
+      </Transition>
+      <Transition name="slide">
+        <BookmarkNavigator />
       </Transition>
 
       <SelectionMenu></SelectionMenu>

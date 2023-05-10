@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 
-import type { Bookmark } from '@prisma/client';
+import type { Bookmark } from '@prisma/client'
 
 import dayjs from 'dayjs'
 
-import {useBookmarkStore} from '@/stores/bookmark'
+import { useBookmarkStore } from '@/stores/bookmark'
 
-defineProps({bookmark:{type:Object as PropType<Bookmark>,required:true}})
+import NarrowButton from '@/components/NarrowButton.vue'
+
+defineProps({ bookmark: { type: Object as PropType<Bookmark>, required: true } })
 
 const bookmarkStore = useBookmarkStore()
 
