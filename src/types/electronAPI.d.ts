@@ -77,7 +77,11 @@ export interface GetBookmarkAmount {
 }
 
 export interface GetBookmarksByBook {
-  (bookId: Book['id']): Promise<Bookmark[]>
+  (bookId: Book['id'] | undefined): Promise<Bookmark[]>
+}
+
+export interface DeleteBookmark {
+  (id: Bookmark['id']): Promise<void>
 }
 export interface IElectronAPI {
   createBook: CreateBook
@@ -97,6 +101,7 @@ export interface IElectronAPI {
   createBookmark: CreateBookmark
   getBookmarkAmount: GetBookmarkAmount
   getBookmarksByBook: GetBookmarksByBook
+  deleteBookmark: DeleteBookmark
 }
 
 declare global {

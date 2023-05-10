@@ -25,7 +25,7 @@ export const useBookmarkStore = defineStore('bookmark', () => {
   }
 
   const bookmarks = ref<Bookmark[]>([])
-  const getBookmarksByBook = async (bookId: Book['id']) => {
+  const getBookmarksByBook = async (bookId: Book['id'] | undefined) => {
     try {
       const res = await window.electronAPI.getBookmarksByBook(bookId)
       bookmarks.value = res
@@ -33,11 +33,21 @@ export const useBookmarkStore = defineStore('bookmark', () => {
       console.log('🚀 ~ file: bookmark.ts:32 ~ getBookmarksByBook ~ error:', error)
     }
   }
+
+  const deleteBookmark = async (id: Bookmark['id']) => {
+    try {
+      await window.electronAPI.deleteBookmark(id)
+      bookmarks.value = bookmarks.value.filter((bookmark) => bookmark.id !== id)
+    } catch (error) {
+      console.log('🚀 ~ file: bookmark.ts:41 ~ deleteBookmark ~ error:', error)
+    }
+  }
   return {
     createBookmark,
     bookmarkAmount,
     getBookmarkAmount,
     bookmarks,
-    getBookmarksByBook
+    getBookmarksByBook,
+    deleteBookmark
   }
 })

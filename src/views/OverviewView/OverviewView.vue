@@ -97,7 +97,17 @@ onMounted(() => {
           <BookCard
             v-for="(book, index) in mostReadBooks"
             :key="index"
-            :mostReadBook="book"
+            :title="book.title"
+            :creator="book.creator"
+            :bookCover="book.bookCover"
+            :info="[
+              {
+                name: 'Duration',
+                value: book.duration + ' minutes',
+                iconStyle: 'ri-hourglass-2-line'
+              },
+              { name: 'Times', value: book.times + ' times', iconStyle: 'ri-functions' }
+            ]"
           ></BookCard>
         </div>
       </div>

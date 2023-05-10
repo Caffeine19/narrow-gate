@@ -1,4 +1,4 @@
-import { Book, Record } from '@prisma/client'
+import { Book, Bookmark, Record } from '@prisma/client'
 import { contextBridge, ipcRenderer } from 'electron'
 import { BookmarkCreateParams } from '../src/types/bookmark'
 
@@ -70,5 +70,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   //bookmark
   createBookmark: (params: BookmarkCreateParams) => ipcRenderer.invoke('createBookmark', params),
   getBookmarkAmount: () => ipcRenderer.invoke('getBookmarkAmount'),
-  getBookmarksByBook: (bookId: Book['id']) => ipcRenderer.invoke('getBookmarksByBook', bookId)
+  getBookmarksByBook: (bookId: Book['id']) => ipcRenderer.invoke('getBookmarksByBook', bookId),
+  deleteBookmark: (id: Bookmark['id']) => ipcRenderer.invoke('deleteBookmark', id)
 })

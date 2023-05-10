@@ -7,6 +7,7 @@ import { writeFileSync, existsSync } from 'fs'
 import {
   CreateBook,
   CreateBookmark,
+  DeleteBookmark,
   GetBookAmount,
   GetBookContent,
   GetBookCoverList,
@@ -39,7 +40,12 @@ import { readFile } from 'fs/promises'
 import { platform } from 'os'
 
 import type { Record } from '@prisma/client'
-import { createBookmark, getBookmarkAmount, getBookmarksByBook } from '../data/bookmark'
+import {
+  createBookmark,
+  deleteBookmark,
+  getBookmarkAmount,
+  getBookmarksByBook
+} from '../data/bookmark'
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -67,6 +73,7 @@ function createWindow() {
   })
 }
 
+//book
 const onCreateBook: CreateBook = async (
   title,
   creator,
@@ -220,6 +227,7 @@ const onGetHasBookmarkBooks: GetHasBookmarkBooks = async () => {
   }
 }
 
+//record
 const onGetRecordDurationAmount: GetRecordDurationAmount = async () => {
   try {
     const durationAmount = await getRecordDurationAmount()
@@ -259,6 +267,7 @@ const onGetDailyRecords: GetDailyRecords = async (begin, end) => {
   }
 }
 
+//bookmark
 const onCreateBookmark: CreateBookmark = async (params) => {
   try {
     const createdBookmark = await createBookmark(params)
@@ -287,6 +296,14 @@ const onGetBookmarksByBook: GetBookmarksByBook = async (bookId) => {
     return bookmarks
   } catch (error) {
     console.log('🚀 ~ file: main.ts:286 ~ onGetBookmarksByBook ~ error:', error)
+  }
+}
+
+const onDeleteBookmark: DeleteBookmark = async (id) => {
+  try {
+    await deleteBookmark(id)
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts:299 ~ onDeleteBookmark:DeleteBookmark ~ error:', error)
   }
 }
 app.whenReady().then(() => {
@@ -330,6 +347,7 @@ app.whenReady().then(() => {
   ipcMain.handle('createBookmark', (event, data) => onCreateBookmark(data))
   ipcMain.handle('getBookmarkAmount', onGetBookmarkAmount)
   ipcMain.handle('getBookmarksByBook', (event, data) => onGetBookmarksByBook(data))
+  ipcMain.handle('deleteBookmark', (event, data) => onDeleteBookmark(data))
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
