@@ -9,6 +9,7 @@ import { useBookmarkStore } from '@/stores/bookmark'
 
 import NarrowButton from '@/components/NarrowButton.vue'
 import BookCard from '../OverviewView/BookCard.vue'
+import type { Bookmark } from '@prisma/client'
 
 const selectedBookId = ref<number | undefined>()
 const setSelectedBookId = (bookId: number | undefined) => {
@@ -29,6 +30,14 @@ const { hasBookmarkBooks } = storeToRefs(bookStore)
 onMounted(() => {
   bookStore.getHasBookmarkBooks()
 })
+
+const copyBookmark = async (contnet: Bookmark['content']) => {
+  try {
+    await navigator.clipboard.writeText(contnet)
+  } catch (error) {
+    console.log('🚀 ~ file: BookmarkVIew.vue:38 ~ copyBookmark ~ error:', error)
+  }
+}
 </script>
 <template>
   <div class="grow relative flex pt-10 overflow-hidden">
@@ -77,6 +86,11 @@ onMounted(() => {
               iconStyle="ri-play-line"
               :action="() => {}"
               buttonStyle="!bg-careless-400/20 !text-careless-400 hover:!text-careless-400 hover:!bg-careless-400/20 hover:!border-careless-400/60"
+            />
+            <NarrowButton
+              iconStyle="ri-clipboard-line"
+              :action="() => copyBookmark(bookmark.content)"
+              buttonStyle="!bg-apathetic-400/20 !text-apathetic-400 hover:!text-apathetic-400 hover:!bg-apathetic-400/20 hover:!border-apathetic-400/60"
             />
             <NarrowButton
               iconStyle="ri-delete-bin-line"
