@@ -70,6 +70,11 @@ const openingChapterNavigator = ref(false)
 const toggleChapterNavigator = (flag: boolean) => {
   openingChapterNavigator.value = flag
 }
+
+const openingBookmarkNavigator = ref(false)
+const toggleBookmarkNavigator = (flag: boolean) => {
+  openingBookmarkNavigator.value = flag
+}
 </script>
 <template>
   <div class="bg-zinc-900 flex flex-col items-stretch justify-between w-full h-full">
@@ -126,11 +131,11 @@ const toggleChapterNavigator = (flag: boolean) => {
         </div>
       </div>
 
-      <Transition name="slide">
+      <Transition name="slide-left">
         <ChapterNavigator v-show="openingChapterNavigator" />
       </Transition>
-      <Transition name="slide">
-        <BookmarkNavigator />
+      <Transition name="slide-right">
+        <BookmarkNavigator v-show="openingBookmarkNavigator" />
       </Transition>
 
       <SelectionMenu></SelectionMenu>
@@ -165,22 +170,31 @@ const toggleChapterNavigator = (flag: boolean) => {
       </p>
       <NarrowButton
         iconStyle="ri-bookmark-line"
-        :active="openingChapterNavigator"
+        :active="openingBookmarkNavigator"
         activeStyle="!bg-apathetic-500/20 !text-apathetic-500 hover:!border-apathetic-500/80"
-        :action="() => toggleChapterNavigator(!openingChapterNavigator)"
+        :action="() => toggleBookmarkNavigator(!openingBookmarkNavigator)"
         class="justify-self-end"
       />
     </div>
   </div>
 </template>
 <style>
-.slide-enter-active,
-.slide-leave-active {
+.slide-left-enter-active,
+.slide-left-leave-active {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
-.slide-enter-from,
-.slide-leave-to {
+.slide-left-enter-from,
+.slide-left-leave-to {
   opacity: 0;
   transform: translateX(-400px);
+}
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.slide-right-enter-from,
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(400px);
 }
 </style>
