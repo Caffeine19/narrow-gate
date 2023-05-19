@@ -195,6 +195,7 @@ export const useReadingStore = defineStore('reading', () => {
     goChapter,
     onKeyUp,
     openingSelectionMenu,
-    createBookmark
+    createBookmark,
+    selectedRange
   }
 })
