@@ -124,9 +124,9 @@ export const getHasBookmarkBooks = async () => {
   try {
     const hasBookmarkBooks = await prisma.book.findMany({
       where: {
-        NOT: {
-          Bookmark: {
-            none: {}
+        Bookmark: {
+          some: {
+            deleted: false
           }
         }
       },
@@ -138,6 +138,7 @@ export const getHasBookmarkBooks = async () => {
         }
       }
     })
+
     console.log(
       '🚀 ~ file: book.ts:134 ~ getHasBookmarkBooks ~ hasBookmarkBooks:',
       hasBookmarkBooks
