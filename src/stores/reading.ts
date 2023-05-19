@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from 'pinia'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 
 import ePub, { Rendition, type NavItem } from 'epubjs'
 import type Section from 'epubjs/types/section'
@@ -99,7 +99,7 @@ export const useReadingStore = defineStore('reading', () => {
       currentChapterHref.value = section.href
 
       //IframeView
-      i.document.documentElement.addEventListener('mouseup', (e: MouseEvent) => {
+      i.document.documentElement.addEventListener('mouseup', () => {
         let selection
 
         if (i.window.getSelection) {
@@ -110,12 +110,7 @@ export const useReadingStore = defineStore('reading', () => {
 
         //判断是否是select事件
         if (selection && selection.toString()) {
-          //TODO:fix this
-          console.log(
-            '🚀 ~ file: reading.ts:114 ~ i.document.documentElement.addEventListener ~ e:',
-            e
-          )
-          onTextSelected(e.clientY, e.clientX)
+          onTextSelected()
         }
       })
     })
@@ -126,16 +121,11 @@ export const useReadingStore = defineStore('reading', () => {
       // console.log('🚀 ~ file: reading.ts:108 ~ rendition.on ~ cfiRange:', cfiRange)
       const range = (await bookStore.book.getRange(cfiRange)).toString()
       console.log('🚀 ~ file: reading.ts:110 ~ rendition.on ~ range:', range)
-      highlightSelection(cfiRange)
-      contents.window.getSelection().removeAllRanges()
 
-      console.log(openedBook.value?.id)
-      if (!openedBook.value?.id) return
-      bookmarkStore.createBookmark({
-        bookId: openedBook.value.id,
-        content: range,
-        location: cfiRange
-      })
+      selectedRange.content = range
+      selectedRange.location = cfiRange
+
+      // contents.window.getSelection().removeAllRanges()
     })
   }
 
@@ -166,11 +156,12 @@ export const useReadingStore = defineStore('reading', () => {
   }
 
   const openingSelectionMenu = ref(false)
-  const selectionMenuPosition = reactive({ top: 0, left: 0 })
-  const onTextSelected = (top: number, left: number) => {
+  const onTextSelected = () => {
     openingSelectionMenu.value = true
-    selectionMenuPosition.top = top
-    selectionMenuPosition.left = left
+  }
+  const selectedRange: { content?: string; location?: string } = {
+    content: undefined,
+    location: undefined
   }
   const highlightSelection = (cfiRange: string) => {
     rendition.annotations.add('highlight', cfiRange, {}, undefined, 'hl', {
@@ -180,6 +171,15 @@ export const useReadingStore = defineStore('reading', () => {
       'fill-opacity': '0.3',
       'mix-blend-mode': 'multiply'
     })
+  }
+  const createBookmark = () => {
+    if (!openedBook.value?.id || !selectedRange.content || !selectedRange.location) return
+    bookmarkStore.createBookmark({
+      bookId: openedBook.value?.id,
+      content: selectedRange.content,
+      location: selectedRange.location
+    })
+    highlightSelection(selectedRange.location)
   }
   return {
     openedBook,
@@ -195,6 +195,6 @@ export const useReadingStore = defineStore('reading', () => {
     goChapter,
     onKeyUp,
     openingSelectionMenu,
-    selectionMenuPosition
+    createBookmark
   }
 })

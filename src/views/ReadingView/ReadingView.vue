@@ -183,15 +183,18 @@ const toggleBookmarkNavigator = (flag: boolean) => {
 .slide-left-leave-active {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
 .slide-left-enter-from,
 .slide-left-leave-to {
   opacity: 0;
   transform: translateX(-400px);
 }
+
 .slide-right-enter-active,
 .slide-right-leave-active {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
 .slide-right-enter-from,
 .slide-right-leave-to {
   opacity: 0;
