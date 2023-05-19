@@ -15,6 +15,7 @@ import { useOSStore } from '@/stores/os'
 import { useReadingStore } from '@/stores/reading'
 import { useRecordStore } from '@/stores/record'
 import BookmarkNavigator from './BookmarkNavigator.vue'
+import { useBookmarkStore } from '@/stores/bookmark'
 
 dayjs.extend(duration)
 
@@ -30,13 +31,10 @@ const { recordDuration, isRecording, recordGaps } = storeToRefs(recordStore)
 let setLastRecordGapEndTimer: string | number | undefined | NodeJS.Timer
 const route = useRoute()
 onMounted(() => {
-  if (route.query.id) {
-    isRecording.value = true
-    readingStore.openBook(Number(route.query.id))
-    recordGaps.value = []
-    recordStore.addRecordGap()
-    setLastRecordGapEndTimer = setInterval(() => recordStore.setLastRecordGapEnd(), 1000)
-  }
+  isRecording.value = true
+  recordGaps.value = []
+  recordStore.addRecordGap()
+  setLastRecordGapEndTimer = setInterval(() => recordStore.setLastRecordGapEnd(), 1000)
 })
 
 const formattedDuration = computed(() => dayjs.duration(recordDuration.value).format('HH:mm:ss'))
@@ -70,6 +68,20 @@ const openingChapterNavigator = ref(false)
 const toggleChapterNavigator = (flag: boolean) => {
   openingChapterNavigator.value = flag
 }
+
+const bookmarkStore = useBookmarkStore()
+const { bookmarks } = storeToRefs(bookmarkStore)
+onMounted(async () => {
+  if (openedBook.value) {
+    if (route.query.id) {
+      await readingStore.openBook(Number(route.query.id))
+      await bookmarkStore.getBookmarksByBook(openedBook.value.id)
+      bookmarks.value.forEach((bookmark) => {
+        readingStore.highlightSelection(bookmark.location)
+      })
+    }
+  }
+})
 
 const openingBookmarkNavigator = ref(false)
 const toggleBookmarkNavigator = (flag: boolean) => {
@@ -135,7 +147,7 @@ const toggleBookmarkNavigator = (flag: boolean) => {
         <ChapterNavigator v-show="openingChapterNavigator" />
       </Transition>
       <Transition name="slide-right">
-        <BookmarkNavigator v-show="openingBookmarkNavigator" />
+        <BookmarkNavigator v-if="openingBookmarkNavigator" />
       </Transition>
 
       <SelectionMenu></SelectionMenu>

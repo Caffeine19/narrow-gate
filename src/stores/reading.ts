@@ -171,6 +171,9 @@ export const useReadingStore = defineStore('reading', () => {
       'fill-opacity': '0.3',
       'mix-blend-mode': 'multiply'
     })
+    // setTimeout(() => {
+    //   rendition.annotations.remove(cfiRange, 'highlight')
+    // }, 2000)
   }
   const createBookmark = () => {
     if (!openedBook.value?.id || !selectedRange.content || !selectedRange.location) return
@@ -196,6 +199,7 @@ export const useReadingStore = defineStore('reading', () => {
     onKeyUp,
     openingSelectionMenu,
     createBookmark,
-    selectedRange
+    selectedRange,
+    highlightSelection
   }
 })

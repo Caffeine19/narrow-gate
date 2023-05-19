@@ -30,7 +30,8 @@ onMounted(() => {
         :key="bookmark.id"
         :bookmark="bookmark"
         class="!border-zinc-600 border rounded"
-      ></BookmarkItem>
+      >
+    </BookmarkItem>
     </ul>
   </div>
 </template>
