@@ -122,7 +122,7 @@ export const getMostReadBooks = async (begin: string, end: string) => {
 
 export const getHasBookmarkBooks = async () => {
   try {
-    const hasBookmarkBooks = await prisma.book.findMany({
+    const res = await prisma.book.findMany({
       where: {
         Bookmark: {
           some: {
@@ -131,18 +131,22 @@ export const getHasBookmarkBooks = async () => {
         }
       },
       include: {
-        _count: {
-          select: {
-            Bookmark: true
+        Bookmark: {
+          where: {
+            deleted: false
           }
         }
       }
     })
 
-    console.log(
-      '🚀 ~ file: book.ts:134 ~ getHasBookmarkBooks ~ hasBookmarkBooks:',
-      hasBookmarkBooks
-    )
+    const hasBookmarkBooks = res.map((book) => {
+      const { Bookmark, ...rest } = book
+      return {
+        ...rest,
+        bookmarkCount: Bookmark.length
+      }
+    })
+    console.log(JSON.stringify(hasBookmarkBooks, null, 4))
     return hasBookmarkBooks
   } catch (error) {
     console.log('🚀 ~ file: book.ts:127 ~ getHasBookmarkBooks ~ error:', error)

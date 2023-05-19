@@ -58,7 +58,7 @@ onMounted(() => {
         :title="book.title"
         :creator="book.creator"
         :bookCover="book.bookCover"
-        :info="[{ iconStyle: 'ri-functions', name: 'Count', value: book._count.Bookmark }]"
+        :info="[{ iconStyle: 'ri-functions', name: 'Count', value: book.bookmarkCount }]"
         @click="setSelectedBookId(book.id)"
         :class="
           book.id === selectedBookId
